@@ -1,0 +1,229 @@
+/* ===============================
+   CSS VARIABLES (DC THEME)
+================================ */
+:root {
+  /* === BACKGROUND === */
+  --bg-main: #05080f;          /* основной фон */
+  --bg-secondary: #15171d;     /* секции / панели */
+  --bg-tertiary: #020617;      /* глубокий тёмный */
+  --bg-glass: rgba(11, 18, 32, 0.7);
+
+  /* === TEXT === */
+  --text-primary: #e6edf7;     /* основной текст */
+  --text-secondary: #9aa4b2;   /* подписи, описания */
+  --text-muted: #6b7280;       /* вторичный */
+
+  /* === ACCENTS (AI SHIELD) === */
+  --accent-cyan: #22d3ee;      /* главный акцент */
+  --accent-blue: #38bdf8;      /* hover / links */
+  --accent-purple: #8b5cf6;   /* AI / нейросети */
+  --accent-green: #4ade80;    /* success / secure */
+  --accent-red: #fb7185;      /* alert / danger */
+
+  /* === GLOW === */
+  --glow-cyan: rgba(34, 211, 238, 0.45);
+  --glow-blue: rgba(56, 189, 248, 0.45);
+  --glow-purple: rgba(139, 92, 246, 0.45);
+  --glow-green: rgba(74, 222, 128, 0.4);
+  --glow-red: rgba(251, 113, 133, 0.45);
+
+  /* === UI / BORDERS === */
+  --border-soft: rgba(148, 163, 184, 0.12);
+  --border-hard: rgba(148, 163, 184, 0.25);
+
+  /* === FX === */
+  --noise-opacity: 0.04;
+  --scanline-opacity: 0.05;
+  --blur-amount: 12px;
+}
+
+/* ===============================
+   RESET & BASE
+================================ */
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html
+{
+    scroll-behavior: smooth;
+}
+
+body
+{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* ===============================
+   CONTAINER
+================================ */
+.container
+{
+    max-width: 1200px;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+/* ===============================
+   HEADER / NAV
+================================ */
+header
+{
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg-secondary);
+    backdrop-filter: blur(20px);
+}
+
+nav
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo
+{
+    color: var(--dc-bright-yellow);
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+nav ul
+{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 25px;
+}
+
+nav ul li a
+{
+    color: var(--dc-light-gray);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover
+{
+    color: var(--dc-bright-yellow);
+}
+
+.login
+{
+    background-color: var(--dc-bright-yellow);
+    color: var(--dc-dark-blue);
+    border: none;
+    padding: 8px 20px;
+    border-radius: var(--radius);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.login:hover {
+    background-color: var(--dc-dark-blue);
+    color: var(--dc-bright-yellow);
+}
+
+.logout {
+    background-color: var(--dc-bright-yellow);
+    color: var(--dc-dark-blue);
+    border: none;
+    padding: 8px 20px;
+    border-radius: var(--radius);
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.logout:hover {
+    background-color: var(--dc-dark-blue);
+    color: var(--dc-bright-yellow);
+}
+
+.modal {
+    display: none; /* скрыто по умолчанию */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--dc-medium-blue);
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: var(--radius);
+    width: 300px;
+    color: var(--dc-bright-yellow);
+    text-align: center;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 25px;
+    cursor: pointer;
+}
+.modal input {
+    width: 90%;
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: none;
+}
+.modal button {
+    width: 95%;
+    padding: 10px;
+    background: var(--dc-bright-yellow);
+    color: var(--dc-dark-blue);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.modal button:hover {
+    background: #fff;
+    color: var(--dc-dark-blue);
+}
+
+/* Контейнер для аккаунта */
+
+.container-user {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-user .user-name {
+    font-size: 15px;
+    font-weight: 500;
+    align-self: center;
+}
+
+.container-user .avatar {
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    border-radius: 50%;
+}

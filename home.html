@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmIGuess.AI | Interactive Prediction</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    
+    <!-- ======================================================
+    BACKGROUND LAYER: Am I Guess ? + Matrix Rain
+    ====================================================== -->
+    <!-- <div class="background-title">
+        <span class="bg-word bg-am">AM</span>
+        <span class="bg-word bg-i">I</span>
+        <span class="bg-word bg-guess">GUESS</span>
+        <span class="bg-word bg-question">?</span>
+    </div>
+
+    <canvas id="matrix-bg"></canvas> -->
+
+    <!-- ====== HEADER: NAVIGATION + LOG IN/LOG OUT ====== -->
+    <header id="header">
+        <nav>
+            <a href="home.html" class="logo">AmIGuess.AI</a>
+            <ul>
+                <li><a href="#catalog">Главная</a></li>
+                <li><a href="#shield">Щит</a></li>
+                <li><a href="#analytics">Аналитика</a></li>
+                <li><a href="#contacts">FAQ</a></li>
+                <li class="container-user" style="display: none;">
+                    <img src="public/card-pic/avatar.jpg" class="avatar">
+                    <h4 class="user-name">Rachel Dawes</h4>
+                    <button class="logout" id="logoutBtn">Выход из системы</button>
+                </li>
+                <li><button class="login" id="loginBtn">Вход в систему</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ====== MODAL WINDOW FOR LOG IN ====== -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Вход в систему</h2>
+            <form id="loginForm">
+                <label for="username">Логин</label>
+                <input type="text" id="username" placeholder="Введите логин" required>
+                
+                <label for="password">Пароль</label>
+                <input type="password" id="password" placeholder="Введите пароль" required>
+                
+                <button type="submit">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====== MAIN SECTIONS ====== -->
+        <main id="main">
+
+            <!-- MAIN SECTION: HERO  -->
+            <section class="hero section">
+                <div class="hero-container">
+                    <div class="hero-content">
+                        <h1 class="hero-title">
+                            Когда данные не дают ответа
+                        </h1>
+                    </div>
+                    <div class="hero-subtitle">
+                        <span class="typewriter" data-text="AmIGuess строит прогноз будущего,AmIGuess анализирует тренды за вас,AmIGuess находит скрытые закономерности">
+
+                        </span>
+                    </div>
+                    <div class="hero-description">
+                        <p>
+                            AI анализирует миллионы данных и строит прогнозы там, где обычные показатели молчат. AmIGuess превращает неизвестное в решение.
+                        </p>
+                    </div>
+                    <div class="hero-CTM"> <!-- Call-to-Move -->
+                        <a href="#start-forecast" class="btn btn-primary">
+                            Запустить прогноз
+                        </a>
+                    </div>
+                </div>
+                    <!-- если нужны будут визульные приколы, glitch-эффекты, HUD -->
+            </section>
+
+            <!-- ====== MAIN SECTION: TEXT-SLIDER -->
+            <section class="slider-section section">
+                <div class="container slider-container">
+                    <div class="text-slide">Google Cloud</div>
+                    <div class="text-slide">MICROSOFT AZURE</div>
+                    <div class="text-slide">AMAZON AWS</div>
+                    <div class="text-slide">IBM Security</div>
+                    <div class="text-slide">CISCO SYSTEMS</div>
+                    <div class="text-slide">GitHub</div>
+                </div>
+            </section>
+
+            <!-- MAIN SECTION: CARD -->
+            <section class="card-section section">
+                <div class="container card-container">
+                    <h2 class="section-title">Возможности AmIGuess</h2>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-magnifying-glass-chart fa-2x"></i>
+                        </div>
+                        <h2 class="card-title">Глубокий анализ данных</h2>
+                        <p class="card-subtitle">AmIGuess изучает миллионы точек данных, выявляя скрытые закономерности и тренды.</p>
+                        <ul class="card-list">
+                            <li><i class="fa-solid fa-check"></i>Предиктивный анализ</li>
+                            <li><i class="fa-solid fa-check"></i>Выявление паттернов</li>
+                            <li><i class="fa-solid fa-check"></i>Анализ больших данных</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-fast-forward fa-2x"></i>
+                        </div>
+                        <h2 class="card-title">Прогноз будущего</h2>
+                        <p class="card-subtitle">Создание точных прогнозов по трендам, событиям и пользовательским данным.</p>
+                        <ul class="card-list">
+                            <li><i class="fa-solid fa-check"></i>Моделирование сценариев</li>
+                            <li><i class="fa-solid fa-check"></i>Оценка рисков</li>
+                            <li><i class="fa-solid fa-check"></i>Персонализированные прогнозы</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                        <h2 class="card-title">Рекомендации в реальном времени</h2>
+                        <p class="card-subtitle">AI подсказывает оптимальные решения для бизнеса на основе анализа данных.</p>
+                        <ul class="card-list">
+                            <li><i class="fa-solid fa-check"></i>Автоматические рекомендации</li>
+                            <li><i class="fa-solid fa-check"></i>Своевременные уведомления</li>
+                            <li><i class="fa-solid fa-check"></i>Поддержка принятия решений</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== MAIN SECTION: START-FORECAST -->
+            <section class="forecast-section section">
+                <div class="container forecast-container">
+                    <h2 class="forecast-title">Идёт загрузка прогноза...</h2>
+                    <div class="loading-bar-container">
+                        <div class="loading-bar" id="forecast-loading"></div>
+                    </div>
+                    <!-- Появление кнопки после завершения загрузки -->
+                    <div class="forecast-result-btn" style="display:none;">
+                        <button id="show-result" class="btn btn-primary">Узнать результат</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== MAIN SECTION: RESULT-FORECAST -->
+            <section class="result-section section">
+                <div class="container result-container">
+                    <h2 class="result-title">Ваш прогноз готов!</h2>
+                    <p class="result-text">
+
+                    </p>
+                </div>
+            </section>
+
+            <!-- ====== MAIN SECTION: FAQ -->
+            <section class="faq-section section">
+                <div class="container faq-container">
+                    <h2 class="faq-title">Ответы на вопросы</h2>
+                    <div class="faq-card">
+                        <div class="faq-heading">
+                            <h3 class="faq-heading-title">Как быстро AmIGuess строит прогноз?</h3>
+                            <i class="fas fa-chevron-down fa-lg"></i>
+                        </div>
+                        <p class="faq-heading-description">
+                            Время построения прогноза зависит от объёма данных, но обычно это занимает всего несколько секунд благодаря оптимизированным алгоритмам AI.
+                        </p>
+                    </div>
+                    <div class="faq-card">
+                        <div class="faq-heading">
+                            <h3 class="faq-heading-title">Можно ли доверять прогнозам AI при недостатке данных?</h3>
+                            <i class="fas fa-chevron-down fa-lg"></i>
+                        </div>
+                        <p class="faq-heading-description">
+                            AmIGuess учитывает доступные данные и использует методы предиктивного моделирования, чтобы предоставлять максимально точные прогнозы даже при ограниченной информации.
+                        </p>
+                    </div>
+                    <div class="faq-card">
+                        <div class="faq-heading">
+                            <h3 class="faq-heading-title">Какая информация сохраняется и как обеспечивается конфиденциальность данных?</h3>
+                            <i class="fas fa-chevron-down fa-lg"></i>
+                        </div>
+                        <p class="faq-heading-description">
+                            Все данные обрабатываются анонимно и шифруются. AmIGuess не хранит личную информацию пользователей и полностью соблюдает стандарты конфиденциальности.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- ====== FOOTER SECTION ====== -->
+        <footer id="contact">
+            <div class="container footer-container">
+            <!-- Верхняя часть футера -->
+                <div class="footer-top">
+                    <div class="footer-brand">
+                        <a href="#" class="logo">
+                            <h4 class="brand-title">AmIGuess</h4>
+                            <p class="brand-subtitle">AI, который предсказывает будущее</p>
+                        </a>
+                        <div class="href-container">
+                            <a href="https://github.com/LatteLorenso" target="_blank">
+                                <i class="fab fa-github fa-lg"></i>
+                            </a>
+                            <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                            <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                            <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <h4>О платформе</h4>
+                        <ul>
+                            <li><a href="#">О нас</a></li>
+                            <li><a href="#">Как работает AI</a></li>
+                            <li><a href="#">Исследования</a></li>
+                            <li><a href="#">Методология прогнозов</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Продукты и возможности</h4>
+                        <ul>
+                            <li><a href="#">Примеры прогнозов</a></li>
+                            <li><a href="#">Интеграции</a></li>
+                            <li><a href="#">API для разработчиков</a></li>
+                            <li><a href="#">Поддержка клиентов</a></li>
+                        </ul>
+                    </div>
+                    <div class="form-container">
+                        <h4>Подписка</h4>
+                        <p>Подпишитесь, чтобы получать свежие прогнозы, аналитические отчёты и инсайты от AmIGuess.AI прямо на вашу почту.</p>
+                        <form action="#" class="subscribe-form">
+                            <input type="email" placeholder="Ваш Email" required>
+                            <button type="submit"><i class="far fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Нижняя часть футера -->
+            <div class="footer-bottom">
+                <p>&copy; 2025 AmIGuess.AI. Все права защищены.</p>
+                <div class="legal-links">
+                    <a href="#">Политика конфиденциальности</a>
+                    <a href="#">Условия использования</a>
+                </div>
+            </div>
+        </footer>
+
+<script src="script.js"></script>
+<script src="products.js"></script>
+</body>
+</html>

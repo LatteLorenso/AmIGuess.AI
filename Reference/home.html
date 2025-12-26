@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NEXUS | Системы Глобальной Киберзащиты</title>
+    <meta name="description" content="NEXUS - передовая платформа защиты данных с использованием искусственного интеллекта нейросетей 4-го поколения.">
+    <meta name="keywords" content="кибербезопасность, AI, защита данных, хакинг, серверы, облако">
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="theme-dark">
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <div class="bg-matrix-overlay"></div>
+    <div class="bg-grid-lines">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <div class="preloader" id="preloader">
+        <div class="cyber-spinner">
+            <div class="spinner-inner"></div>
+        </div>
+        <div class="loading-text" id="loading-text">ИНИЦИАЛИЗАЦИЯ ПРОТОКОЛОВ...</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+    </div>
+
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-shield-virus logo-icon"></i>
+                <span class="logo-text">NEXUS<span class="highlight">.SEC</span></span>
+            </a>
+
+            <nav class="nav-menu" id="nav-menu">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#hero" class="nav-link active-link" data-text="Главная">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link" data-text="О системе">О системе</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#solutions" class="nav-link" data-text="Решения">Решения</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#pricing" class="nav-link" data-text="Тарифы">Тарифы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#faq" class="nav-link" data-text="FAQ">FAQ</a>
+                    </li>
+                </ul>
+                <div class="nav-close" id="nav-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Переключить тему">
+                    <i class="fa-regular fa-sun"></i>
+                </button>
+                <a href="#contact" class="btn btn-sm btn-glitch">Вход в систему</a>
+                <div class="nav-toggle" id="nav-toggle">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+
+        <section class="hero section" id="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <div class="hero-badge">v.4.0.2 STABLE</div>
+                    <h1 class="hero-title">
+                        ЗАЩИТА <br>
+                        <span class="typewriter" data-text="ЦИФРОВЫХ АКТИВОВ,СЕРВЕРНЫХ ДАННЫХ,ВАШЕГО БИЗНЕСА"></span>
+                        <span class="cursor">|</span>
+                    </h1>
+                    <p class="hero-description">
+                        Автономная система кибербезопасности на базе нейронных сетей. Мы предотвращаем угрозы до того, как они станут реальностью. Анализ трафика в реальном времени.
+                    </p>
+
+                    <div class="hero-btns">
+                        <a href="#solutions" class="btn btn-primary">
+                            <i class="fa-solid fa-rocket"></i> Начать сканирование
+                        </a>
+                        <a href="#demo" class="btn btn-outline">
+                            <i class="fa-solid fa-play"></i> Демо-видео
+                        </a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <h3 class="stat-number" data-target="99">0</h3>
+                            <span class="stat-symbol">%</span>
+                            <p class="stat-desc">Отраженных атак</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 class="stat-number" data-target="24">0</h3>
+                            <span class="stat-symbol">/7</span>
+                            <p class="stat-desc">Мониторинг</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 class="stat-number" data-target="500">0</h3>
+                            <span class="stat-symbol">+</span>
+                            <p class="stat-desc">Клиентов Enterprise</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="cyber-globe">
+                        <div class="globe-grid"></div>
+                        <div class="globe-core"></div>
+                    </div>
+                    <div class="floating-card card-1">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Шифрование AES-256</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <i class="fa-solid fa-bug-slash"></i>
+                        <span>Вирусы удалены</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="partners-marquee">
+            <div class="marquee-track">
+                <div class="partner-logo"><i class="fa-brands fa-aws"></i> AMAZON AWS</div>
+                <div class="partner-logo"><i class="fa-brands fa-google"></i> GOOGLE CLOUD</div>
+                <div class="partner-logo"><i class="fa-brands fa-microsoft"></i> MICROSOFT AZURE</div>
+                <div class="partner-logo"><i class="fa-brands fa-ibm"></i> IBM SECURITY</div>
+                <div class="partner-logo"><i class="fa-brands fa-cisco"></i> CISCO SYSTEMS</div>
+                <div class="partner-logo"><i class="fa-brands fa-aws"></i> AMAZON AWS</div>
+                <div class="partner-logo"><i class="fa-brands fa-google"></i> GOOGLE CLOUD</div>
+                <div class="partner-logo"><i class="fa-brands fa-microsoft"></i> MICROSOFT AZURE</div>
+                <div class="partner-logo"><i class="fa-brands fa-ibm"></i> IBM SECURITY</div>
+                <div class="partner-logo"><i class="fa-brands fa-cisco"></i> CISCO SYSTEMS</div>
+            </div>
+        </div>
+
+        <section class="about section" id="about">
+            <div class="container about-container">
+                <div class="section-header text-center">
+                    <span class="section-subtitle">АРХИТЕКТУРА</span>
+                    <h2 class="section-title">КАК РАБОТАЕТ <span class="highlight">NEXUS</span></h2>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="about-grid">
+                    <div class="feature-card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="card-title">ИИ-Аналитика</h3>
+                        <p class="card-text">
+                            Наши алгоритмы обучаются на миллионах инцидентов ежедневно, предсказывая векторы атак zero-day.
+                        </p>
+                        <ul class="card-list">
+                            <li><i class="fa-solid fa-check"></i> Предиктивный анализ</li>
+                            <li><i class="fa-solid fa-check"></i> Нейросетевая фильтрация</li>
+                            <li><i class="fa-solid fa-check"></i> Самообучение</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card active-card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                        <h3 class="card-title">Децентрализация</h3>
+                        <p class="card-text">
+                            Распределенная сеть узлов обеспечивает отказоустойчивость 99.999% даже при массированных DDoS атаках.
+                        </p>
+                        <ul class="card-list">
+                            <li><i class="fa-solid fa-check"></i> Блокчейн валидация</li>
+                            <li><i class="fa-solid fa-check"></i> Глобальные ноды</li>
+                            <li><i class="fa-solid fa-check"></i> Отсутствие единой точки отказа</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="card-icon">
+                            <i class="fa-solid fa-fingerprint"></i>
+                        </div>
+                        <h3 class="card-title">Биометрия</h3>
+                        <p class="card-text">
+                            Многофакторная аутентификация нового поколения: от сетчатки глаза до поведенческого анализа.
+                        </p>
+                        <ul class="card-list">
+                            <li><i class="fa-solid fa-check"></i> Face ID 3D</li>
+                            <li><i class="fa-solid fa-check"></i> Голосовой ключ</li>
+                            <li><i class="fa-solid fa-check"></i> Анализ паттернов ввода</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="solutions section bg-darker" id="solutions">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">ИНСТРУМЕНТАРИЙ</span>
+                    <h2 class="section-title">МОДУЛИ ЗАЩИТЫ</h2>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs-header">
+                        <div class="tab-btn active-tab" data-tab="#tab-1">
+                            <i class="fa-solid fa-server"></i> Cloud Shield
+                        </div>
+                        <div class="tab-btn" data-tab="#tab-2">
+                            <i class="fa-solid fa-database"></i> SQL Armor
+                        </div>
+                        <div class="tab-btn" data-tab="#tab-3">
+                            <i class="fa-solid fa-envelope-open-text"></i> Email Guard
+                        </div>
+                        <div class="tab-btn" data-tab="#tab-4">
+                            <i class="fa-solid fa-mobile-screen"></i> Mobile Sec
+                        </div>
+                    </div>
+
+                    <div class="tabs-content">
+                        <div class="tab-pane active-content" id="tab-1">
+                            <div class="tab-grid">
+                                <div class="tab-text">
+                                    <h3>Облачный Щит Эволюции</h3>
+                                    <p>Полная изоляция ваших облачных ресурсов. Мы создаем виртуальный "купол", который фильтрует входящий трафик.</p>
+                                    <div class="progress-block">
+                                        <div class="progress-label">
+                                            <span>Эффективность фильтрации</span>
+                                            <span>99%</span>
+                                        </div>
+                                        <div class="progress-bar"><span style="width: 99%"></span></div>
+                                    </div>
+                                    <a href="#" class="btn-text">Узнать больше <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                                <div class="tab-image">
+                                    <div class="code-window">
+                                        <div class="code-header">
+                                            <span class="dot red"></span>
+                                            <span class="dot yellow"></span>
+                                            <span class="dot green"></span>
+                                        </div>
+                                        <div class="code-body">
+                                            <pre>
+<span class="keyword">function</span> <span class="function">initCloudShield</span>() {
+  <span class="const">const</span> traffic = <span class="method">monitor</span>(端口: 443);
+  <span class="keyword">if</span> (traffic.isMalicious) {
+     <span class="method">blockIP</span>(traffic.source);
+     <span class="return">return</span> <span class="string">"Threat Eliminated"</span>;
+  }
+}
+                                            </pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="tab-2">
+                            <div class="tab-grid">
+                                <div class="tab-text">
+                                    <h3>SQL Инъекции? В прошлом.</h3>
+                                    <p>Автоматическое санирование всех запросов к базам данных. Работает с MySQL, PostgreSQL, MongoDB.</p>
+                                    <div class="progress-block">
+                                        <div class="progress-label">
+                                            <span>Скорость обработки</span>
+                                            <span>0.02ms</span>
+                                        </div>
+                                        <div class="progress-bar"><span style="width: 95%"></span></div>
+                                    </div>
+                                    <a href="#" class="btn-text">Узнать больше <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                                <div class="tab-image">
+                                    <div class="mockup-db">
+                                        <i class="fa-solid fa-database fa-5x"></i>
+                                        <div class="shield-overlay"><i class="fa-solid fa-check"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="tab-3">
+                            <div class="tab-grid">
+                                <div class="tab-text">
+                                    <h3>Защита Корпоративной Почты</h3>
+                                    <p>Анти-фишинг модуль, анализирующий заголовки писем и вложения в песочнице.</p>
+                                    <a href="#" class="btn-text">Узнать больше <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab-4">
+                            <div class="tab-grid">
+                                <div class="tab-text">
+                                    <h3>Мобильная Безопасность</h3>
+                                    <p>SDK для iOS и Android. Защита приложений от реверс-инжиниринга.</p>
+                                    <a href="#" class="btn-text">Узнать больше <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing section" id="pricing">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-subtitle">СТОИМОСТЬ</span>
+                    <h2 class="section-title">ВЫБЕРИТЕ УРОВЕНЬ ЗАЩИТЫ</h2>
+                </div>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>STARTUP</h3>
+                            <div class="price">
+                                <span class="currency">$</span>
+                                <span class="amount">49</span>
+                                <span class="period">/мес</span>
+                            </div>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><i class="fa-solid fa-check"></i> 1 Веб-сайт</li>
+                            <li><i class="fa-solid fa-check"></i> Базовая защита от DDoS</li>
+                            <li><i class="fa-solid fa-check"></i> SSL Сертификат</li>
+                            <li class="disabled"><i class="fa-solid fa-xmark"></i> Техподдержка 24/7</li>
+                            <li class="disabled"><i class="fa-solid fa-xmark"></i> AI Мониторинг</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline full-width">Выбрать</a>
+                    </div>
+
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">РЕКОМЕНДУЕМ</div>
+                        <div class="pricing-header">
+                            <h3>BUSINESS</h3>
+                            <div class="price">
+                                <span class="currency">$</span>
+                                <span class="amount">199</span>
+                                <span class="period">/мес</span>
+                            </div>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><i class="fa-solid fa-check"></i> До 10 Веб-сайтов</li>
+                            <li><i class="fa-solid fa-check"></i> Продвинутая DDoS защита</li>
+                            <li><i class="fa-solid fa-check"></i> Wildcard SSL</li>
+                            <li><i class="fa-solid fa-check"></i> Техподдержка 24/7</li>
+                            <li class="disabled"><i class="fa-solid fa-xmark"></i> Персональный менеджер</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary full-width">Выбрать</a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>ENTERPRISE</h3>
+                            <div class="price">
+                                <span class="currency">$</span>
+                                <span class="amount">999</span>
+                                <span class="period">/мес</span>
+                            </div>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><i class="fa-solid fa-check"></i> Безлимитные домены</li>
+                            <li><i class="fa-solid fa-check"></i> Защита уровня L7</li>
+                            <li><i class="fa-solid fa-check"></i> Аудит кода</li>
+                            <li><i class="fa-solid fa-check"></i> Приоритетная поддержка</li>
+                            <li><i class="fa-solid fa-check"></i> Персональный менеджер</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline full-width">Связаться</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq section bg-darker" id="faq">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Вопросы и Ответы</h2>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            Как быстро подключается система?
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Подключение происходит через DNS-записи. Обычно это занимает от 15 минут до 1 часа для глобального обновления.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            Влияет ли защита на скорость сайта?
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Напротив, благодаря нашей CDN сети, ваш сайт будет загружаться быстрее для пользователей из любой точки мира.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            Есть ли гарантия возврата средств?
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Да, мы предоставляем 30-дневную гарантию возврата средств на тарифах Startup и Business.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer" id="contact">
+            <div class="container footer-container">
+                <div class="footer-top">
+                    <div class="footer-brand">
+                        <a href="#" class="logo">
+                            <i class="fa-solid fa-shield-virus"></i> NEXUS
+                        </a>
+                        <p>Ваша цифровая крепость в океане информации.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fa-brands fa-github"></i></a>
+                            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Компания</h4>
+                        <ul>
+                            <li><a href="#">О нас</a></li>
+                            <li><a href="#">Карьера</a></li>
+                            <li><a href="#">Новости</a></li>
+                            <li><a href="#">Партнеры</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Продукт</h4>
+                        <ul>
+                            <li><a href="#">Функции</a></li>
+                            <li><a href="#">Интеграции</a></li>
+                            <li><a href="#">API Документация</a></li>
+                            <li><a href="#">Статус серверов</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-newsletter">
+                        <h4>Подписка</h4>
+                        <p>Получайте отчеты об уязвимостях.</p>
+                        <form action="#" class="newsletter-form">
+                            <input type="email" placeholder="Ваш Email" required>
+                            <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2023 NEXUS Security Systems. Все права защищены.</p>
+                    <div class="legal-links">
+                        <a href="#">Политика конфиденциальности</a>
+                        <a href="#">Условия использования</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <a href="#" class="scroll-up" id="scroll-up">
+            <i class="fa-solid fa-arrow-up"></i>
+        </a>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
