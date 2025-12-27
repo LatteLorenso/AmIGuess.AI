@@ -1,50 +1,76 @@
-/* ===============================
-   CSS VARIABLES (DC THEME)
-================================ */
+/* ====== CSS VARIABLES ====== */
 :root {
-  /* === BACKGROUND === */
-  --bg-main: #05080f;          /* основной фон */
-  --bg-secondary: #15171d;     /* секции / панели */
-  --bg-tertiary: #020617;      /* глубокий тёмный */
-  --bg-glass: rgba(11, 18, 32, 0.7);
+    /* ===== ОСНОВНОЙ ФОН ===== */
+    --color-bg-main: #05060a;          /* основной фон сайта */
+    --color-bg-secondary: #0a0d14;     /* секции с акцентом */
+    --color-bg-glass: rgba(255,255,255,0.03); /* стеклянные карточки */
 
-  /* === TEXT === */
-  --text-primary: #e6edf7;     /* основной текст */
-  --text-secondary: #9aa4b2;   /* подписи, описания */
-  --text-muted: #6b7280;       /* вторичный */
+    /* ===== BRAND / CORE COLOR ===== */
+    --color-brand-primary: #ff7f50;      /* яркий коралловый — броский, но приятный */
+    --color-brand-second: #1e90ff;       /* насыщенный синий для акцентов */
+    --color-brand-soft: rgba(255,127,80,0.15); /* мягкое свечение */
+    --color-brand-glow: 0 0 30px rgba(255,127,80,0.35); /* сильный акцент glow */
 
-  /* === ACCENTS (AI SHIELD) === */
-  --accent-cyan: #22d3ee;      /* главный акцент */
-  --accent-blue: #38bdf8;      /* hover / links */
-  --accent-purple: #8b5cf6;   /* AI / нейросети */
-  --accent-green: #4ade80;    /* success / secure */
-  --accent-red: #fb7185;      /* alert / danger */
+    /* ===== ТЕКСТ ===== */
+    --color-text-main: #e6e9f0;        /* основной текст */
+    --color-text-muted: #9aa3b2;       /* второстепенный текст */
+    --color-text-dim: #7b8291;         /* подсказки, мелкий текст */
 
-  /* === GLOW === */
-  --glow-cyan: rgba(34, 211, 238, 0.45);
-  --glow-blue: rgba(56, 189, 248, 0.45);
-  --glow-purple: rgba(139, 92, 246, 0.45);
-  --glow-green: rgba(74, 222, 128, 0.4);
-  --glow-red: rgba(251, 113, 133, 0.45);
+    /* ===== АКЦЕНТЫ (AM – I – GUESS – ?) ===== */
+    --color-accent-am: #00eaff;        /* AM — существование */
+    --color-accent-i: #9b5cff;         /* I — интеллект / AI */
+    --color-accent-guess: #00ffb3;     /* GUESS — вероятность */
+    --color-accent-question: #ff4d4d;  /* ? — неопределенность */
 
-  /* === UI / BORDERS === */
-  --border-soft: rgba(148, 163, 184, 0.12);
-  --border-hard: rgba(148, 163, 184, 0.25);
+    /* ===== КНОПКИ ===== */
+    --color-btn-primary: #00eaff;      /* фон основной кнопки */
+    --color-btn-primary-darker: #00eaffd8;
+    /* --color-btn-shadow: ; */
+    --color-btn-second: #9b5cff;       /* фон / граница второстепенной кнопки */
+    --color-btn-second-darker: #9b5cffd8;
+    --color-btn-text: #05060a;         /* цвет текста на кнопках */
 
-  /* === FX === */
-  --noise-opacity: 0.04;
-  --scanline-opacity: 0.05;
-  --blur-amount: 12px;
+    /* ===== ГРАНИЦЫ / ЛИНИИ ===== */
+    --color-border-soft: rgba(255,255,255,0.08);
+    --color-border-strong: rgba(255,255,255,0.15);
+
+    /* ===== ЭФФЕКТЫ ===== */
+    --glow-cyan: 0 0 20px rgba(0,234,255,0.25);
+    --glow-green: 0 0 20px rgba(0,255,179,0.25);
+    --glow-purple: 0 0 20px rgba(155,92,255,0.25);
+
+    /* ===== ШРИФТЫ ===== */
+    --body-font: 'Rajdhani', sans-serif;
+    --code-font: 'JetBrains Mono', monospace;
+
+    /* ===== РАДИУСЫ ===== */
+    --radius-sm: 2px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+
+    /* ===== АНИМАЦИИ ===== */
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.35s ease;
+    --transition-slow: 0.6s ease;
+
+    /* ===== Отступы ===== */
+    --header-height: 4.5rem;
 }
 
-/* ===============================
-   RESET & BASE
-================================ */
-*
+
+/* ====== RESET & BASE ====== */
+*,
+*::before,
+*::after
 {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+::selection {
+    background-color: var(--color-accent-guess);
+    color: #000;
 }
 
 html
@@ -54,19 +80,40 @@ html
 
 body
 {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-primary);
+    font-family: var(--body-font);
+    background-color: var(--color-bg-main);
+    color: var(--color-text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
 }
+
+/* ====== GENERAL ELEMENTS ====== */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
 
 /* ===============================
    CONTAINER
 ================================ */
 .container
 {
-    max-width: 1200px;
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
+    width: 100%;
+    padding: 0 24px;
+}
+
+.section {
+    padding: 5rem 0 2rem;
 }
 
 /* ===============================
@@ -77,82 +124,101 @@ header
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: var(--bg-secondary);
+    background-color: var(--color-bg-secondary);
     backdrop-filter: blur(20px);
-}
-
-nav
-{
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 0 24px;
 }
 
 .logo
 {
-    color: var(--dc-bright-yellow);
+    color: var(--color-text-second);
     font-size: 24px;
     font-weight: bold;
     text-decoration: none;
     transition: color 0.2s ease;
+    white-space: nowrap;
+    line-height: 1.6;
+}
+
+.logo span {
+    color: var(--color-brand-second);
+}
+
+.logo:hover {
+    color: var(--color-brand-second);
+}
+
+nav
+{
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 15px 0 15px 0;
+    background: var(--color-bg-glass);
 }
 
 nav ul
 {
     display: flex;
     align-items: center;
+    gap: 20px;
     list-style: none;
-    gap: 25px;
 }
 
-nav ul li a
-{
-    color: var(--dc-light-gray);
+nav ul li a {
+    position: relative;
+    color: var(--color-text-main);
     text-decoration: none;
-    transition: color 0.3s;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
 }
 
-nav ul li a:hover
-{
-    color: var(--dc-bright-yellow);
+nav ul li a:hover {
+    color: var(--color-brand-second);
 }
 
-.login
+nav ul li a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-brand-second);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.3s ease;
+}
+
+nav ul li a:hover::after {
+    transform: scaleY(1);
+}
+
+.login,
+.logout
 {
-    background-color: var(--dc-bright-yellow);
-    color: var(--dc-dark-blue);
-    border: none;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text);
+    border: 2px solid var(--color-border-soft);
     padding: 8px 20px;
-    border-radius: var(--radius);
     font-weight: bold;
     cursor: pointer;
     font-size: 15px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease, border 0.2s ease;
 }
 
-.login:hover {
-    background-color: var(--dc-dark-blue);
-    color: var(--dc-bright-yellow);
-}
-
-.logout {
-    background-color: var(--dc-bright-yellow);
-    color: var(--dc-dark-blue);
-    border: none;
-    padding: 8px 20px;
-    border-radius: var(--radius);
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 15px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
+.login:hover, 
 .logout:hover {
-    background-color: var(--dc-dark-blue);
-    color: var(--dc-bright-yellow);
+    background-color: var(--color-bg-glass);
+    border: 2px solid var(--color-brand-second);
 }
 
+/* ====== MODAL WINDOW ====== */
 .modal {
     display: none; /* скрыто по умолчанию */
     position: fixed;
@@ -205,8 +271,7 @@ nav ul li a:hover
     color: var(--dc-dark-blue);
 }
 
-/* Контейнер для аккаунта */
-
+/* ====== Контейнер для аккаунта ====== */
 .container-user {
     display: flex;
     flex-direction: row;
@@ -226,4 +291,322 @@ nav ul li a:hover
     height: 50px;
     align-items: center;
     border-radius: 50%;
+}
+
+/* ====== MAIN SECTION: HERO ====== */
+.hero-container {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: center;
+    margin-top: -50px;
+    min-height: calc(100vh - var(--header-height));
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex-wrap: wrap;
+}
+
+.hero-title {
+    font-size: 4rem;
+    color: var(--color-text-main);
+    line-height: 1.2;
+}
+
+/* Для плавного появления при анимации typewriter */
+.typewriter {
+    color: var(--color-accent-am);
+}
+
+.cursor {
+    font-size: 4rem;
+    margin-bottom: 40px;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.hero-description {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+    max-width: 450px;
+}
+
+.hero-CTM {
+    margin-top: 0.950rem;
+    display: flex;
+    justify-content: left;
+}
+
+.hero-CTM .btn-primary {
+    background: var(--color-btn-primary);
+    color: var(--color-btn-text);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--code-font);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.975rem;
+    padding: 10px 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--color-btn-primary-darker);
+    box-shadow: var(--glow-cyan);
+}
+
+.hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-item {
+    font-size: 14px;
+    text-align: left;
+    padding-left: 15px;
+}
+
+.stat-item i {
+    color: var(--color-accent-question);
+}
+
+/* ====== MAIN SECTION: TEXT-SLIDER ====== */
+.slider-section {
+    background: var(--color-bg-secondary);
+    padding: 30px;
+    overflow: hidden;
+    border-top: 1px solid var(--color-border-soft);
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.slider-container {
+    display: flex;
+    flex-direction: row;
+    gap: 64px;
+    width: max-content;
+    animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.text-slide {
+    font-size: 19px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.text-slide:hover {
+    color: var(--color-text-main);
+    text-shadow: var(--color-brand-glow);
+}
+
+/* ====== MAIN SECTION: CARD ====== */
+.card-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-title {
+    display: flex;
+    flex-direction: row;
+    white-space: pre;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-title span {
+    color: var(--color-accent-guess);
+}
+
+.card-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 48px;
+}
+
+.card,
+.card-active {
+    background: var(--color-bg-secondary);
+    padding: 40px;
+    border: 1px solid var(--color-border-soft);
+    transition: transform 0.3s ease;
+    animation: fadeInLeft 2s ease-out;
+    overflow: hidden;
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(500px);
+    }
+    90% {
+        opacity: 0.9;
+        transform: translateX(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.card-icon {
+    margin-bottom: 1rem;
+    color: var(--color-accent-guess);
+}
+
+.card-title {
+    margin-bottom: 1.5rem;
+    font-size: 20px;
+}
+
+.card-subtitle {
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.card-list span i {
+    font-size: 0.8rem;
+    color: var(--color-accent-guess);
+}
+
+.card-list li {
+    color: var(--color-text-dim);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--color-accent-guess);
+    transition: height 0.4s ease;
+}
+
+.card-active {
+    border-left: 3px solid var(--color-accent-guess);
+}
+
+.card:hover,
+.card-active:hover {
+    transform: translateY(-10px);
+}
+
+.card:hover::before {
+    height: 100%;
+}
+
+/* ====== MAIN SECTION: START-FORECAST ====== */
+.forecast-section {
+    background: var(--color-bg-secondary);
+}
+
+.forecast-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.forecast-title {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    font-size: 32px;
+    text-transform: uppercase;
+    margin-bottom: -20px;
+}
+
+.forecast-description {
+    color: var(--color-text-muted);
+    padding: 0 0 0 15px;
+}
+
+.loading-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.forecast-load-text {
+    font-size: 20px;
+}
+
+.cursor2 {
+    font-size: 24px;
+    margin-bottom: 40px;
+    animation: blink 0.8s step-end infinite;
+}
+
+.btn-secondary {
+    margin: 0 auto;
+    background: var(--color-btn-second-darker);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--code-font);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.975rem;
+    padding: 10px 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    cursor: not-allowed;
+}
+
+.btn-secondary:hover {
+    background: var(--color-btn-second-darker);
+    box-shadow: var(--color-btn-second-darker);
 }
