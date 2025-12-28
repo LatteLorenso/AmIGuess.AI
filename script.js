@@ -1,114 +1,94 @@
-/* =========================
-   USERS / ROLES
-========================= */
+// Загрузка
+const messages = [
+    "АНАЛИЗ ВЕРОЯТНОСТЕЙ...",
+    "ПОСТРОЕНИЕ МОДЕЛИ БУДУЩЕГО...",
+    "РАСЧЁТ НАИБОЛЕЕ ВЕРОЯТНОГО ИСХОДА..."
+];
 
-// Получаем элементы
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const accountBtns = document.querySelector(".container-user");
-const modal = document.getElementById("loginModal");
-const closeBtn = document.querySelector(".close");
-const changeForAdmin = document.querySelector(".btn-delete");
-const loginForm = document.getElementById("loginForm");
+const loader = document.getElementById("page-loader");
+const textEl = document.getElementById("loading-text");
+const siteContent = document.getElementById("site-content");
 
-let currentUser = null;
+const loaderText = document.querySelector('.loader-text');
+let index = 0;
 
-// Открытие модального окна
-loginBtn.addEventListener("click", () => {
-    modal.style.display = "block";
-});
+loaderText.textContent = messages[index];
+loaderText.classList.add('fade-in');
 
-// Закрытие при клике на X
-closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-});
+const textInterval = setInterval(() => {
+    loaderText.classList.remove('fade-in');
+    loaderText.classList.add('fade-out');
 
-// Закрытие при клике вне окна
-window.addEventListener("click", (e) => {
-    if (e.target === modal) {
-        modal.style.display = "none";
-    }
-});
+    setTimeout(() => {
+        index++;
 
-// Логика логина
-loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+        // ЕСЛИ СООБЩЕНИЯ ЗАКОНЧИЛИСЬ
+        if (index >= messages.length) {
+            clearInterval(textInterval);
+            loader.classList.add('done');
 
-    // Простая проверка
-    if (username === "admin" && password === "admin123") {
-        currentUser = "admin";
-        alert("Вы вошли как Админ");
-        modal.style.display = "none";
-        updateUIAfterLogin();
-        // Здесь можно показать админские кнопки
-    } else if (username === "user" && password === "1234") {
-        currentUser = "user";
-        alert("Вы вошли как Пользователь");
-        modal.style.display = "none";
-        updateUIAfterLogin();
-        // Здесь можно скрыть админские кнопки
-    } else {
-        alert("Неверный логин или пароль");
-    }
+            // финальная пауза перед показом сайта
+            setTimeout(() => {
+                loader.classList.add('fade-out');
 
-    loginForm.reset();
-});
+                setTimeout(() => {
+                    loader.remove();
+                    siteContent.style.display = 'block';
+                    siteContent.classList.add('fade-in');
+                }, 600);
 
-// Функция обновления UI после входа
-function updateUIAfterLogin() {
-    loginBtn.style.display = "none"; // скрываем кнопку "Войти"
-    console.log(accountBtns); // должен показать DOM-элемент
-    accountBtns.style.display = "flex"; // попробуй показать вручную
-    userRoleSpan.textContent = currentUser.toUpperCase();
+            }, 1200);
 
-    
-    if (currentUser = "admin") {
-        changeForAdmin.style.display = "inline-block";
-    } else if (currentUser = "user") {
-        changeForAdmin.style.display = "none";
+            return;
+        }
+
+        // обычная смена текста
+        loaderText.textContent = messages[index];
+        loaderText.classList.remove('fade-out');
+        loaderText.classList.add('fade-in');
+
+    }, 300);
+
+}, 1500);
+
+// Matrix
+const canvas = document.getElementById("matrix-bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const letters = "01АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯabcdefghijklmnopqrstuvwxyz";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for (let x = 0; x < columns; x++) {
+    drops[x] = Math.random() * canvas.height;
+}
+
+function draw() {
+    ctx.fillStyle = "rgba(0,0,0,0.05)"; // для эффекта затухания
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ffb3"; // зелёный цвет кода
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i]);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+
+        drops[i] += fontSize;
     }
 }
 
-// Логика выхода
-logoutBtn.addEventListener("click", () => {
-    currentUser = null;
-    loginBtn.style.display = "block";
-    accountBtns.style.display = "none";
-    alert("Вы вышли из аккаунта");
+setInterval(draw, 50);
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 });
-
-/* ФОРМА */
-
-function handleContact(event) {
-    event.preventDefault(); // предотвращаем перезагрузку страницы
-
-    const form = event.target;
-    const name = form.querySelector(".form-input[type='text']").value;
-    const email = form.querySelector(".form-input[type='email']").value;
-    const subject = form.querySelector(".form-input[type='text']:nth-child(2)").value;
-    const message = form.querySelector(".form-textarea").value;
-
-    if (!name || !email || !subject || !message) {
-        alert("Пожалуйста, заполните все поля!");
-        return;
-    }
-
-    // Данные формы в объект
-    const formData = { name, email, subject, message };
-
-    // Получаем старые записи из localStorage или создаём массив
-    let allContacts = JSON.parse(localStorage.getItem("contacts")) || [];
-
-    // Добавляем новые данные
-    allContacts.push(formData);
-
-    // Сохраняем обратно в localStorage
-    localStorage.setItem("contacts", JSON.stringify(allContacts));
-
-    console.log("Форма отправлена:", formData);
-    alert(`Спасибо, ${name}! Ваше сообщение отправлено и сохранено.`);
-
-    form.reset();
-}

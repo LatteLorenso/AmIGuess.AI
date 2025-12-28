@@ -8,64 +8,78 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+
+    <!-- ====== PAGE LOADER ====== -->
+    <div id="page-loader">
+        <div class="loader-core">
+            <span class="ring ring-1"></span>
+            <span class="ring ring-2"></span>
+            <span class="core"></span>
+            <span class="loader-check">
+                <i class="fa-solid fa-check"></i>
+            </span>
+        </div>
+        <div class="loader-text" id="loading-text">
+            Идёт инициализация
+        </div>
+    </div>
     
-    <!-- ======================================================
-    BACKGROUND LAYER: Am I Guess ? + Matrix Rain
-    ====================================================== -->
-    <!-- <div class="background-title">
-        <span class="bg-word bg-am">AM</span>
-        <span class="bg-word bg-i">I</span>
-        <span class="bg-word bg-guess">GUESS</span>
-        <span class="bg-word bg-question">?</span>
-    </div>
-
-    <canvas id="matrix-bg"></canvas> -->
-
-    <!-- ====== HEADER: NAVIGATION + LOG IN/LOG OUT ====== -->
-    <header>
-        <div class="logo-container">
-            <a href="#main" class="logo">AmIGuess<span>.AI</span></a>
+    <div id="site-content" style="display: none;">
+        
+        <!-- ====== BACKGROUND LAYER: Am I Guess ? + Martix ====== -->
+        <div class="background-title">
+            <span class="bg-word bg-am">AM</span>
+            <span class="bg-word bg-i">I</span>
+            <span class="bg-word bg-guess">GUESS</span>
+            <span class="bg-word bg-question">?</span>
+        </div>
+    
+        <canvas id="matrix-bg"></canvas>
+    
+        <!-- ====== HEADER: NAVIGATION + LOG IN/LOG OUT ====== -->
+        <header>
+            <div class="logo-container">
+                <a href="#main" class="logo">AmIGuess<span>.AI</span></a>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#catalog">Главная</a></li>
+                    <li><a href="#shield">Щит</a></li>
+                    <li><a href="#analytics">Аналитика</a></li>
+                    <li><a href="#contacts">FAQ</a></li>
+                </ul>
+            </nav>
+            
+            <div>
+                <li class="container-user" style="display: none;">
+                    <img src="public/card-pic/avatar.jpg" class="avatar">
+                    <h4 class="user-name">Rachel Dawes</h4>
+                    <button class="logout" id="logoutBtn">Выход из системы</button>
+                </li>
+                    <button class="login" id="loginBtn">Вход в систему</button>
+            </div>
+        </header>
+    
+        <!-- ====== MODAL WINDOW FOR LOG IN ====== -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Вход в систему</h2>
+                <form id="loginForm">
+                    <label for="username">Логин</label>
+                    <input type="text" id="username" placeholder="Введите логин" required>
+                    
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" placeholder="Введите пароль" required>
+                    
+                    <button type="submit">Войти</button>
+                </form>
+            </div>
         </div>
         
-        <nav>
-            <ul>
-                <li><a href="#catalog">Главная</a></li>
-                <li><a href="#shield">Щит</a></li>
-                <li><a href="#analytics">Аналитика</a></li>
-                <li><a href="#contacts">FAQ</a></li>
-            </ul>
-        </nav>
-        
-        <div>
-            <li class="container-user" style="display: none;">
-                <img src="public/card-pic/avatar.jpg" class="avatar">
-                <h4 class="user-name">Rachel Dawes</h4>
-                <button class="logout" id="logoutBtn">Выход из системы</button>
-            </li>
-                <button class="login" id="loginBtn">Вход в систему</button>
-        </div>
-    </header>
-
-    <!-- ====== MODAL WINDOW FOR LOG IN ====== -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Вход в систему</h2>
-            <form id="loginForm">
-                <label for="username">Логин</label>
-                <input type="text" id="username" placeholder="Введите логин" required>
-                
-                <label for="password">Пароль</label>
-                <input type="password" id="password" placeholder="Введите пароль" required>
-                
-                <button type="submit">Войти</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- ====== MAIN SECTIONS ====== -->
+        <!-- ====== MAIN SECTIONS ====== -->
         <main id="main">
-
             <!-- ====== MAIN SECTION: HERO ====== -->
             <section class="hero section">
                 <div class="container hero-container">
@@ -230,10 +244,10 @@
                     </div>
                 </div>
             </section>
-        </main>
+            </min>
 
-        <!-- ====== FOOTER SECTION ====== -->
-        <footer id="contact">
+            <!-- ====== FOOTER SECTION ====== -->
+            <foter id="contact">
             <div class="container footer-container">
             <!-- Верхняя часть футера -->
                 <div class="footer-top">
@@ -288,7 +302,8 @@
                     <a href="#">Условия использования</a>
                 </div>
             </div>
-        </footer>
+            </footer>
+    </div>
 
 <script src="script.js"></script>
 <script src="products.js"></script>
