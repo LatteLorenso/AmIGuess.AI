@@ -51,6 +51,8 @@ const textInterval = setInterval(() => {
 
 }, 1500);
 
+// Курсор
+
 
 // Matrix
 const canvas = document.getElementById("matrix-bg");
