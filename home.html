@@ -85,10 +85,12 @@
                 <div class="container hero-container">
                     <div class="hero-content">
                         <h1 class="hero-title">
-                            Когда данные не дают ответа
+                            Когда данные <br>не дают ответа
                         </h1>
-                            <span class="typewriter" data-text="AmIGuess строит прогноз будущего,AmIGuess анализирует тренды за вас,AmIGuess находит скрытые закономерности"></span>
+                        <div class="typewriter-container">
+                            <span class="typewriter-text" data-text="AmIGuess строит прогноз будущего,AmIGuess анализирует тренды за вас,AmIGuess находит скрытые закономерности"></span>
                             <span class="cursor">|</span>
+                        </div>
                         <p class="hero-description">
                             AI анализирует миллионы данных и строит прогнозы там, где обычные показатели молчат. <br>AmIGuess превращает неизвестное в решение.
                         </p>
@@ -96,17 +98,6 @@
                             <a href="#start-forecast" class="btn btn-primary">
                                 <i class="fa-solid fa-rocket"></i>Запустить прогноз
                             </a>
-                        </div>
-                        <div class="hero-stats section">
-                            <div class="stat-item">
-                                <h3 class="stat" data-target="AI Core ">AI Core <i class="fa-solid fa-circle fa-sm"></i></h3>
-                            </div>
-                            <div class="stat-item">
-                                <h3 class="stat" data-target="Потоки данных: активны">Потоки данных: неактивны</h3>
-                            </div>
-                            <div class="stat-item">
-                                <h3 class="stat" data-target="Обновление модели: в реальном времени"></h3>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -116,19 +107,20 @@
             <!-- ====== MAIN SECTION: TEXT-SLIDER ====== -->
             <section class="slider-section section">
                 <div class="slider-container">
-                    <div class="text-slide"><i class="fa-brands fa-google"></i>Google Cloud</div>
-                    <div class="text-slide"><i class="fa-brands fa-microsoft"></i>MICROSOFT AZURE</div>
-                    <div class="text-slide"><i class="fa-brands fa-amazon"></i>AMAZON AWS</div>
-                    <div class="text-slide"><i class="fa-solid fa-shield"></i>IBM Security</div>
-                    <div class="text-slide"><i class="fa-solid fa-chart-column"></i>CISCO SYSTEMS</div>
-                    <div class="text-slide"><i class="fab fa-github fa-lg"></i>GitHub</div>
+                    <span class="text-slide"><i class="fa-brands fa-google"></i>Google Cloud</span>
+                    <span class="text-slide"><i class="fa-brands fa-microsoft"></i>MICROSOFT AZURE</span>
+                    <span class="text-slide"><i class="fa-brands fa-amazon"></i>AMAZON AWS</span>
+                    <span class="text-slide"><i class="fa-solid fa-shield"></i>IBM Security</span>
+                    <span class="text-slide"><i class="fa-solid fa-chart-column"></i>CISCO SYSTEMS</span>
+                    <span class="text-slide"><i class="fab fa-github fa-lg"></i>GitHub</span>
                     <!-- Дублируем -->
-                    <div class="text-slide"><i class="fa-brands fa-google"></i>Google Cloud</div>
-                    <div class="text-slide"><i class="fa-brands fa-microsoft"></i>MICROSOFT AZURE</div>
-                    <div class="text-slide"><i class="fa-brands fa-amazon"></i>AMAZON AWS</div>
-                    <div class="text-slide"><i class="fa-solid fa-shield"></i>IBM Security</div>
-                    <div class="text-slide"><i class="fa-solid fa-chart-column"></i>CISCO SYSTEMS</div>
-                    <div class="text-slide"><i class="fab fa-github fa-lg"></i>GitHub</div>
+                    <span class="text-slide"><i class="fa-brands fa-google"></i>Google Cloud</span>
+                    <span class="text-slide"><i class="fa-brands fa-microsoft"></i>MICROSOFT AZURE</span>
+                    <span class="text-slide"><i class="fa-brands fa-amazon"></i>AMAZON AWS</span>
+                    <span class="text-slide"><i class="fa-solid fa-shield"></i>IBM Security</span>
+                    <span class="text-slide"><i class="fa-solid fa-chart-column"></i>CISCO SYSTEMS</span>
+                    <span class="text-slide"><i class="fab fa-github fa-lg"></i>GitHub</span>
+                    
                 </div>
             </section>
 
@@ -176,32 +168,37 @@
             </section>
 
             <!-- ====== MAIN SECTION: START-FORECAST ====== -->
-            <section class="forecast-section section" id="start-forecast">
+            <section class="forecast-section" id="start-forecast">
                 <div class="container forecast-container">
                     <h2 class="forecast-title">Старт прогноза</h2>
                     <p class="forecast-description">AI анализирует данные и строит прогноз на основе ваших показателей.</p>
-                    <div class="loading-text">
-                        <h3 class="forecast-load-text typewriter" data-text="Анализ данных и сценариев,Построение вероятностной модели,Завершение процесса"></h3>
-                        <span class="cursor2">|</span>
+
+                    <div class="progress-block-container">
+                        <div class="percentage">
+                            <span>0%</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="loading-bar-container">
+                            <div class="loading-bar" id="forecast-loading"></div>
+                        </div>
                     </div>
-                    <div class="loading-bar-container">
-                        <div class="loading-bar" id="forecast-loading"></div>
+
+                    <div class="forecast-btn-container">
+                        <div class="forecast-btn-start">
+                            <button id="start-scan" class="btn btn-scan">Начать сканирование</button>
+                        </div>
+                        <div class="forecast-btn-result">
+                            <button id="result-scan" class="btn btn-result">Результаты сканирования</button>
+                        </div>
                     </div>
-                    <div class="forecast-result-btn">
-                        <button id="show-result" class="btn btn-secondary" disabled>Получить результат</button>
-                    </div>
+
+                    <ul id="forecast-text-result" class="forecast-text-result" style="display: none;">
+                        <li><i class="fa-solid fa-check"></i>Учтено: 3 147 892 параметра</li>
+                        <li><i class="fa-solid fa-check"></i>Обработано: 12 сценариев</li>
+                        <li><i class="fa-solid fa-check"></i>Уровень уверенности модели: высокий</li>
+                    </ul>
                 </div>
             </section>
-
-            <!-- ====== MAIN SECTION: RESULT-FORECAST ====== -->
-            <!-- <section class="result-section section">
-                <div class="container result-container">
-                    <h2 class="result-title">Результаты прогноза</h2>
-                    <p class="result-text">
-                        AI завершил анализ и подготовил прогноз на основе миллионов данных. <br>Ниже представлены ключевые показатели и результаты прогноза.
-                    </p>
-                </div>
-            </section> -->
 
             <!-- ====== MAIN SECTION: FAQ ====== -->
             <section class="faq-section section">
@@ -247,13 +244,13 @@
             </min>
 
             <!-- ====== FOOTER SECTION ====== -->
-            <foter id="contact">
+            <footer id="contact" class="section">
             <div class="container footer-container">
             <!-- Верхняя часть футера -->
                 <div class="footer-top">
                     <div class="footer-brand">
                         <a href="#main" class="logo">
-                            <h4 class="brand-title">AmIGuess</h4>
+                            <h4 class="brand-title">AmIGuess.AI</h4>
                         </a>
                             <p class="brand-subtitle">AI, который предсказывает будущее</p>
                         <div class="href-container">
