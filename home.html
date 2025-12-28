@@ -9,6 +9,10 @@
 </head>
 <body>
 
+    <!-- Курсор -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
+
     <!-- ====== PAGE LOADER ====== -->
     <div id="page-loader">
         <div class="loader-core">
@@ -58,26 +62,9 @@
                     <h4 class="user-name">Rachel Dawes</h4>
                     <button class="logout" id="logoutBtn">Выход из системы</button>
                 </li>
-                    <button class="login" id="loginBtn">Вход в систему</button>
+                    <a href="#email-form" class="login" id="loginBtn">Вход в систему</a>
             </div>
         </header>
-    
-        <!-- ====== MODAL WINDOW FOR LOG IN ====== -->
-        <div id="loginModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Вход в систему</h2>
-                <form id="loginForm">
-                    <label for="username">Логин</label>
-                    <input type="text" id="username" placeholder="Введите логин" required>
-                    
-                    <label for="password">Пароль</label>
-                    <input type="password" id="password" placeholder="Введите пароль" required>
-                    
-                    <button type="submit">Войти</button>
-                </form>
-            </div>
-        </div>
         
         <!-- ====== MAIN SECTIONS ====== -->
         <main id="main">
@@ -107,22 +94,14 @@
 
             <!-- ====== MAIN SECTION: TEXT-SLIDER ====== -->
             <section class="slider-section section">
-                <div class="slider-container">
+                <article class="slider-container">
                     <span class="text-slide"><i class="fa-brands fa-google"></i>Google Cloud</span>
                     <span class="text-slide"><i class="fa-brands fa-microsoft"></i>MICROSOFT AZURE</span>
                     <span class="text-slide"><i class="fa-brands fa-amazon"></i>AMAZON AWS</span>
                     <span class="text-slide"><i class="fa-solid fa-shield"></i>IBM Security</span>
                     <span class="text-slide"><i class="fa-solid fa-chart-column"></i>CISCO SYSTEMS</span>
                     <span class="text-slide"><i class="fab fa-github fa-lg"></i>GitHub</span>
-                    <!-- Дублируем -->
-                    <span class="text-slide"><i class="fa-brands fa-google"></i>Google Cloud</span>
-                    <span class="text-slide"><i class="fa-brands fa-microsoft"></i>MICROSOFT AZURE</span>
-                    <span class="text-slide"><i class="fa-brands fa-amazon"></i>AMAZON AWS</span>
-                    <span class="text-slide"><i class="fa-solid fa-shield"></i>IBM Security</span>
-                    <span class="text-slide"><i class="fa-solid fa-chart-column"></i>CISCO SYSTEMS</span>
-                    <span class="text-slide"><i class="fab fa-github fa-lg"></i>GitHub</span>
-                    
-                </div>
+                </article>
             </section>
 
             <!-- ====== MAIN SECTION: CARD ====== -->
@@ -284,11 +263,12 @@
                     <div class="form-container">
                         <h4>Подписка</h4>
                         <p>Подпишитесь, чтобы получать свежие прогнозы, аналитические отчёты и инсайты от AmIGuess.AI прямо на вашу почту.</p>
-                        <form action="#" class="subscribe-form">
-                            <input type="email" placeholder="Ваш Email" required>
+                        <form action="#" class="subscribe-form" id="email-form">
+                            <input type="email" placeholder="Ваш Email" required id="email-input">
                             <button type="submit"><i class="far fa-paper-plane"></i></button>
                         </form>
                     </div>
+                    <!-- <div id="toast" class="toast">Вы подписались!</div> -->
                 </div>
             </div>
 
@@ -304,6 +284,6 @@
     </div>
 
 <script src="script.js"></script>
-<script src="products.js"></script>
+<script src="cursor.js"></script>
 </body>
 </html>

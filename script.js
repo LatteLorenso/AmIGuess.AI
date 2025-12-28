@@ -37,7 +37,7 @@ const textInterval = setInterval(() => {
                     siteContent.classList.add('fade-in');
                 }, 600);
 
-            }, 1200);
+            }, 1100);
 
             return;
         }
@@ -49,9 +49,7 @@ const textInterval = setInterval(() => {
 
     }, 300);
 
-}, 1500);
-
-// Курсор
+}, 1400);
 
 
 // Matrix
@@ -241,4 +239,34 @@ btnResult.addEventListener("click", () => {
     btnStart.style.display = "none";
     btnResult.style.display = "none";
     textResult.style.display = "flex";
+});
+
+// Форма сохраняет, введенный Email
+const form = document.getElementById('email-form');
+const input = document.getElementById('email-input');
+
+// !Не закончен алёрт!
+// function showToast(subscribed) {
+//     const toast = document.getElementById('toast');
+//     // toast.textContent = subscribed;
+//     toast.classList.add('show');
+
+//     setTimeout(() => {
+//         toast.classList.remove('show');
+//     }, 2000);
+// }
+
+form.addEventListener('submit', (Event) => {
+    Event.preventDefault();
+    const email = input.value.trim();
+
+    if (email) {
+        let emails = JSON.parse(localStorage.getItem('subscribedEmails')) || []; // JSON.parse - из строки в массив
+        emails.push(email);
+        localStorage.setItem('subscribedEmails', JSON.stringify(emails)); // JSON.stringify - из массива в строку
+        console.log('Текущий список email:', emails);
+        // showToast();
+        input.value = ''; // Очищаем поле после добавления Email
+
+    }
 });
