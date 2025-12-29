@@ -264,7 +264,8 @@ form.addEventListener('submit', (Event) => {
         let emails = JSON.parse(localStorage.getItem('subscribedEmails')) || []; // JSON.parse - из строки в массив
         emails.push(email);
         localStorage.setItem('subscribedEmails', JSON.stringify(emails)); // JSON.stringify - из массива в строку
-        console.log('Текущий список email:', emails);
+        console.log('Текущий email:', email);
+        console.log('Список записанных emails:', JSON.parse(localStorage.getItem('subscribedEmails')));
         // showToast();
         input.value = ''; // Очищаем поле после добавления Email
 
