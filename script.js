@@ -241,6 +241,34 @@ btnResult.addEventListener("click", () => {
     textResult.style.display = "flex";
 });
 
+const faqCards = document.querySelectorAll('.faq-card');
+
+faqCards.forEach(card => {
+    const accordion = card.querySelector('.faq-heading');
+    const panel = card.querySelector('.panel');
+
+    accordion.addEventListener('click', () => {
+        faqCards.forEach(other => {
+            if (other !== card) {
+                other.classList.remove('active');
+                other.querySelector('.panel').style.maxHeight = null;
+            }
+        });
+
+        card.classList.toggle('active');
+
+        if (card.classList.contains('active')) {
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+        } else {
+            panel.style.maxHeight = null;
+        }
+    });
+});
+
+// accordion.addEventListener('click', () => {
+//     panel.classList.add("open");
+// })
+
 // Форма сохраняет, введенный Email
 const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');

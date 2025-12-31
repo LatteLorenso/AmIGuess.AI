@@ -960,9 +960,10 @@ nav ul li a:hover::after {
 
 .faq-card {
     background: var(--color-bg-tertiary);
-    width: 50%;
+    width: 55%;
     padding: 20px;
     border: 1px solid var(--color-border-soft);
+    transition: transform 0.6s ease;
 }
 
 .faq-heading {
@@ -987,17 +988,22 @@ nav ul li a:hover::after {
 }
 
 .panel {
+    color: var(--color-text-main);
     padding: 0 5px;
-    /* transform: translateY(-50px); */
-    /* opacity: 1; */
+    max-height: 0;
+    overflow: hidden;
     margin-top: 15px;
     overflow: hidden;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: max-height 0.4s ease;
+}
+
+.faq-card.active .fa-chevron-down {
+    transform: rotate(180deg);
 }
 
 /* !Не закончен аккордеон! */
 
-/* .panel.active {
+/* .panel.open {
     transform: translateY(0);
     opacity: 1;
 } */
