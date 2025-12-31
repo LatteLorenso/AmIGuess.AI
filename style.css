@@ -8,7 +8,7 @@
     --color-bg-tertiary: #0a0a0a;
 
     /* ===== BRAND / CORE COLOR ===== */
-    --color-brand-primary: #1e90ff;       /* насыщенный синий для акцентов */
+    --color-brand-primary: #0d6efd;       /* насыщенный синий для акцентов */
     --color-primary-glow-soft: 0 0 15px rgba(0, 234, 255, 0.3); /* слабый акцент glow */
     --color-primary-glow-strong: 0 0 50px rgba(0, 234, 255, 0.7); /* сильный акцент glow */
     --color-second-glow-soft: 0 0 15px rgba(155, 92, 255, 0.3); /* слабый акцент glow */
@@ -322,7 +322,7 @@ header
 
 .logo
 {
-    color: var(--color-text-second);
+    color: var(--color-brand-primary);
     font-size: 24px;
     font-weight: bold;
     text-decoration: none;
