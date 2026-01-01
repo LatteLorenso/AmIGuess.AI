@@ -105,7 +105,7 @@ body.hovering #cursor-outline {
 }
 
 ::selection {
-    background-color: #1e8fffe0;
+    background-color: rgba(30, 143, 255, 0.878);
     color: var(--color-text-main);
 }
 
@@ -778,7 +778,8 @@ nav ul li a:hover::after {
 
 .forecast-description {
     color: var(--color-text-muted);
-    padding: 0 0 0 15px;
+    font-size: 1.125rem;
+    padding-left: 15px;
 }
 
 /* Контейнер прогресс-бара */
@@ -913,8 +914,9 @@ nav ul li a:hover::after {
 .forecast-text-result {
     display: flex;
     flex-direction: column;
+    width: 600px;
     margin: 0 auto;
-    margin-top: -100px;
+    margin-top: -130px;
 }
 
 .forecast-text-result li {
@@ -922,12 +924,35 @@ nav ul li a:hover::after {
     align-items: center;
     gap: 10px;
     color: var(--color-text-main);
-    font-size: 24px;
+    font-size: 1.25rem;
     font-weight: 500;
 }
 
 .forecast-text-result i {
     color: var(--color-brand-primary);
+}
+
+.forecast-text-result p {
+    margin-top: 10px;
+    font-size: 1.125rem;
+    text-align: center;
+    color: var(--color-text-muted);
+}
+
+.forecast-text-result a {
+    display: inline-block;
+    color: var(--color-brand-primary);
+    text-decoration: underline;
+    transition: color 0.3s ease background 0.4s ease;
+}
+
+.forecast-text-result a:hover {
+    text-decoration: none;
+}
+
+.forecast-text-result a:active {
+    color: var(--color-text-main);
+    background: rgba(30, 143, 255, 0.878);
 }
 
 /* ====== MAIN SECTION: FAQ ====== */
