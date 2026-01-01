@@ -1,0 +1,1404 @@
+/* =========================================
+   1. ПЕРЕМЕННЫЕ И НАСТРОЙКИ (VARIABLES)
+   ========================================= */
+
+:root {
+    /* --- Цветовая палитра (Cyberpunk Theme) --- */
+    --hue: 170;
+    /* Основной оттенок (Cyan/Teal) */
+    --sat: 100%;
+    --first-color: hsl(var(--hue), var(--sat), 50%);
+    --first-color-alt: hsl(var(--hue), var(--sat), 40%);
+    --first-color-light: hsl(var(--hue), var(--sat), 70%);
+    --first-color-glow: hsla(var(--hue), var(--sat), 50%, 0.4);
+    --title-color: hsl(var(--hue), 10%, 95%);
+    --text-color: hsl(var(--hue), 5%, 75%);
+    --text-color-light: hsl(var(--hue), 5%, 60%);
+    --body-color: #050505;
+    --container-color: #0a0a0a;
+    --container-color-light: #111111;
+    --border-color: hsla(var(--hue), 20%, 30%, 0.3);
+    /* --- Шрифты --- */
+    --body-font: 'Rajdhani', sans-serif;
+    --code-font: 'JetBrains Mono', monospace;
+    --h1-font-size: 3.5rem;
+    --h2-font-size: 2.25rem;
+    --h3-font-size: 1.5rem;
+    --normal-font-size: 1rem;
+    --small-font-size: 0.875rem;
+    --smaller-font-size: 0.75rem;
+    /* --- Вес шрифта --- */
+    --font-light: 300;
+    --font-medium: 500;
+    --font-bold: 700;
+    /* --- Отступы и Z-index --- */
+    --header-height: 4.5rem;
+    --z-back: -10;
+    --z-normal: 1;
+    --z-tooltip: 10;
+    --z-fixed: 100;
+    --z-modal: 1000;
+}
+
+
+/* Адаптивная типографика */
+
+@media screen and (max-width: 992px) {
+     :root {
+        --h1-font-size: 2.5rem;
+        --h2-font-size: 1.75rem;
+        --h3-font-size: 1.25rem;
+    }
+}
+
+
+/* =========================================
+   2. БАЗОВЫЕ СТИЛИ (RESET & BASE)
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+    background-color: var(--body-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+    cursor: none;
+    /* Скрываем стандартный курсор для кастомного */
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+button,
+input {
+    border: none;
+    outline: none;
+    font-family: var(--body-font);
+}
+
+
+/* Скроллбар */
+
+::-webkit-scrollbar {
+    width: 0.6rem;
+    background-color: var(--body-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--container-color-light);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--first-color-alt);
+}
+
+
+/* Selection (выделение текста) */
+
+::selection {
+    background-color: var(--first-color);
+    color: #000;
+}
+
+
+/* =========================================
+   3. УТИЛИТАРНЫЕ КЛАССЫ (REUSABLE CSS)
+   ========================================= */
+
+.container {
+    /* max-width: 1200px; */
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+.section {
+    padding: 5rem 0 2rem;
+}
+
+.section-header {
+    margin-bottom: 3.5rem;
+    position: relative;
+}
+
+.section-title {
+    font-size: var(--h2-font-size);
+    color: var(--title-color);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.section-subtitle {
+    display: block;
+    font-family: var(--code-font);
+    color: var(--first-color);
+    font-size: var(--small-font-size);
+    margin-bottom: 0.5rem;
+    letter-spacing: 4px;
+}
+
+.highlight {
+    color: var(--first-color);
+    text-shadow: 0 0 10px var(--first-color-glow);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.bg-darker {
+    background-color: #020202;
+}
+
+
+/* =========================================
+   4. КАСТОМНЫЙ КУРСОР (CURSOR)
+   ========================================= */
+
+.cursor-dot,
+.cursor-outline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.cursor-dot {
+    width: 5px;
+    height: 5px;
+    background-color: var(--first-color);
+}
+
+.cursor-outline {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--first-color);
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+}
+
+
+/* Эффект при наведении на ссылки */
+
+body.hovering .cursor-outline {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 255, 200, 0.1);
+    border-color: transparent;
+}
+
+
+/* =========================================
+   5. ФОНОВЫЕ ЭФФЕКТЫ (BACKGROUNDS)
+   ========================================= */
+
+.bg-matrix-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, #000 120%);
+    z-index: var(--z-back);
+    opacity: 0.8;
+}
+
+.bg-grid-lines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5%;
+    z-index: -5;
+    pointer-events: none;
+}
+
+.line {
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, var(--border-color), transparent);
+    opacity: 0.3;
+}
+
+
+/* =========================================
+   6. ПРЕЛОАДЕР (LOADER)
+   ========================================= */
+
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-out, visibility 0.5s;
+}
+
+.cyber-spinner {
+    width: 60px;
+    height: 60px;
+    border: 3px solid transparent;
+    border-top-color: var(--first-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.cyber-spinner::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 3px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+.loading-text {
+    font-family: var(--code-font);
+    font-size: var(--small-font-size);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    color: var(--first-color);
+    animation: blink 1s infinite;
+}
+
+.loading-bar-container {
+    width: 200px;
+    height: 2px;
+    background: #222;
+    position: relative;
+}
+
+.loading-bar {
+    height: 100%;
+    background: var(--first-color);
+    width: 0%;
+    box-shadow: 0 0 10px var(--first-color);
+    transition: width 0.1s linear;
+}
+
+.preloader-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+
+/* =========================================
+   7. ШАПКА (HEADER & NAV)
+   ========================================= */
+
+.header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--z-fixed);
+    background: rgba(5, 5, 5, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+}
+
+.header-container {
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: var(--font-bold);
+    font-size: 1.25rem;
+    color: var(--title-color);
+    font-family: var(--code-font);
+}
+
+.logo-icon {
+    color: var(--first-color);
+    font-size: 1.5rem;
+}
+
+.nav-menu {
+    position: relative;
+}
+
+.nav-list {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-link {
+    position: relative;
+    font-size: var(--small-font-size);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-color);
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--first-color);
+    transform: translateY(100%);
+    transition: transform 0.3s;
+}
+
+.nav-link:hover {
+    color: transparent;
+}
+
+.nav-link:hover::before {
+    transform: translateY(0);
+}
+
+.active-link {
+    color: var(--first-color);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.theme-toggle {
+    background: transparent;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.theme-toggle:hover {
+    color: var(--first-color);
+}
+
+.nav-toggle,
+.nav-close {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--title-color);
+}
+
+
+/* =========================================
+   8. КНОПКИ (BUTTONS)
+   ========================================= */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-family: var(--code-font);
+    font-size: var(--small-font-size);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    transition: 0.3s;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* Primary Button */
+
+.btn-primary {
+    background-color: var(--first-color);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: var(--first-color-alt);
+    box-shadow: 0 0 20px var(--first-color-glow);
+}
+
+
+/* Outline Button */
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--first-color);
+    color: var(--first-color);
+}
+
+.btn-outline:hover {
+    background-color: rgba(0, 255, 200, 0.1);
+    box-shadow: 0 0 15px var(--first-color-glow);
+}
+
+
+/* Glitch Button (Small) */
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: var(--smaller-font-size);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-sm:hover {
+    border-color: var(--first-color);
+    color: var(--first-color);
+}
+
+.btn-text {
+    color: var(--first-color);
+    font-size: var(--small-font-size);
+    font-weight: var(--font-bold);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-text:hover {
+    gap: 0.5rem;
+}
+
+
+/* =========================================
+   9. СЕКЦИЯ HERO
+   ========================================= */
+
+.hero-container {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: center;
+    min-height: calc(100vh - var(--header-height));
+    padding-top: 2rem;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(0, 255, 200, 0.1);
+    border: 1px solid var(--first-color);
+    color: var(--first-color);
+    font-family: var(--code-font);
+    font-size: var(--smaller-font-size);
+    margin-bottom: 1.5rem;
+}
+
+.hero-title {
+    font-size: var(--h1-font-size);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+.typewriter {
+    color: var(--first-color);
+}
+
+.cursor {
+    animation: blink 1s step-end infinite;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: var(--text-color-light);
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+    line-height: 1.6;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 4rem;
+}
+
+
+/* Статистика в Hero */
+
+.hero-stats {
+    display: flex;
+    gap: 3rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-family: var(--code-font);
+    color: #fff;
+}
+
+.stat-symbol {
+    color: var(--first-color);
+}
+
+.stat-desc {
+    font-size: var(--smaller-font-size);
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+
+/* Hero Visual (Глобус) */
+
+.hero-visual {
+    position: relative;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cyber-globe {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    position: relative;
+    background: radial-gradient(circle, rgba(0, 255, 200, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+    border: 1px solid rgba(0, 255, 200, 0.2);
+}
+
+.globe-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px dashed var(--first-color);
+    animation: spin 20s linear infinite;
+    opacity: 0.3;
+}
+
+.globe-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    background: var(--first-color);
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: pulse 3s infinite alternate;
+}
+
+
+/* Плавающие карточки */
+
+.floating-card {
+    position: absolute;
+    padding: 0.75rem 1.25rem;
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: 4px;
+    font-family: var(--code-font);
+    font-size: var(--smaller-font-size);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.floating-card i {
+    color: var(--first-color);
+}
+
+.card-1 {
+    top: 20%;
+    left: 0;
+    animation: float 4s ease-in-out infinite;
+}
+
+.card-2 {
+    bottom: 20%;
+    right: 0;
+    animation: float 4s ease-in-out infinite 2s;
+}
+
+
+/* =========================================
+   10. MARQUEE (БЕГУЩАЯ СТРОКА)
+   ========================================= */
+
+.partners-marquee {
+    background: var(--container-color);
+    padding: 1.5rem 0;
+    overflow: hidden;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.marquee-track {
+    display: flex;
+    gap: 4rem;
+    width: max-content;
+    animation: scroll 20s linear infinite;
+}
+
+.partner-logo {
+    color: var(--text-color-light);
+    font-family: var(--code-font);
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.partner-logo:hover {
+    opacity: 1;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+
+/* =========================================
+   11. СЕКЦИЯ ABOUT (КАРТОЧКИ)
+   ========================================= */
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.feature-card {
+    background: var(--container-color);
+    padding: 2.5rem;
+    border: 1px solid var(--border-color);
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 0;
+    background: var(--first-color);
+    transition: 0.4s;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.feature-card:hover::before,
+.feature-card.active-card::before {
+    height: 100%;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    color: var(--first-color);
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    font-size: var(--small-font-size);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.card-list li {
+    font-size: var(--smaller-font-size);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color-light);
+}
+
+.card-list li i {
+    color: var(--first-color);
+    font-size: 0.8rem;
+}
+
+
+/* =========================================
+   12. СЕКЦИЯ SOLUTIONS (TABS)
+   ========================================= */
+
+.tabs-container {
+    background: var(--container-color);
+    border: 1px solid var(--border-color);
+    margin-top: 3rem;
+}
+
+.tabs-header {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--code-font);
+    font-size: var(--small-font-size);
+    color: var(--text-color-light);
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.tab-btn.active-tab {
+    background: var(--first-color-glow);
+    color: #fff;
+    border-bottom: 2px solid var(--first-color);
+}
+
+.tabs-content {
+    padding: 3rem;
+    min-height: 400px;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeEffect 0.5s;
+}
+
+.tab-pane.active-content {
+    display: block;
+}
+
+.tab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.tab-text h3 {
+    font-size: 1.75rem;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.tab-text p {
+    margin-bottom: 2rem;
+}
+
+.progress-block {
+    margin-bottom: 2rem;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--code-font);
+    font-size: var(--smaller-font-size);
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #222;
+    border-radius: 2px;
+}
+
+.progress-bar span {
+    display: block;
+    height: 100%;
+    background: var(--first-color);
+    box-shadow: 0 0 10px var(--first-color);
+}
+
+
+/* Имитация кода в табах */
+
+.code-window {
+    background: #1e1e1e;
+    border-radius: 6px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.code-header {
+    background: #2d2d2d;
+    padding: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dot.red {
+    background: #ff5f56;
+}
+
+.dot.yellow {
+    background: #ffbd2e;
+}
+
+.dot.green {
+    background: #27c93f;
+}
+
+.code-body {
+    padding: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #d4d4d4;
+}
+
+.keyword {
+    color: #c586c0;
+}
+
+.function {
+    color: #dcdcaa;
+}
+
+.string {
+    color: #ce9178;
+}
+
+.const {
+    color: #569cd6;
+}
+
+.method {
+    color: #4ec9b0;
+}
+
+.return {
+    color: #c586c0;
+}
+
+
+/* =========================================
+   13. СЕКЦИЯ PRICING (ЦЕНЫ)
+   ========================================= */
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+    align-items: center;
+}
+
+.pricing-card {
+    background: var(--container-color);
+    border: 1px solid var(--border-color);
+    padding: 2.5rem;
+    text-align: center;
+    transition: 0.3s;
+    position: relative;
+}
+
+.pricing-card:hover {
+    border-color: var(--first-color);
+    transform: scale(1.02);
+}
+
+.pricing-card.popular {
+    background: linear-gradient(180deg, rgba(0, 255, 200, 0.05) 0%, var(--container-color) 100%);
+    border-color: var(--first-color);
+    padding: 3.5rem 2.5rem;
+    z-index: 2;
+}
+
+.popular-badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--first-color);
+    color: #000;
+    padding: 0.25rem 1rem;
+    font-size: var(--smaller-font-size);
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.pricing-header h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.price {
+    font-size: 3rem;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.price .currency {
+    font-size: 1.5rem;
+    vertical-align: super;
+}
+
+.price .period {
+    font-size: 1rem;
+    color: var(--text-color);
+    font-weight: 400;
+}
+
+.pricing-list {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.pricing-list li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.pricing-list li.disabled {
+    color: var(--text-color-light);
+    opacity: 0.5;
+}
+
+.pricing-list i {
+    color: var(--first-color);
+}
+
+.pricing-list li.disabled i {
+    color: #555;
+}
+
+.full-width {
+    width: 100%;
+}
+
+
+/* =========================================
+   14. FAQ (ACCORDION)
+   ========================================= */
+
+.accordion {
+    max-width: 800px;
+    margin: 3rem auto 0;
+}
+
+.accordion-item {
+    background: var(--container-color);
+    border: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.accordion-header {
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: var(--font-medium);
+    transition: 0.3s;
+    color: #fff;
+}
+
+.accordion-header:hover {
+    color: var(--first-color);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 1.5rem;
+}
+
+.accordion-content p {
+    padding-bottom: 1.5rem;
+    color: var(--text-color-light);
+    line-height: 1.6;
+}
+
+.accordion-open .accordion-content {
+    max-height: 200px;
+    /* Достаточно для текста */
+}
+
+.accordion-open .accordion-header i {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================
+   15. FOOTER
+   ========================================= */
+
+.footer {
+    background: #000;
+    border-top: 1px solid var(--border-color);
+    padding-top: 5rem;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+}
+
+.footer-brand p {
+    margin: 1.5rem 0;
+    font-size: var(--small-font-size);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: 0.3s;
+}
+
+.social-links a:hover {
+    background: var(--first-color);
+    color: #000;
+    border-color: var(--first-color);
+}
+
+.footer-links h4,
+.footer-newsletter h4 {
+    color: #fff;
+    margin-bottom: 1.5rem;
+}
+
+.footer-links ul li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-links a:hover {
+    color: var(--first-color);
+    padding-left: 5px;
+}
+
+.newsletter-form {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.newsletter-form input {
+    width: 100%;
+    padding: 0.75rem;
+    background: #111;
+    color: #fff;
+    border: 1px solid var(--border-color);
+}
+
+.newsletter-form button {
+    background: var(--first-color);
+    padding: 0 1.25rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.newsletter-form button:hover {
+    background: var(--first-color-alt);
+}
+
+.footer-bottom {
+    border-top: 1px solid #111;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--smaller-font-size);
+}
+
+.legal-links {
+    display: flex;
+    gap: 2rem;
+}
+
+
+/* Кнопка "Наверх" */
+
+.scroll-up {
+    position: fixed;
+    right: 2rem;
+    bottom: -20%;
+    background: var(--first-color);
+    padding: 0.6rem;
+    border-radius: 4px;
+    z-index: var(--z-tooltip);
+    transition: 0.4s;
+    color: #000;
+}
+
+.scroll-up.show-scroll {
+    bottom: 3rem;
+}
+
+
+/* =========================================
+   16. АНИМАЦИИ (KEYFRAMES)
+   ========================================= */
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes fadeEffect {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================
+   17. МЕДИА ЗАПРОСЫ (RESPONSIVE)
+   ========================================= */
+
+
+/* Large Devices (Desktops) */
+
+@media screen and (max-width: 1200px) {
+    .container {
+        max-width: 960px;
+    }
+    .hero-title {
+        font-size: 3rem;
+    }
+}
+
+
+/* Medium Devices (Tablets/Laptops) */
+
+@media screen and (max-width: 992px) {
+    .container {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding-top: 6rem;
+    }
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero-visual {
+        margin-top: 4rem;
+        height: 400px;
+    }
+    .about-grid,
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .tab-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .tab-image {
+        order: -1;
+        margin-bottom: 2rem;
+    }
+    .footer-top {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* Small Devices (Tablets/Large Phones) */
+
+@media screen and (max-width: 768px) {
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        background: #000;
+        width: 80%;
+        height: 100%;
+        padding: 4rem 2rem;
+        transition: 0.4s;
+        border-left: 1px solid var(--border-color);
+        z-index: var(--z-fixed);
+    }
+    .show-menu {
+        right: 0;
+    }
+    .nav-list {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .nav-toggle,
+    .nav-close {
+        display: block;
+    }
+    .nav-close {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+    .header-actions .btn {
+        display: none;
+        /* Скрываем кнопку входа на моб */
+    }
+    .about-grid,
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    .tabs-header {
+        flex-direction: column;
+    }
+}
+
+
+/* Extra Small Devices (Phones) */
+
+@media screen and (max-width: 576px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    .hero-stats {
+        flex-direction: column;
+        gap: 1.5rem;
+        border: none;
+    }
+    .footer-top {
+        grid-template-columns: 1fr;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    .legal-links {
+        justify-content: center;
+    }
+    .cyber-globe {
+        width: 250px;
+        height: 250px;
+    }
+    .globe-core {
+        width: 120px;
+        height: 120px;
+    }
+}
