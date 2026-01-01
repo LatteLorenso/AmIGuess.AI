@@ -859,11 +859,12 @@ nav ul li a:hover::after {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: transform 0.6s ease, opacity 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.6s ease, opacity 0.4s ease, color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
 }
 
 .btn-scan:hover {
+    color: #cccccc;
     background: var(--color-btn-second-darker);
     box-shadow: var(--color-brand-glow-soft);
 }
@@ -892,19 +893,20 @@ nav ul li a:hover::after {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: transform 0.6s ease, opacity 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.6s ease, opacity 0.4s ease, color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     cursor: auto;
+}
+
+.btn-result:hover {
+    color: #cccccc;
+    background: var(--color-btn-second-darker);
+    box-shadow: var(--color-brand-glow);
 }
 
 .btn-result.show {
     transform: translateX(0);
     opacity: 1;
     cursor: pointer;
-}
-
-.btn-result:hover {
-    background: var(--color-btn-second-darker);
-    box-shadow: var(--color-brand-glow);
 }
 
 /* Текст результата сканирования */
