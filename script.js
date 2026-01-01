@@ -217,6 +217,7 @@ btnStart.addEventListener("click", () => {
     // Блокируем кнопку
     btnStart.disabled = true;
     btnStart.style.cursor = "not-allowed";
+    btnStart.style.color = "rgba(11, 11, 11, 0.376)";
 
     // Запускаем прогресс-бар
     let width = 0;
