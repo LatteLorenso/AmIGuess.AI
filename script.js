@@ -253,6 +253,7 @@ faqCards.forEach(card => {
             if (other !== card) {
                 other.classList.remove('active');
                 other.querySelector('.panel').style.maxHeight = null;
+                panel.style.marginTop = '15px';
             }
         });
 
@@ -262,6 +263,7 @@ faqCards.forEach(card => {
             panel.style.maxHeight = panel.scrollHeight + 'px';
         } else {
             panel.style.maxHeight = null;
+            panel.style.marginTop = '0px';
         }
     });
 });

@@ -967,11 +967,11 @@ nav ul li a:hover::after {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    cursor: pointer;
     transition: color 0.3s;
 }
 
-.active, .faq-heading:hover {
+.active, .faq-card:hover {
+    cursor: pointer;
     color: var(--color-brand-primary);
 }
 
@@ -989,21 +989,12 @@ nav ul li a:hover::after {
     padding: 0 5px;
     max-height: 0;
     overflow: hidden;
-    margin-top: 15px;
-    overflow: hidden;
-    transition: max-height 0.4s ease;
+    transition: max-height 0.4s ease, margin-top 0.4s ease;
 }
 
 .faq-card.active .fa-chevron-down {
     transform: rotate(180deg);
 }
-
-/* !Не закончен аккордеон! */
-
-/* .panel.open {
-    transform: translateY(0);
-    opacity: 1;
-} */
 
 /* ====== FOOTER SECTION ====== */
 
