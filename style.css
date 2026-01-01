@@ -565,7 +565,7 @@ nav ul li a:hover::after {
 }
 
 .hero-CTM .btn-primary {
-    background: var(--color-btn-primary);
+    background: #cccccc;
     color: var(--color-btn-text);
     border: none;
     border-radius: var(--radius-sm);
@@ -582,7 +582,7 @@ nav ul li a:hover::after {
 }
 
 .btn-primary:hover {
-    background: var(--color-btn-primary-darker);
+    background: var(--color-brand-primary);
     box-shadow: var(--color-primary-glow-soft);
 }
 
