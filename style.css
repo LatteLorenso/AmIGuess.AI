@@ -8,7 +8,7 @@
     --color-bg-tertiary: #0a0a0a;
 
     /* ===== BRAND / CORE COLOR ===== */
-    --color-brand-primary: #007bff;       /* насыщенный синий для акцентов */
+    --color-brand-primary: #008cff;       /* насыщенный синий для акцентов */
     --color-primary-glow-soft: 0 0 15px rgba(0, 234, 255, 0.3); /* слабый акцент glow */
     --color-primary-glow-strong: 0 0 50px rgba(0, 234, 255, 0.7); /* сильный акцент glow */
     --color-second-glow-soft: 0 0 15px rgba(155, 92, 255, 0.3); /* слабый акцент glow */
@@ -398,12 +398,11 @@ nav ul li a:hover::after {
     font-weight: bold;
     cursor: pointer;
     font-size: 15px;
-    transition: background-color 0.2s ease, border 0.2s ease;
+    transition: border 0.2s ease;
 }
 
 .login:hover, 
 .logout:hover {
-    background-color: var(--color-bg-glass);
     border: 2px solid var(--color-brand-primary);
 }
 
@@ -533,7 +532,7 @@ nav ul li a:hover::after {
     transform-origin: left center;
     font-size: 2rem;
     font-weight: 600;
-    color: var(--color-accent-am);
+    color: var(--color-brand-primary);
 }
 
 .cursor {
@@ -665,7 +664,7 @@ nav ul li a:hover::after {
 }
 
 .section-title span {
-    color: var(--color-accent-guess);
+    color: var(--color-brand-primary);
 }
 
 .card-container {
@@ -707,7 +706,7 @@ nav ul li a:hover::after {
 
 .card-icon {
     margin-bottom: 1rem;
-    color: var(--color-accent-guess);
+    color: var(--color-brand-primary);
 }
 
 .card-title {
@@ -723,7 +722,7 @@ nav ul li a:hover::after {
 
 .card-list span i {
     font-size: 0.8rem;
-    color: var(--color-accent-guess);
+    color: var(--color-brand-primary);
 }
 
 .card-list li {
@@ -737,12 +736,12 @@ nav ul li a:hover::after {
     left: 0;
     width: 3px;
     height: 0;
-    background: var(--color-accent-guess);
-    transition: height 0.4s ease;
+    background: var(--color-brand-primary);
+    transition: height 0.4s ease, box-shadow 0.5s ease;
 }
 
 .card-active {
-    border-left: 3px solid var(--color-accent-guess);
+    border-left: 3px solid var(--color-brand-primary);
 }
 
 .card:hover,
@@ -752,6 +751,7 @@ nav ul li a:hover::after {
 
 .card:hover::before {
     height: 100%;
+    box-shadow: 10px 0 40px rgba(0, 140, 255, 0.7);
 }
 
 /* ====== MAIN SECTION: START-FORECAST ====== */
@@ -812,7 +812,7 @@ nav ul li a:hover::after {
     justify-content: space-between;
     font-family: var(--code-font);
     font-size: 16px;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
 }
 
 .loading-bar-container {
@@ -826,7 +826,7 @@ nav ul li a:hover::after {
 .loading-bar {
     width: 0;
     height: 100%;
-    background-color: var(--color-btn-second);
+    background-color: var(--color-brand-primary);
     border-radius: var(--radius-sm);
     box-shadow: 0 0 20px rgba(196, 159, 255, 0.847);
     transition: width 0.2s ease;
@@ -847,7 +847,7 @@ nav ul li a:hover::after {
     transform: translateX(0);
     opacity: 1;
     margin: 0 auto;
-    background: var(--color-btn-second);
+    background: var(--color-brand-primary);
     border: none;
     border-radius: var(--radius-sm);
     font-family: var(--code-font);
@@ -880,7 +880,7 @@ nav ul li a:hover::after {
     transform: translateX(50px);
     opacity: 0;
     margin: 0 auto;
-    background: var(--color-btn-second);
+    background: var(--color-brand-primary);
     border: none;
     border-radius: var(--radius-sm);
     font-family: var(--code-font);
@@ -911,26 +911,21 @@ nav ul li a:hover::after {
 .forecast-text-result {
     display: flex;
     flex-direction: column;
-    list-style: none;
-    width: fit-content;      /* ширина ul под контент */
     margin: 0 auto;
-    margin-top: -50px;
+    margin-top: -100px;
 }
 
 .forecast-text-result li {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     gap: 10px;
     color: var(--color-text-main);
     font-size: 24px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    width: max-content;
+    font-weight: 500;
 }
 
 .forecast-text-result i {
-    color: var(--color-accent-i);
+    color: var(--color-brand-primary);
 }
 
 /* ====== MAIN SECTION: FAQ ====== */
