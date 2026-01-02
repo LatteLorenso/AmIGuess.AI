@@ -1353,11 +1353,10 @@ input[type="checkbox"] {
     transition: all 0.3s ease;
 }
 
-/* Смартфоны <768px */
-@media (max-width: 767px) {
-    #main {
-        width: 750px;
-        margin: 0 auto;
+/* Смартфоны 576px */
+@media (min-width: 575px) and (max-width: 767px) {
+    .subsBtn {
+        display: none;
     }
 
     nav ul {
@@ -1365,13 +1364,179 @@ input[type="checkbox"] {
         top: 70px;
         left: 0;
         width: 100%;
-        height: calc(20vh - 70px);
-        background: var(--color-bg-main);
+        height: calc(40vh - 70px);
+        background: var(--color-bg-modal);
+        backdrop-filter: blur(20px);
         transform: translateY(-120%);
         opacity: 0;
         pointer-events: none;
         justify-content: center;
+        flex-direction: column;
         transition: transform 0.4s ease, opacity 0.3s ease;
+    }
+
+    nav ul li a {
+        font-size: 14px;
+    }
+
+    nav ul.active {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-window {
+        margin: 9vh auto;
+    }
+
+    .modal-close {
+        font-size: 46px;
+    }
+
+    #modal-icon {
+        opacity: 1;
+        transition: none;
+    }
+    
+    #modal-icon.active {
+        transform: translateX(-10px);
+    }
+
+    .modal-title.hovering {
+        transform: translateX(0);
+    }
+
+    .login-form input {
+        padding: 18px;
+    }
+
+    .login-form .btn-submit {
+        padding: 16px;
+    }
+
+    .burger {
+        display: flex;
+    }
+
+    .background-title {
+        display: none;
+    }
+
+    .hero-container {
+        margin-top: -140px;
+    }
+
+    .hero-title {
+        font-size: 2.25rem;
+        flex-wrap: nowrap;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+    
+    .typewriter-text {
+        font-size: 1.1875rem;
+    }
+
+    .cursor {
+        font-size: 1.125rem;
+        animation: blink 1.5s step-end infinite;
+    }
+
+    .hero-CTM .btn-primary {
+        font-size: 1.125rem;
+    }
+
+    .slider-section {
+        padding: 20px;
+    }
+
+    .text-slide {
+        font-size: 17px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .card-container {
+        width: 100%;
+        display: grid;
+        grid-template-columns: none;
+        gap: 3rem;
+        margin-top: 48px;
+    }
+
+    .card.animate, .card-active.animate {
+        animation: none;
+    }
+
+    .forecast-container {
+        align-items: center;
+    }
+
+    .forecast-title {
+        font-size: 2rem;
+    }
+
+    .forecast-description {
+        color: var(--color-text-muted);
+        font-size: 1rem;
+        padding-left: 0;
+    }
+
+    .forecast-text-result {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0 auto;
+        margin-top: -130px;
+    }
+
+    .forecast-text-result li {
+        justify-content: center;
+        font-size: 1.125rem;
+    }
+
+    .forecast-text-result p {
+        font-size: 1rem;
+    }
+
+    .faq-title {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .faq-card {
+        width: 85%;
+    }
+
+    .footer-top {
+        grid-template-columns: none;
+    }
+}
+
+/* Смартфоны 768px */
+@media (min-width: 767px) and (max-width: 1440px) { 
+    nav ul {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: calc(40vh - 70px);
+        background: var(--color-bg-modal);
+        backdrop-filter: blur(20px);
+        transform: translateY(-120%);
+        opacity: 0;
+        pointer-events: none;
+        justify-content: center;
+        flex-direction: column;
+        transition: transform 0.4s ease, opacity 0.3s ease;
+    }
+
+    nav ul li a {
+        font-size: 16px;
     }
 
     nav ul.active {
@@ -1418,11 +1583,12 @@ input[type="checkbox"] {
     }
 
     .hero-title {
+        min-width: 535px;
         font-size: 2.5rem;
     }
     
     .typewriter-text {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
     }
 
     .cursor {
