@@ -97,15 +97,36 @@ window.addEventListener("resize", () => {
 // Modal Window Log in
 const loginBtn = document.getElementById('loginBtn');
 const loginModal = document.getElementById('login-modal');
+const overlayModal = document.querySelector('.modal-overlay');
 const loginModalClose = document.querySelector('.modal-close');
 
-loginBtn.addEventListener('click', (Element) => {
-    Element.preventDefault(); // убираем переход по ссылке
+loginBtn.addEventListener('click', (event) => {
+    event.preventDefault(); // убираем переход по ссылке
     loginModal.classList.add('active');
 });
 
-loginModalClose.addEventListener('click', () => {
-    loginModal.classList.remove('active');
+function closeModal() {
+    const modalWindow = loginModal.querySelector('.modal-window');
+
+    modalWindow.classList.add('closing');
+
+    setTimeout(() => {
+        loginModal.classList.remove('active');
+        modalWindow.classList.remove('closing');
+    }, 400);
+}
+
+// Закрытие по крестику
+loginModalClose.addEventListener('click', closeModal);
+
+// Закрытие по клику вне модалки
+overlayModal.addEventListener('click', closeModal);
+
+// Закрытие по ESC (UX)
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
 });
 
 const modalTitle = document.querySelector('.modal-title');

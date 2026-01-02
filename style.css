@@ -446,6 +446,10 @@ nav ul li a:hover::after {
     cursor: none;
 }
 
+.modal-window.closing {
+    animation: modalFadeDown 0.4s ease; 
+}
+
 /* Закрытие */
 .modal-close {
     position: absolute;
@@ -595,6 +599,17 @@ nav ul li a:hover::after {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes modalFadeDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(100px);
     }
 }
 
