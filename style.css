@@ -542,14 +542,23 @@ nav ul li a:hover::after {
     border-color: var(--color-brand-primary);
 }
 
+input[type="[password]"]::placeholder {
+    font-size: 18px;
+}
+
 .checkbox-form {
     flex-direction: row;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.5);
+    margin-left: 5px;
 }
 
 .checkbox-form label {
     font-size: 18px;
     color: var(--color-text-dim);
-    margin-left: 2px;
+    margin-left: 10px;
 }
 
 /* Кнопка */
@@ -674,6 +683,7 @@ nav ul li a:hover::after {
 /* Для плавного появления при анимации typewriter */
 .typewriter-container {
     display: inline-flex;
+    flex-direction: row;
     margin-bottom: 10px;
     text-transform: uppercase;
     gap: 5px;
@@ -1316,4 +1326,192 @@ nav ul li a:hover::after {
 
 .legal-links a {
     margin-left: 20px;
+}
+
+/* ====== Responsive Web Design ====== */
+
+/* Бургер-меню */
+
+/* Бургер (скрыт на десктопе) */
+.burger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 25px;
+    width: 25px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.burger span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--color-text-main);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Смартфоны <768px */
+@media (max-width: 767px) {
+    #main {
+        width: 750px;
+        margin: 0 auto;
+    }
+
+    nav ul {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: calc(20vh - 70px);
+        background: var(--color-bg-main);
+        transform: translateY(-120%);
+        opacity: 0;
+        pointer-events: none;
+        justify-content: center;
+        transition: transform 0.4s ease, opacity 0.3s ease;
+    }
+
+    nav ul.active {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-window {
+        margin: 9vh auto;
+    }
+
+    #modal-icon {
+        opacity: 1;
+        transition: none;
+    }
+    
+    #modal-icon.active {
+        transform: translateX(-10px);
+    }
+
+    .modal-title.hovering {
+        transform: translateX(0);
+    }
+
+    .login-form input {
+        padding: 18px;
+    }
+
+    .login-form .btn-submit {
+        padding: 16px;
+    }
+
+    .burger {
+        display: flex;
+    }
+
+    .background-title {
+        display: none;
+    }
+
+    .hero-container {
+        margin-top: -120px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .typewriter-text {
+        font-size: 1.5rem;
+    }
+
+    .cursor {
+        font-size: 1.5rem;
+        animation: blink 1.5s step-end infinite;
+    }
+
+    .hero-CTM .btn-primary {
+        font-size: 1.125rem;
+    }
+
+    .slider-section {
+        padding: 20px;
+    }
+
+    .text-slide {
+        font-size: 17px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .card-container {
+        width: 100%;
+        display: grid;
+        grid-template-columns: none;
+        gap: 3rem;
+        margin-top: 48px;
+    }
+
+    .card.animate, .card-active.animate {
+        animation: none;
+    }
+
+    .forecast-container {
+        align-items: center;
+    }
+
+    .forecast-title {
+        font-size: 2rem;
+    }
+
+    .forecast-description {
+        color: var(--color-text-muted);
+        font-size: 1rem;
+        padding-left: 0;
+    }
+
+    .forecast-text-result {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0 auto;
+        margin-top: -130px;
+    }
+
+    .forecast-text-result li {
+        justify-content: center;
+        font-size: 1.125rem;
+    }
+
+    .forecast-text-result p {
+        font-size: 1rem;
+    }
+
+    .faq-title {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .faq-card {
+        width: 85%;
+    }
+
+    .footer-top {
+        grid-template-columns: none;
+    }
+}
+
+/* Анимация бургера */
+.burger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.burger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
 }
