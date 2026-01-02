@@ -94,6 +94,46 @@ window.addEventListener("resize", () => {
     canvas.height = window.innerHeight;
 });
 
+// Modal Window Log in
+const loginBtn = document.getElementById('loginBtn');
+const loginModal = document.getElementById('login-modal');
+const loginModalClose = document.querySelector('.modal-close');
+
+loginBtn.addEventListener('click', (Element) => {
+    Element.preventDefault(); // убираем переход по ссылке
+    loginModal.classList.add('active');
+});
+
+loginModalClose.addEventListener('click', () => {
+    loginModal.classList.remove('active');
+});
+
+const modalTitle = document.querySelector('.modal-title');
+const modalTitleIcon = document.getElementById('modal-icon');
+
+modalTitle.addEventListener('mouseover', () => {
+    modalTitle.classList.add('hovering');
+    modalTitleIcon.classList.add('active');
+});
+
+modalTitle.addEventListener('mouseout', () => {
+    modalTitleIcon.classList.remove('active');
+    modalTitle.classList.remove('hovering');
+});
+
+const userContainer = document.querySelector('.container-user');
+const logoutBtn = document.getElementById('logoutBtn');
+
+function showUser(name = 'User') {
+    loginBtn.style.display = 'none';
+    userContainer.style.display = 'flex';
+    userContainer.querySelector('.user-name').textContent = name;
+}
+
+function logout() {
+    userContainer.style.display = 'none';
+    loginBtn.style.display = 'inline';
+}
 
 // Typewriter
 const typewriterEl = document.querySelector('.typewriter-text');
@@ -267,10 +307,6 @@ faqCards.forEach(card => {
         }
     });
 });
-
-// accordion.addEventListener('click', () => {
-//     panel.classList.add("open");
-// })
 
 // Форма сохраняет, введенный Email
 const form = document.getElementById('email-form');

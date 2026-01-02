@@ -58,11 +58,53 @@
             
             <div>
                 <li class="container-user" style="display: none;">
-                    <img src="public/card-pic/avatar.jpg" class="avatar">
-                    <h4 class="user-name">Rachel Dawes</h4>
+                    <!-- <img src="public/card-pic/avatar.jpg" class="avatar">
+                    <h4 class="user-name">Rachel Dawes</h4> -->
                     <button class="logout" id="logoutBtn">Выход из системы</button>
                 </li>
-                    <a href="#email-form" class="login" id="loginBtn">Вход в систему</a>
+                    <a class="login" id="loginBtn">Вход в систему</a>
+                    <a href="#email-form" class="subsBtn">Подписаться</a>
+            </div>
+
+            <!-- ====== LOGIN MODAL ====== -->
+            <div class="modal" id="login-modal">
+                <div class="modal-overlay"></div>
+            
+                <div class="modal-window">
+                    <button class="modal-close" aria-label="Закрыть">&times;</button>
+            
+                    <div class="container-title">
+                        <i class="fa-solid fa-arrow-right-to-bracket" id="modal-icon"></i>
+                        <h3 class="modal-title"></i>AmIGuess<span>.AI</span></h3>
+                    </div>
+                    <p class="modal-subtitle">
+                        Авторизуйтесь, чтобы получить доступ к прогнозам и аналитике AmIGuess.AI
+                    </p>
+            
+                    <form class="login-form" id="login-form">
+                        <input 
+                            type="email" 
+                            name="email" 
+                            placeholder="Email"
+                            required
+                        >
+            
+                        <input 
+                            type="password" 
+                            name="password" 
+                            placeholder="******"
+                            required
+                        >
+            
+                        <button type="submit" class="btn btn-primary">
+                            Войти
+                        </button>
+                    </form>
+            
+                    <p class="modal-hint">
+                        Нет аккаунта? <a href="#">Создать</a>
+                    </p>
+                </div>
             </div>
         </header>
         
@@ -182,7 +224,7 @@
                         <li><i class="fa-solid fa-check"></i>Учтено: 3 147 892 параметра</li>
                         <li><i class="fa-solid fa-check"></i>Обработано: 12 сценариев</li>
                         <li><i class="fa-solid fa-check"></i>Уровень уверенности модели: высокий</li>
-                        <p>предлагаем установить пробную версию нашего <a href="https://github.com/LatteLorenso/AmIGuess.AI.git" target="_blank">AmIGuess AI-assistant</a></p>
+                        <p><i class="fa-solid fa-download"></i>предлагаем установить пробную версию нашего <a href="https://github.com/LatteLorenso/AmIGuess.AI.git" target="_blank">AmIGuess AI-assistant</a></p>
                     </ul>
                 </div>
             </section>

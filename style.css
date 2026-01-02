@@ -2,6 +2,7 @@
 :root {
     /* ===== ОСНОВНОЙ ФОН ===== */
     --color-bg-header: rgba(5, 6, 10, 0.5);          /* основной фон сайта */
+    --color-bg-modal: rgba(5, 6, 10, 0.9);          /* основной фон модального окна */
     --color-bg-main: #05060a;          /* основной фон сайта */
     --color-bg-secondary: #0a0d14;     /* секции с акцентом */
     --color-bg-glass: rgba(255,255,255,0.03); /* стеклянные карточки */
@@ -38,7 +39,7 @@
 
     /* ===== ЭФФЕКТЫ ===== */
     --glow-cyan: 0 0 20px rgba(0,234,255,0.25);
-    --glow-green: 0 0 20px rgba(0,255,179,0.25);
+    --glow-green: 0 0 20px rgba(0,255,179,0.5);
     --glow-purple: 0 0 20px rgba(155,92,255,0.25);
 
     /* ===== ШРИФТЫ ===== */
@@ -389,6 +390,7 @@ nav ul li a:hover::after {
 }
 
 .login,
+.subsBtn,
 .logout
 {
     background-color: var(--color-bg-secondary);
@@ -406,57 +408,171 @@ nav ul li a:hover::after {
     border: 2px solid var(--color-brand-primary);
 }
 
-/* ====== MODAL WINDOW ====== */
+.subsBtn:hover {
+    border: 2px solid var(--color-accent-question);
+}
+
+/* ====== MODAL BASE ====== */
 .modal {
-    display: none; /* скрыто по умолчанию */
     position: fixed;
+    inset: 0;
     z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.5);
+    display: none;
 }
 
-.modal-content {
-    background-color: var(--dc-medium-blue);
-    margin: 15% auto;
-    padding: 20px;
-    border-radius: var(--radius);
-    width: 300px;
-    color: var(--dc-bright-yellow);
-    text-align: center;
-    position: relative;
+.modal.active {
+    display: block;
 }
 
-.close {
+/* Затемнение */
+.modal-overlay {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 25px;
-    cursor: pointer;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
 }
-.modal input {
-    width: 90%;
-    padding: 8px;
-    margin: 8px 0;
-    border-radius: 8px;
-    border: none;
+
+/* Окно */
+.modal-window {
+    position: relative;
+    max-width: 450px;
+    margin: 25vh auto;
+    padding: 40px;
+    background: var(--color-bg-secondary);
+    backdrop-filter: blur(40px);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    animation: modalFadeUp 0.4s ease;
 }
-.modal button {
-    width: 95%;
-    padding: 10px;
-    background: var(--dc-bright-yellow);
-    color: var(--dc-dark-blue);
+
+/* Закрытие */
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 36px;
+    background: none;
     border: none;
-    border-radius: 8px;
+    color: var(--color-text-muted);
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: var(--color-brand-primary);
+}
+
+/* Тексты */
+.container-title {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
+
+.modal-title
+{
+    margin-top: 30px;
+    color: var(--color-text-main);
+    text-align: center;
+    font-size: 32px;
     font-weight: bold;
+    text-decoration: none;
+    transform: translateX(0);
+    transition: color 0.2s ease, transform 0.5s ease, text-shadow 0.4s ease;
+    white-space: nowrap;
+    line-height: 1.6;
+    margin-bottom: 30px;
 }
-.modal button:hover {
-    background: #fff;
-    color: var(--dc-dark-blue);
+
+.fa-solid, .fas {
+    font-size: 32px;
+    font-weight: 900;
+}
+
+#modal-icon {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: transform 0.5s ease;
+}
+
+#modal-icon.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.modal-title span {
+    color: var(--color-brand-primary);
+}
+
+.modal-title.hovering {
+    color: var(--color-brand-primary);
+    transform: translateX(10px);
+    text-shadow: 0 0 30px rgba(0, 140, 255, 0.3);
+}
+
+.modal-subtitle {
+    font-size: 16px;
+    color: var(--color-text-muted);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Форма */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.login-form input {
+    padding: 12px 14px;
+    background: var(--color-bg-main);
+    border: 1px solid var(--color-border-soft);
+    color: var(--color-text-main);
+    border-radius: var(--radius-sm);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: var(--color-brand-second);
+    box-shadow: var(--glow-cyan);
+}
+
+/* Кнопка */
+.login-form button {
+    margin-top: 8px;
+}
+
+/* Подсказка */
+.modal-hint {
+    margin-top: 20px;
+    font-size: 13px;
+    text-align: center;
+    color: var(--color-text-dim);
+}
+
+.modal-hint a {
+    color: var(--color-brand-primary);
+    text-decoration: underline;
+}
+
+.modal-hint a:hover {
+    text-decoration: none;
+}
+
+/* Анимация */
+@keyframes modalFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ====== Контейнер для аккаунта ====== */
