@@ -94,11 +94,15 @@ window.addEventListener("resize", () => {
     canvas.height = window.innerHeight;
 });
 
-// Modal Window Log in
-const loginBtn = document.getElementById('loginBtn');
+// Modal Window Log in/Log out
+
+let isLoggedIn = false; // глобально для скрипта
+
+// Log in
 const loginModal = document.getElementById('login-modal');
 const overlayModal = document.querySelector('.modal-overlay');
 const loginModalClose = document.querySelector('.modal-close');
+const loginBtn = document.getElementById('loginBtn');
 
 loginBtn.addEventListener('click', (event) => {
     event.preventDefault(); // убираем переход по ссылке
@@ -129,32 +133,116 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-const modalTitle = document.querySelector('.modal-title');
-const modalTitleIcon = document.getElementById('modal-icon');
-
-modalTitle.addEventListener('mouseover', () => {
-    modalTitle.classList.add('hovering');
-    modalTitleIcon.classList.add('active');
-});
-
-modalTitle.addEventListener('mouseout', () => {
-    modalTitleIcon.classList.remove('active');
-    modalTitle.classList.remove('hovering');
+document.querySelectorAll('.container-title').forEach(container => {
+    const modalTitle = container.querySelector('.modal-title');
+    const modalTitleIcon = container.querySelector('.modal-icon');
+    
+    modalTitle.addEventListener('mouseover', () => {
+        modalTitle.classList.add('hovering');
+        modalTitleIcon.classList.add('active');
+    });
+    
+    modalTitle.addEventListener('mouseout', () => {
+        modalTitleIcon.classList.remove('active');
+        modalTitle.classList.remove('hovering');
+    });
 });
 
 const userContainer = document.querySelector('.container-user');
-const logoutBtn = document.getElementById('logoutBtn');
 
-function showUser(name = 'User') {
+function showUser() {
     loginBtn.style.display = 'none';
-    userContainer.style.display = 'flex';
-    userContainer.querySelector('.user-name').textContent = name;
+    userContainer.style.display = 'inline';
 }
 
 function logout() {
-    userContainer.style.display = 'none';
     loginBtn.style.display = 'inline';
+    userContainer.style.display = 'none';
 }
+
+// Log out
+const logoutModal = document.getElementById('logout-modal');
+const logoutModalClose = document.getElementById('logout-modal-close');
+const logoutBtn = document.getElementById('logoutBtn');
+
+logoutBtn.addEventListener('click', (event) => {
+    event.preventDefault(); // убираем переход по ссылке
+    logoutModal.classList.add('active');
+});
+
+// Закрытие по крестику
+logoutModalClose.addEventListener('click', closeModal);
+
+// Закрытие по клику вне модалки
+overlayModal.addEventListener('click', closeModal);
+
+// Закрытие по ESC (UX)
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
+});
+
+const leaveBtn = document.querySelector('.btn-logout');
+
+leaveBtn.addEventListener('click', (event) => {
+    event.preventDefault(); // убираем переход по ссылке
+    logoutModal.classList.remove('active');
+    logout();
+    isLoggedIn = false;
+});
+
+// Подключение формы к серверу
+const loginForm = document.getElementById('login-form');
+
+loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(loginForm);
+
+    const data = {
+        email: formData.get('email'),
+        fname: formData.get('fname'),
+        sname: formData.get('sname'),
+        password: formData.get('password')
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            isLoggedIn = true;
+            closeModal();
+            showUser();
+            showToast(`Добро пожаловать, ${result.user.name}!`, 'success');
+        }
+    } catch (error) {
+        showToast(result.message, 'error');
+    }
+});
+
+// Require login for download AmIGuess AI-assistant
+const passloginModal = document.getElementById('passing-login-modal');
+
+passloginModal.addEventListener('click', (event) => {
+    event.preventDefault(); // Отключаем стандартный переход по ссылке
+
+    if (!isLoggedIn) {
+        console.log('error');
+        loginModal.classList.add('active');
+    } else {
+        const href = passloginModal.getAttribute('href'); // Снова включаем переход по ссылке
+        if (href) {
+            window.open(href, '_blank');
+        }
+    }
+});
 
 // Typewriter
 const typewriterEl = document.querySelector('.typewriter-text');
@@ -334,15 +422,18 @@ const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');
 
 // !Не закончен алёрт!
-// function showToast(subscribed) {
-//     const toast = document.getElementById('toast');
-//     // toast.textContent = subscribed;
-//     toast.classList.add('show');
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const text = toast.querySelector('.toast-message');
 
-//     setTimeout(() => {
-//         toast.classList.remove('show');
-//     }, 2000);
-// }
+    text.textContent = message;
+
+    toast.className = `toast show ${type}`;
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2500);
+}
 
 form.addEventListener('submit', (Event) => {
     Event.preventDefault();
@@ -360,7 +451,7 @@ form.addEventListener('submit', (Event) => {
     }
 });
 
-// Адаптивка RWD
+// Адаптивка RWD burger
 
 const burger = document.getElementById('burger');
 const navLinks = document.getElementById('navLinks');

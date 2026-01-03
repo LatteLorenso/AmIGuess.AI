@@ -426,9 +426,11 @@ nav ul li a:hover::after {
 
 /* Затемнение */
 .modal-overlay {
-    position: absolute;
-    inset: 0;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.6);
+    cursor: none;
 }
 
 /* Окно */
@@ -490,7 +492,7 @@ nav ul li a:hover::after {
     margin-bottom: 30px;
 }
 
-#modal-icon {
+.modal-icon {
     font-size: 32px;
     font-weight: 900;
     opacity: 0;
@@ -498,7 +500,7 @@ nav ul li a:hover::after {
     transition: opacity 0.4s ease, transform 0.5s ease;
 }
 
-#modal-icon.active {
+.modal-icon.active {
     opacity: 1;
     transform: translateX(0);
 }
@@ -521,7 +523,7 @@ nav ul li a:hover::after {
 }
 
 /* Форма */
-.login-form {
+.login-form, .logout-form {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -542,7 +544,7 @@ nav ul li a:hover::after {
     border-color: var(--color-brand-primary);
 }
 
-input[type="[password]"]::placeholder {
+input[type="password"]::placeholder {
     font-size: 18px;
 }
 
@@ -553,6 +555,7 @@ input[type="[password]"]::placeholder {
 input[type="checkbox"] {
     transform: scale(1.5);
     margin-left: 5px;
+    cursor: pointer;
 }
 
 .checkbox-form label {
@@ -561,7 +564,7 @@ input[type="checkbox"] {
     margin-left: 10px;
 }
 
-/* Кнопка */
+/* Кнопка login */
 .login-form .btn-submit {
     margin-top: 8px;
     padding: 10px 14px;
@@ -599,6 +602,31 @@ input[type="checkbox"] {
     text-decoration: none;
 }
 
+/* ====== LOGOUT WINDOW ====== */
+
+/* Кнопка logout */
+.btn-logout {
+    margin-top: 8px;
+    padding: 10px 14px;
+    width: 90%;
+    margin: 0 auto;
+    background: var(--color-accent-question);
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--code-font);
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--color-text-main);
+    transition: color 0.3s ease, background 0.3s ease;
+}
+
+.btn-logout:hover {
+    color: #000;
+    background: #cccccc;
+}
+
 /* Анимация */
 @keyframes modalFadeUp {
     from {
@@ -620,28 +648,6 @@ input[type="checkbox"] {
         opacity: 0;
         transform: translateY(100px);
     }
-}
-
-/* ====== Контейнер для аккаунта ====== */
-.container-user {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-}
-
-.container-user .user-name {
-    font-size: 15px;
-    font-weight: 500;
-    align-self: center;
-}
-
-.container-user .avatar {
-    width: 50px;
-    height: 50px;
-    align-items: center;
-    border-radius: 50%;
 }
 
 /* ====== MAIN SECTION: HERO ====== */
@@ -1078,12 +1084,11 @@ input[type="checkbox"] {
 .forecast-text-result {
     display: flex;
     flex-direction: column;
-    width: 600px;
     margin: 0 auto;
     margin-top: -130px;
 }
 
-.forecast-text-result li {
+.result, .install-a-href {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1092,29 +1097,27 @@ input[type="checkbox"] {
     font-weight: 500;
 }
 
-.forecast-text-result i {
+.result i, .install-a-href i {
     color: var(--color-brand-primary);
 }
 
-.forecast-text-result p {
-    margin-top: 10px;
+.install-a-href {
+    margin-top: 20px;
     font-size: 1.125rem;
-    text-align: center;
     color: var(--color-text-muted);
 }
 
-.forecast-text-result a {
-    display: inline-block;
+.install-a-href a {
     color: var(--color-brand-primary);
     text-decoration: underline;
     transition: color 0.3s ease background 0.4s ease;
 }
 
-.forecast-text-result a:hover {
+.install-a-href a:hover {
     text-decoration: none;
 }
 
-.forecast-text-result a:active {
+.install-a-href a:active {
     color: var(--color-text-main);
     background: rgba(30, 143, 255, 0.878);
 }
@@ -1302,9 +1305,39 @@ input[type="checkbox"] {
     background: #1e8fffe8;
 }
 
-/* !Не закончен алёрт! */
-/* .toast {
-} */
+/* Тост-алерт */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    min-width: 240px;
+    padding: 20px;
+    border-radius: 12px;
+    background: var(--color-bg-secondary);
+    color: #fff;
+    font-size: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Активное состояние */
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Типы */
+.toast.success {
+    border-left: 4px solid var(--color-brand-primary);
+}
+
+.toast.error {
+    border-left: 4px solid var(--color-accent-question);
+}
 
 /* Нижняя часть футера */
 .footer-bottom {
@@ -1393,12 +1426,12 @@ input[type="checkbox"] {
         font-size: 46px;
     }
 
-    #modal-icon {
+    .modal-icon {
         opacity: 1;
         transition: none;
     }
     
-    #modal-icon.active {
+    .modal-icon.active {
         transform: translateX(-10px);
     }
 
@@ -1412,6 +1445,13 @@ input[type="checkbox"] {
 
     .login-form .btn-submit {
         padding: 16px;
+    }
+
+    /* Кнопка logout */
+    .btn-logout {
+        margin-top: 8px;
+        padding: 16px;
+        font-size: 18px;
     }
 
     .burger {
@@ -1568,6 +1608,13 @@ input[type="checkbox"] {
 
     .login-form .btn-submit {
         padding: 16px;
+    }
+
+    /* Кнопка logout */
+    .btn-logout {
+        margin-top: 8px;
+        padding: 16px;
+        font-size: 18px;
     }
 
     .burger {

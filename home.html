@@ -65,9 +65,7 @@
             
             <div>
                 <li class="container-user" style="display: none;">
-                    <!-- <img src="public/card-pic/avatar.jpg" class="avatar">
-                    <h4 class="user-name">Rachel Dawes</h4> -->
-                    <button class="logout" id="logoutBtn">Выход из системы</button>
+                    <a class="logout" id="logoutBtn">Выход из системы</a>
                 </li>
                     <a class="login" id="loginBtn">Вход в систему</a>
                     <a href="#email-form" class="subsBtn">Подписаться</a>
@@ -81,7 +79,7 @@
                     <button class="modal-close" aria-label="Закрыть">&times;</button>
             
                     <div class="container-title">
-                        <i class="fa-solid fa-arrow-right-to-bracket" id="modal-icon"></i>
+                        <i class="fa-solid fa-arrow-right-to-bracket modal-icon"></i>
                         <h3 class="modal-title"></i>AmIGuess<span>.AI</span></h3>
                     </div>
                     <p class="modal-subtitle">
@@ -97,15 +95,15 @@
                         >
 
                         <input 
-                            type="fname" 
-                            name="Имя" 
+                            type="text" 
+                            name="fname" 
                             placeholder="Имя"
                             required
                         >
 
                         <input 
-                            type="sname" 
-                            name="Фамилия" 
+                            type="text" 
+                            name="sname" 
                             placeholder="Фамилия"
                             required
                         >
@@ -119,12 +117,13 @@
 
                         <div class="checkbox-form">
                             <input
+                                id="remember-me"
                                 type="checkbox"
-                                name="Запомнить меня"
+                                name="remember-me"
                                 value="Запомнить меня"
                             >
                             <label
-                                for="Запомнить меня"
+                                for="remember-me"
                             >Запомнить меня
                             </label>
                         </div>
@@ -138,6 +137,29 @@
                     <p class="modal-hint">
                         Нет аккаунта? <a href="#">Создать</a>
                     </p>
+                </div>
+            </div>
+
+            <!-- ====== LOGOUT MODAL ====== -->
+            <div class="modal" id="logout-modal">
+                <div class="modal-overlay"></div>
+            
+                <div class="modal-window">
+                    <button class="modal-close" id="logout-modal-close" aria-label="Закрыть">&times;</button>
+            
+                    <div class="container-title">
+                        <i class="fa-solid fa-arrow-right-to-bracket modal-icon"></i>
+                        <h3 class="modal-title"></i>AmIGuess<span>.AI</span></h3>
+                    </div>
+                    <p class="modal-subtitle">
+                        Вы уверены, что хотите выйти из аккаунта AmIGuess.AI?
+                    </p>
+            
+                    <form class="logout-form" id="logout-form">
+                        <button type="button" class="btn-logout">
+                            Выйти
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>
@@ -255,10 +277,10 @@
                     </div>
 
                     <ul id="forecast-text-result" class="forecast-text-result" style="display: none;">
-                        <li><i class="fa-solid fa-check"></i>Учтено: 3 147 892 параметра</li>
-                        <li><i class="fa-solid fa-check"></i>Обработано: 12 сценариев</li>
-                        <li><i class="fa-solid fa-check"></i>Уровень уверенности модели: высокий</li>
-                        <p><i class="fa-solid fa-download"></i>предлагаем установить пробную версию нашего <a href="https://github.com/LatteLorenso/AmIGuess.AI.git" target="_blank">AmIGuess AI-assistant</a></p>
+                        <li class="result"><i class="fa-solid fa-check"></i>Учтено: 3 147 892 параметра</li>
+                        <li class="result"><i class="fa-solid fa-check"></i>Обработано: 12 сценариев</li>
+                        <li class="result"><i class="fa-solid fa-check"></i>Уровень уверенности модели: высокий</li>
+                        <li class="install-a-href"><i class="fa-solid fa-download fa-sm"></i>предлагаем установить пробную версию нашего <a href="https://github.com/LatteLorenso/AmIGuess.AI.git" target="_blank" id="passing-login-modal">AmIGuess AI-assistant</a></li>
                     </ul>
                 </div>
             </section>
@@ -351,7 +373,9 @@
                             <button type="submit"><i class="far fa-paper-plane"></i></button>
                         </form>
                     </div>
-                    <!-- <div id="toast" class="toast">Вы подписались!</div> -->
+                    <div id="toast" class="toast">
+                        <span class="toast-message"></span>
+                    </div>
                 </div>
             </div>
 
