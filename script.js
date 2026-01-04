@@ -144,9 +144,6 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// Закрытие по крестику
-// loginModalClose.addEventListener('click', closeModal);
-
 document.querySelectorAll('.container-title').forEach(container => {
     const modalTitle = container.querySelector('.modal-title');
     const modalTitleIcon = container.querySelector('.modal-icon');
@@ -172,6 +169,10 @@ function showUser() {
 function logout() {
     loginBtn.style.display = 'inline';
     userContainer.style.display = 'none';
+
+    // очищаем форму
+    loginForm.reset();
+    isLoggedIn = false;
 }
 
 // Log out
@@ -183,9 +184,6 @@ logoutBtn.addEventListener('click', (event) => {
     logoutModal.classList.add('active');
 });
 
-// Закрытие по крестику
-// logoutModalClose.addEventListener('click', closeModal);
-
 const leaveBtn = document.querySelector('.btn-logout');
 
 leaveBtn.addEventListener('click', (event) => {
@@ -193,6 +191,7 @@ leaveBtn.addEventListener('click', (event) => {
     logoutModal.classList.remove('active');
     logout();
     isLoggedIn = false;
+    showToast(`Ждем вашего возвращения!`, 'success');
 });
 
 // Подключение формы к серверу
@@ -200,6 +199,10 @@ const loginForm = document.getElementById('login-form');
 
 loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+
+    document.querySelectorAll('#login-form input').forEach(input => {
+        input.classList.remove('input-error');
+    });
 
     const formData = new FormData(loginForm);
 
@@ -223,10 +226,12 @@ loginForm.addEventListener('submit', async (event) => {
             isLoggedIn = true;
             closeModal(loginModal);
             showUser();
-            showToast(`Добро пожаловать, ${result.user.name}!`, 'success');
+            showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+        } else {
+            showToast(result.message, 'error');
         }
     } catch (error) {
-        showToast(result.message, 'error');
+        showToast('error');
     }
 });
 
@@ -455,7 +460,6 @@ form.addEventListener('submit', (Event) => {
 });
 
 // Адаптивка RWD burger
-
 const burger = document.getElementById('burger');
 const navLinks = document.getElementById('navLinks');
 
