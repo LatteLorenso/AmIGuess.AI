@@ -108,6 +108,7 @@ body.hovering #cursor-outline {
 html
 {
     scroll-behavior: smooth;
+    scrollbar-color: var(--color-brand-primary) var(--color-bg-header);
 }
 
 body
@@ -823,13 +824,19 @@ input[type="checkbox"] {
 .text-slide {
     font-size: 19px;
     font-weight: 500;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     text-transform: uppercase;
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Выравнивание иконки и текста */
+.text-slide i,
+.text-slide a {
+    vertical-align: middle;
 }
 
 .text-slide:hover {
@@ -1390,8 +1397,13 @@ input[type="checkbox"] {
     transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* Смартфоны 576px */
-@media (min-width: 575px) and (max-width: 767px) {
+/* Смартфоны >455px */
+@media (min-width: 455px) and (max-width: 767px) {
+    html {
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+    }
+
     .subsBtn {
         display: none;
     }
@@ -1562,7 +1574,11 @@ input[type="checkbox"] {
 }
 
 /* Смартфоны 768px */
-@media (min-width: 767px) and (max-width: 1440px) { 
+@media (min-width: 767px) and (max-width: 1440px) {
+    html {
+        scroll-behavior: smooth;
+    }
+
     nav ul {
         position: fixed;
         top: 70px;

@@ -51,47 +51,68 @@ const textInterval = setInterval(() => {
 
 }, 1400);
 
-
 // Matrix
 const canvas = document.getElementById("matrix-bg");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
 const letters = "01АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯabcdefghijklmnopqrstuvwxyz";
 const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = [];
 
-for (let x = 0; x < columns; x++) {
-    drops[x] = Math.random() * canvas.height;
+let columns;
+let drops;
+let animationInterval;
+
+// --- ИНИЦИАЛИЗАЦИЯ ---
+function initMatrix() {
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    columns = Math.floor(canvas.width / dpr / fontSize);
+    drops = Array(columns).fill(0).map(() => Math.random() * canvas.height);
+
+    ctx.font = `${fontSize}px monospace`;
 }
 
+// --- ОТРИСОВКА ---
 function draw() {
-    ctx.fillStyle = "rgba(0,0,0,0.05)"; // для эффекта затухания
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#00eaff81"; // зелёный цвет кода
-    ctx.font = fontSize + "px monospace";
+    ctx.fillStyle = "#00eaff81";
 
     for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i]);
+        const char = letters[Math.floor(Math.random() * letters.length)];
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        const x = i * fontSize;
+        const y = drops[i];
+
+        ctx.fillText(char, x, y);
+
+        // если строка ушла вниз — перезапуск
+        if (y > canvas.height && Math.random() > 0.975) {
             drops[i] = 0;
+        } else {
+            drops[i] += fontSize;
         }
-
-        drops[i] += fontSize;
     }
 }
 
-setInterval(draw, 50);
+// --- ЗАПУСК ---
+initMatrix();
+animationInterval = setInterval(draw, 50);
 
+// --- RESIZE ---
 window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    clearInterval(animationInterval);
+    initMatrix();
+    animationInterval = setInterval(draw, 50);
 });
 
 // Modal Window Log in/Log out
@@ -101,7 +122,6 @@ let isLoggedIn = false; // глобально для скрипта
 // Log in
 const loginModal = document.getElementById('login-modal');
 const overlayModal = document.querySelector('.modal-overlay');
-// const loginModalClose = document.querySelector('.modal-close');
 const loginBtn = document.getElementById('loginBtn');
 
 loginBtn.addEventListener('click', (event) => {
@@ -429,7 +449,7 @@ faqCards.forEach(card => {
 const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');
 
-// Функция для уведомления успешного/неуспешного входа
+// !Не закончен алёрт!
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
     const text = toast.querySelector('.toast-message');
@@ -453,7 +473,9 @@ form.addEventListener('submit', (Event) => {
         localStorage.setItem('subscribedEmails', JSON.stringify(emails)); // JSON.stringify - из массива в строку
         console.log('Текущий email:', email);
         console.log('Список записанных emails:', JSON.parse(localStorage.getItem('subscribedEmails')));
+        // showToast();
         input.value = ''; // Очищаем поле после добавления Email
+
     }
 });
 
