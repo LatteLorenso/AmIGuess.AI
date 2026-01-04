@@ -101,12 +101,20 @@ let isLoggedIn = false; // глобально для скрипта
 // Log in
 const loginModal = document.getElementById('login-modal');
 const overlayModal = document.querySelector('.modal-overlay');
-const loginModalClose = document.querySelector('.modal-close');
+// const loginModalClose = document.querySelector('.modal-close');
 const loginBtn = document.getElementById('loginBtn');
 
 loginBtn.addEventListener('click', (event) => {
     event.preventDefault(); // убираем переход по ссылке
     loginModal.classList.add('active');
+});
+
+document.querySelectorAll('.modal-window').forEach(overlay => {
+    const modalClose = overlay.querySelector('.modal-close');
+
+    modalClose.addEventListener('click', closeModal);
+
+
 });
 
 function closeModal() {
@@ -121,7 +129,7 @@ function closeModal() {
 }
 
 // Закрытие по крестику
-loginModalClose.addEventListener('click', closeModal);
+// loginModalClose.addEventListener('click', closeModal);
 
 // Закрытие по клику вне модалки
 overlayModal.addEventListener('click', closeModal);
@@ -162,7 +170,7 @@ function logout() {
 
 // Log out
 const logoutModal = document.getElementById('logout-modal');
-const logoutModalClose = document.getElementById('logout-modal-close');
+const logoutModalClose = document.querySelector('.modal-close');
 const logoutBtn = document.getElementById('logoutBtn');
 
 logoutBtn.addEventListener('click', (event) => {
