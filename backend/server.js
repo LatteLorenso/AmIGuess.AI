@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+const express = require('express'); // легкое подключение сервера
+const cors = require('cors'); // позволяем браузеру связываться с разными адресами
+const mongoose = require('mongoose'); // Связь между бэкендом и MongoDB (позволяет читать/писать данные в БД через JS)
 const bcrypt = require('bcryptjs'); // для хеширования паролей
 
 const app = express();
@@ -23,27 +23,6 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
-
-// Регистрация нового пользователя
-// app.post('/register', async (req, res) => {
-//     const { email, password, fname, sname } = req.body;
-
-// if (!email || !password || !fname || !sname) {
-//     return res.status(400).json({ message: 'Заполните все поля' });
-// }
-
-//     try {
-//         // Хешируем пароль
-//         const hashedPassword = await bcrypt.hash(password, 10);
-
-//         const newUser = new User({ email, password: hashedPassword, fname, sname });
-//         await newUser.save();
-
-//         res.json({ success: true, user: { name: `${fname} ${sname}`, email } });
-//     } catch (error) {
-//         res.status(500).json({ success: false, message: 'Ошибка сервера' });
-//     }
-// });
 
 // Вход в аккаунт
 app.post('/login', async (req, res) => {
@@ -93,6 +72,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Подключение сервера
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

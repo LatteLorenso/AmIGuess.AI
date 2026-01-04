@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose'); // Связь между бэкендом и MongoDB (позволяет читать/писать данные в БД через JS)
+const bcrypt = require('bcryptjs'); // для хеширования паролей
 
 // Подключение к MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/amiguess')
@@ -14,6 +14,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true }
 });
 
+// Модель User — связывает userSchema с коллекцией users в MongoDB
+// Через неё выполняются все операции с пользователями (find, save, etc.)
 const User = mongoose.model('User', userSchema);
 
 // Список пользователей для добавления

@@ -429,7 +429,7 @@ faqCards.forEach(card => {
 const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');
 
-// !Не закончен алёрт!
+// Функция для уведомления успешного/неуспешного входа
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
     const text = toast.querySelector('.toast-message');
@@ -453,9 +453,7 @@ form.addEventListener('submit', (Event) => {
         localStorage.setItem('subscribedEmails', JSON.stringify(emails)); // JSON.stringify - из массива в строку
         console.log('Текущий email:', email);
         console.log('Список записанных emails:', JSON.parse(localStorage.getItem('subscribedEmails')));
-        // showToast();
         input.value = ''; // Очищаем поле после добавления Email
-
     }
 });
 

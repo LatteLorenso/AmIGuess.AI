@@ -9,11 +9,11 @@
 </head>
 <body>
 
-    <!-- Курсор -->
+    <!-- ====== Курсор ====== -->
     <div id="cursor-dot"></div>
     <div id="cursor-outline"></div>
 
-    <!-- ====== PAGE LOADERs ====== -->
+    <!-- ====== PAGE LOADER ====== -->
     <div id="page-loader">
         <div class="loader-core">
             <span class="ring ring-1"></span>
@@ -28,9 +28,9 @@
         </div>
     </div>
     
-    <div id="site-content" style="display: none;">
+    <section id="site-content" style="display: none;">
         
-        <!-- ====== BACKGROUND LAYER: Am I Guess ? + Martix ====== -->
+        <!-- ====== BACKGROUND LAYER: Am I Guess ? + Matrix ====== -->
         <div class="background-title">
             <span class="bg-word bg-am">AM</span>
             <span class="bg-word bg-i">I</span>
@@ -187,7 +187,6 @@
                         </div>
                     </div>
                 </div>
-                    <!-- если нужны будут визульные приколы, glitch-эффекты, HUD -->
             </section>
 
             <!-- ====== MAIN SECTION: TEXT-SLIDER ====== -->
@@ -326,59 +325,58 @@
                     </div>
                 </div>
             </section>
-            </main>
+        </main>
 
-            <!-- ====== FOOTER SECTION ====== -->
-            <footer class="footer-section section" id="contacts">
+        <!-- ====== FOOTER SECTION ====== -->
+        <footer class="footer-section section" id="contacts">
             <div class="container footer-container">
             <!-- Верхняя часть футера -->
-                <div class="footer-top">
-                    <div class="footer-brand">
-                        <a href="#main" class="logo">
-                            <h4 class="brand-title">AmIGuess.AI</h4>
-                        </a>
-                            <p class="brand-subtitle">AI, который предсказывает будущее</p>
-                        <div class="href-container">
-                            <li><a href="https://github.com/LatteLorenso" target="_blank">
-                                <i class="fab fa-github fa-lg"></i>
-                            </a></li>
-                            <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
-                            <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
-                            <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
-                        </div>
-                    </div>
-                    <div class="footer-links">
-                        <h4>О платформе</h4>
-                        <ul>
-                            <li><a href="#">О нас</a></li>
-                            <li><a href="#">Как работает AI-assistant</a></li>
-                            <li><a href="#">Исследования</a></li>
-                            <li><a href="#">Методология прогнозов</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-links">
-                        <h4>Продукты и возможности</h4>
-                        <ul>
-                            <li><a href="#">Примеры прогнозов</a></li>
-                            <li><a href="#">Интеграции</a></li>
-                            <li><a href="#">API для разработчиков</a></li>
-                            <li><a href="#">Поддержка клиентов</a></li>
-                        </ul>
-                    </div>
-                    <div class="form-container">
-                        <h4>Подписка</h4>
-                        <p>Подпишитесь, чтобы получать свежие прогнозы, аналитические отчёты и инсайты от AmIGuess.AI прямо на вашу почту.</p>
-                        <form action="#" class="subscribe-form" id="email-form">
-                            <input type="email" placeholder="Ваш Email" required id="email-input">
-                            <button type="submit"><i class="far fa-paper-plane"></i></button>
-                        </form>
-                    </div>
-                    <div id="toast" class="toast">
-                        <span class="toast-message"></span>
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="#main" class="logo">
+                        <h4 class="brand-title">AmIGuess.AI</h4>
+                    </a>
+                        <p class="brand-subtitle">AI, который предсказывает будущее</p>
+                    <div class="href-container">
+                        <li><a href="https://github.com/LatteLorenso" target="_blank">
+                            <i class="fab fa-github fa-lg"></i>
+                        </a></li>
+                        <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
+                        <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
+                        <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
                     </div>
                 </div>
+                <div class="footer-links">
+                    <h4>О платформе</h4>
+                    <ul>
+                        <li><a href="#">О нас</a></li>
+                        <li><a href="#">Как работает AI-assistant</a></li>
+                        <li><a href="#">Исследования</a></li>
+                        <li><a href="#">Методология прогнозов</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Продукты и возможности</h4>
+                    <ul>
+                        <li><a href="#">Примеры прогнозов</a></li>
+                        <li><a href="#">Интеграции</a></li>
+                        <li><a href="#">API для разработчиков</a></li>
+                        <li><a href="#">Поддержка клиентов</a></li>
+                    </ul>
+                </div>
+                <div class="form-container">
+                    <h4>Подписка</h4>
+                    <p>Подпишитесь, чтобы получать свежие прогнозы, аналитические отчёты и инсайты от AmIGuess.AI прямо на вашу почту.</p>
+                    <form action="#" class="subscribe-form" id="email-form">
+                        <input type="email" placeholder="Ваш Email" required id="email-input">
+                        <button type="submit"><i class="far fa-paper-plane"></i></button>
+                    </form>
+                </div>
+                <div id="toast" class="toast">
+                    <span class="toast-message"></span>
+                </div>
             </div>
-
+            
             <!-- Нижняя часть футера -->
             <div class="footer-bottom">
                 <p>&copy; 2025 AmIGuess.AI. Все права защищены.</p>
@@ -387,8 +385,8 @@
                     <a href="#">Условия использования</a>
                 </div>
             </div>
-            </footer>
-    </div>
+        </footer>
+    </section>
 
 <script src="script.js"></script>
 <script src="cursor.js"></script>

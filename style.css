@@ -1,7 +1,7 @@
 /* ====== CSS VARIABLES ====== */
 :root {
     /* ===== ОСНОВНОЙ ФОН ===== */
-    --color-bg-header: rgba(5, 6, 10, 0.5);          /* основной фон сайта */
+    --color-bg-header: rgba(5, 6, 10, 0.5);          /* основной фон хеддера */
     --color-bg-modal: rgba(5, 6, 10, 0.9);          /* основной фон модального окна */
     --color-bg-main: #05060a;          /* основной фон сайта */
     --color-bg-secondary: #0a0d14;     /* секции с акцентом */
@@ -9,7 +9,7 @@
     --color-bg-tertiary: #0a0a0a;
 
     /* ===== BRAND / CORE COLOR ===== */
-    --color-brand-primary: #008cff;       /* насыщенный синий для акцентов */
+    --color-brand-primary: #008cff;       /* основной цвет сайта */
     --color-primary-glow-soft: 0 0 15px rgba(0, 234, 255, 0.3); /* слабый акцент glow */
     --color-primary-glow-strong: 0 0 50px rgba(0, 234, 255, 0.7); /* сильный акцент glow */
     --color-second-glow-soft: 0 0 15px rgba(155, 92, 255, 0.3); /* слабый акцент glow */
@@ -50,11 +50,6 @@
     --radius-sm: 2px;
     --radius-md: 12px;
     --radius-lg: 20px;
-
-    /* ===== АНИМАЦИИ ===== */
-    --transition-fast: 0.2s ease;
-    --transition-base: 0.35s ease;
-    --transition-slow: 0.6s ease;
 
     /* ===== Отступы ===== */
     --header-height: 4.5rem;
@@ -141,9 +136,7 @@ img {
 }
 
 
-/* ===============================
-   CONTAINER
-================================ */
+/* ====== CONTAINER ====== */
 .container
 {
     width: 100%;
@@ -156,7 +149,6 @@ img {
 }
 
 /* ====== PAGE LOADER ====== */
-
 #page-loader {
     position: fixed;
     inset: 0;
@@ -251,7 +243,6 @@ img {
 }
 
 /* Смена текста загрузки */
-
 .fade-in {
     opacity: 1;
     transition: opacity 0.3s ease;
@@ -263,7 +254,6 @@ img {
 }
 
 /* ====== BACKGROUND LAYER: Am I Guess ? + Martix ====== */
-
 .background-title {
     position: absolute;
     top: 52%;
@@ -273,7 +263,7 @@ img {
     font-weight: 900;
     color: rgba(255,255,255,0.02);
     white-space: nowrap;
-    pointer-events: none; /* чтобы текст не мешал кликам */
+    pointer-events: none;
     z-index: -99;
     display: flex;
     gap: 1rem;
@@ -302,12 +292,11 @@ img {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -100; /* под всем контентом */
+    z-index: -100;
     display: block;
 }
 
 /* ====== HEADER / NAV ====== */
-
 header
 {
     position: sticky;
@@ -522,7 +511,7 @@ nav ul li a:hover::after {
     text-align: center;
 }
 
-/* Форма */
+/* ====== LOGIN WINDOW ====== */
 .login-form, .logout-form {
     display: flex;
     flex-direction: column;
@@ -585,7 +574,6 @@ input[type="checkbox"] {
     background: #cccccc;
 }
 
-/* Подсказка */
 .modal-hint {
     margin-top: 20px;
     font-size: 13px;
@@ -603,7 +591,6 @@ input[type="checkbox"] {
 }
 
 /* ====== LOGOUT WINDOW ====== */
-
 /* Кнопка logout */
 .btn-logout {
     margin-top: 8px;
@@ -625,6 +612,42 @@ input[type="checkbox"] {
 .btn-logout:hover {
     color: #000;
     background: #cccccc;
+}
+
+/* Уведомление об успешном/неуспешном входе пользователя */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    min-width: 240px;
+    padding: 20px;
+    border-radius: 12px;
+    background: var(--color-bg-secondary);
+    color: #fff;
+    font-size: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Активное состояние */
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ====== Типы состояний ====== */
+/* Успешное */
+.toast.success {
+    border-left: 4px solid var(--color-brand-primary);
+}
+
+/* Неуспешное */
+.toast.error {
+    border-left: 4px solid var(--color-accent-question);
 }
 
 /* Анимация */
@@ -986,6 +1009,7 @@ input[type="checkbox"] {
     margin-bottom: 2px;
 }
 
+/* Контейнер для полосы загрузки */
 .loading-bar-container {
     height: 12px;
     background-color: rgba(255,255,255,0.1);
@@ -1013,7 +1037,7 @@ input[type="checkbox"] {
     margin-top: 20px;
 }
 
-/* Кнопки */
+/* Кнопка сканирования */
 .btn-scan {
     transform: translateX(0);
     opacity: 1;
@@ -1040,6 +1064,7 @@ input[type="checkbox"] {
     box-shadow: var(--color-brand-glow-soft);
 }
 
+/* Прячем кнопку по завершению сканирования */
 .btn-scan.hidden {
     transform: translateX(-50px);
     opacity: 0;
@@ -1048,6 +1073,7 @@ input[type="checkbox"] {
     cursor: none;
 }
 
+/* Кнопка результата сканирования */
 .btn-result {
     transform: translateX(50px);
     opacity: 0;
@@ -1074,6 +1100,7 @@ input[type="checkbox"] {
     box-shadow: var(--color-brand-glow);
 }
 
+/* Показываем кнопку по завершению сканирования */
 .btn-result.show {
     transform: translateX(0);
     opacity: 1;
@@ -1189,7 +1216,6 @@ input[type="checkbox"] {
 }
 
 /* ====== FOOTER SECTION ====== */
-
 #contacts {
     background: var(--color-bg-main);
     border-top: 1px solid var(--color-border-soft);
@@ -1269,7 +1295,7 @@ input[type="checkbox"] {
     padding-left: 5px;
 }
 
-/* Форма футера */
+/* Форма подписки на обновления */
 .form-container h4 {
     font-size: 16px;
     margin-bottom: 15px;
@@ -1305,40 +1331,6 @@ input[type="checkbox"] {
     background: #1e8fffe8;
 }
 
-/* Тост-алерт */
-.toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    min-width: 240px;
-    padding: 20px;
-    border-radius: 12px;
-    background: var(--color-bg-secondary);
-    color: #fff;
-    font-size: 1rem;
-    opacity: 0;
-    transform: translateY(20px);
-    pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 1000;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
-
-/* Активное состояние */
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Типы */
-.toast.success {
-    border-left: 4px solid var(--color-brand-primary);
-}
-
-.toast.error {
-    border-left: 4px solid var(--color-accent-question);
-}
-
 /* Нижняя часть футера */
 .footer-bottom {
     padding: 32px 24px 0;
@@ -1363,9 +1355,8 @@ input[type="checkbox"] {
 
 /* ====== Responsive Web Design ====== */
 
-/* Бургер-меню */
-
-/* Бургер (скрыт на десктопе) */
+/* ====== Бургер-меню ====== */
+/* Бургер (скрыт на экранах больше 1440px) */
 .burger {
     display: none;
     flex-direction: column;
@@ -1384,6 +1375,19 @@ input[type="checkbox"] {
     background-color: var(--color-text-main);
     border-radius: 2px;
     transition: all 0.3s ease;
+}
+
+/* Анимация бургера */
+.burger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.burger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
 }
 
 /* Смартфоны 576px */
@@ -1714,17 +1718,4 @@ input[type="checkbox"] {
     .footer-top {
         grid-template-columns: none;
     }
-}
-
-/* Анимация бургера */
-.burger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.burger.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.burger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
 }
