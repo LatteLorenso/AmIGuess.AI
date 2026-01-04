@@ -109,37 +109,43 @@ loginBtn.addEventListener('click', (event) => {
     loginModal.classList.add('active');
 });
 
-document.querySelectorAll('.modal-window').forEach(overlay => {
-    const modalClose = overlay.querySelector('.modal-close');
-
-    modalClose.addEventListener('click', closeModal);
-
-
-});
-
-function closeModal() {
-    const modalWindow = loginModal.querySelector('.modal-window');
+function closeModal(modal) {
+    const modalWindow = modal.querySelector('.modal-window');
 
     modalWindow.classList.add('closing');
 
     setTimeout(() => {
-        loginModal.classList.remove('active');
+        modal.classList.remove('active');
         modalWindow.classList.remove('closing');
     }, 400);
 }
 
-// Закрытие по крестику
-// loginModalClose.addEventListener('click', closeModal);
+document.querySelectorAll('.modal').forEach(modal => {
+    const closeBtn = modal.querySelector('.modal-close');
+    const overlay = modal.querySelector('.modal-overlay');
 
-// Закрытие по клику вне модалки
-overlayModal.addEventListener('click', closeModal);
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            closeModal(modal);
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            closeModal(modal);
+        });
+    }
+});
 
 // Закрытие по ESC (UX)
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-        closeModal();
+        document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     }
 });
+
+// Закрытие по крестику
+// loginModalClose.addEventListener('click', closeModal);
 
 document.querySelectorAll('.container-title').forEach(container => {
     const modalTitle = container.querySelector('.modal-title');
@@ -170,7 +176,6 @@ function logout() {
 
 // Log out
 const logoutModal = document.getElementById('logout-modal');
-const logoutModalClose = document.querySelector('.modal-close');
 const logoutBtn = document.getElementById('logoutBtn');
 
 logoutBtn.addEventListener('click', (event) => {
@@ -179,17 +184,7 @@ logoutBtn.addEventListener('click', (event) => {
 });
 
 // Закрытие по крестику
-logoutModalClose.addEventListener('click', closeModal);
-
-// Закрытие по клику вне модалки
-overlayModal.addEventListener('click', closeModal);
-
-// Закрытие по ESC (UX)
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-        closeModal();
-    }
-});
+// logoutModalClose.addEventListener('click', closeModal);
 
 const leaveBtn = document.querySelector('.btn-logout');
 
@@ -226,7 +221,7 @@ loginForm.addEventListener('submit', async (event) => {
 
         if (result.success) {
             isLoggedIn = true;
-            closeModal();
+            closeModal(loginModal);
             showUser();
             showToast(`Добро пожаловать, ${result.user.name}!`, 'success');
         }
