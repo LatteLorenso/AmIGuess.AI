@@ -822,7 +822,7 @@ input[type="checkbox"] {
 }
 
 .text-slide {
-    font-size: 19px;
+    font-size: 1.1875rem; /* 19px */
     font-weight: 500;
     display: inline-flex;
     align-items: center;
@@ -912,6 +912,7 @@ input[type="checkbox"] {
 .card-title {
     margin-bottom: 1.5rem;
     font-size: 20px;
+    width: max-content;
 }
 
 .card-subtitle {
@@ -927,6 +928,7 @@ input[type="checkbox"] {
 
 .card-list li {
     color: var(--color-text-dim);
+    width: max-content;
 }
 
 .card::before {
@@ -1207,7 +1209,7 @@ input[type="checkbox"] {
 }
 
 .faq-heading-title {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 400;
 }
 
@@ -1238,17 +1240,18 @@ input[type="checkbox"] {
 }
 
 .brand-title {
-    font-size: 22px;
+    font-size: 1.5rem;
     margin-bottom: 15px;
 }
 
 .brand-subtitle {
     margin-bottom: 1.5rem;
-    font-size: 0.875rem;
+    width: max-content;
     color: var(--color-text-muted);
 }
 
 .href-container {
+    width: max-content;
     display: flex;
     flex-direction: row;
     gap: 20px;
@@ -1262,13 +1265,12 @@ input[type="checkbox"] {
 
 .href-container li i:hover {
     background: var(--color-brand-primary);
-    color: #000;
     border-color: var(--color-border-strong);
 }
 
 .href-container i {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border: 1px solid var(--color-border-soft);
     display: flex;
     align-items: center;
@@ -1306,15 +1308,16 @@ input[type="checkbox"] {
 /* Окно модального контента */
 .footer-modal-window {
     position: relative;
-    max-width: 500px; /* чуть шире, чтобы помещался текст */
+    max-width: 650px;
     margin: 10vh auto;
-    padding: 30px 40px;
+    padding: 40px;
     background: var(--color-bg-secondary);
     backdrop-filter: blur(40px);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-md);
     box-shadow: 0 20px 60px rgba(0,0,0,0.9);
     animation: modalFadeUp 0.4s ease;
+    cursor: none;
 }
 
 /* Анимация закрытия */
@@ -1341,22 +1344,25 @@ input[type="checkbox"] {
 
 /* Заголовок */
 .footer-modal-title {
+    text-align: center;
     font-size: 1.6rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin: 15px 0 15px 0;
 }
 
 /* Контент модалки */
 .footer-modal-content {
+    width: 560px;
     font-size: 1rem;
-    line-height: 1.5;
-    color: var(--color-text-primary);
+    line-height: 1.6;
+    color: var(--color-text-muted);
 }
 
 /* Ссылки футера */
 .footer-links {
     display: flex;
     flex-direction: column;
+    width: max-content;
     gap: 20px;
 }
 
@@ -1417,6 +1423,7 @@ input[type="checkbox"] {
 
 /* Нижняя часть футера */
 .footer-bottom {
+    font-size: 0.875rem;
     padding: 32px 24px 0;
     border-top: 1px solid var(--color-border-soft);
     display: flex;
@@ -1424,17 +1431,13 @@ input[type="checkbox"] {
 }
 
 .footer-bottom p {
-    font-size: 14px;
     color: var(--color-text-dim);
 }
 
 .footer-bottom .legal-links {
-    font-size: 14px;
     color: var(--color-text-dim);
-}
-
-.legal-links a {
-    margin-left: 20px;
+    display: flex;
+    gap: 20px;
 }
 
 /* ====== Responsive Web Design ====== */
@@ -1458,25 +1461,26 @@ input[type="checkbox"] {
     width: 100%;
     background-color: var(--color-text-main);
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: opacity 0.8s ease;
 }
 
 /* Анимация бургера */
 .burger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    opacity: 0.8;
 }
 
 .burger.active span:nth-child(2) {
-    opacity: 0;
+    opacity: 0.6;
 }
 
 .burger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
+    opacity: 0.4;
 }
 
 /* Смартфоны >455px */
 @media (min-width: 455px) and (max-width: 767px) {
     html {
+        font-size: 1rem;
         scroll-behavior: smooth;
         scrollbar-width: thin;
     }
@@ -1486,6 +1490,8 @@ input[type="checkbox"] {
     }
 
     nav ul {
+        display: flex;
+        flex-direction: row;
         position: fixed;
         top: 70px;
         left: 0;
@@ -1502,7 +1508,7 @@ input[type="checkbox"] {
     }
 
     nav ul li a {
-        font-size: 14px;
+        font-size: 1rem;
     }
 
     nav ul.active {
@@ -1560,33 +1566,31 @@ input[type="checkbox"] {
     }
 
     .hero-title {
-        font-size: 2.25rem;
+        font-size: 3.5rem;
+        width: 600px;
         flex-wrap: nowrap;
     }
 
     .hero-description {
-        font-size: 1rem;
+        font-size: 1.1875rem;
     }
     
     .typewriter-text {
-        font-size: 1.1875rem;
+        font-size: 1.5rem;
     }
 
     .cursor {
-        font-size: 1.125rem;
+        font-size: 1.5rem;
         animation: blink 1.5s step-end infinite;
     }
 
     .hero-CTM .btn-primary {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
+        padding: 10px 30px;
     }
 
     .slider-section {
         padding: 20px;
-    }
-
-    .text-slide {
-        font-size: 17px;
     }
 
     .section-title {
@@ -1599,6 +1603,14 @@ input[type="checkbox"] {
         grid-template-columns: none;
         gap: 3rem;
         margin-top: 48px;
+    }
+
+    .card-list span i {
+        font-size: 1rem;
+    }
+
+    .card-list li {
+        font-size: 1.125rem;
     }
 
     .card.animate, .card-active.animate {
@@ -1615,21 +1627,59 @@ input[type="checkbox"] {
 
     .forecast-description {
         color: var(--color-text-muted);
-        font-size: 1rem;
+        font-size: 1.25rem;
+        text-align: center;
         padding-left: 0;
+    }
+
+    .progress-block-container {
+        width: 80%;
+    }
+
+    .forecast-btn-container {
+        display: block;
+    }
+
+    .btn-scan,
+    .btn-result {
+        font-size: 1.25rem;
+        padding: 10px 30px;
+    }
+
+    /* Прячем кнопку по завершению сканирования */
+    .btn-scan.hidden {
+        transform: translateY(-50px);
+    }
+
+    .btn-result.show {
+        transform: translateY(0);
     }
 
     .forecast-text-result {
         display: flex;
+        max-width: 596px;
         flex-direction: column;
-        width: 100%;
         margin: 0 auto;
         margin-top: -130px;
     }
 
-    .forecast-text-result li {
-        justify-content: center;
-        font-size: 1.125rem;
+    .result {
+        font-size: 1.5rem;
+    }
+
+    .install-a-href {
+        display: block;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+
+    li .fa-download {
+        margin-right: 10px;
+    }
+
+    #passing-login-modal {
+        display: block;
+        margin: 0 auto;
     }
 
     .forecast-text-result p {
@@ -1642,17 +1692,65 @@ input[type="checkbox"] {
     }
 
     .faq-card {
-        width: 85%;
+        width: 90%;
+    }
+
+    .faq-heading-title {
+        font-size: 1.5rem;
+        font-weight: 400;
+    }
+
+    .faq-heading-description {
+        font-size: 1.5rem;
+        height: max-content;
     }
 
     .footer-top {
+        font-size: 1.125rem;
         grid-template-columns: none;
     }
-}
 
+    .brand-title {
+        font-size: 1.5rem;
+    }
+
+    .brand-subtitle {
+        font-size: 1rem;
+    }
+
+    .href-container i {
+        width: 55px;
+        height: 55px;
+    }
+
+    .footer-modal-window {
+        max-width: 450px;
+    }
+
+    .footer-modal-content {
+        width: 360px;
+    }
+
+    .footer-modal-title {
+        margin: 15px 0 20px 0;
+    }
+
+    .subscribe-form input {
+        font-size: 1rem;
+        height: 60px;
+    }
+
+    .footer-bottom {
+        align-items: left;
+        flex-direction: column;
+        gap: 15px;
+        font-size: 1rem;
+    }
+}
 /* Смартфоны 768px */
 @media (min-width: 767px) and (max-width: 1440px) {
     html {
+        font-size: 1.125rem;
         scroll-behavior: smooth;
     }
 
@@ -1673,7 +1771,7 @@ input[type="checkbox"] {
     }
 
     nav ul li a {
-        font-size: 16px;
+        font-size: 1rem;
     }
 
     nav ul.active {
@@ -1810,5 +1908,17 @@ input[type="checkbox"] {
 
     .footer-top {
         grid-template-columns: none;
+    }
+
+    .subscribe-form input {
+        font-size: 1rem;
+        height: 60px;
+    }
+
+    .footer-bottom {
+        align-items: left;
+        flex-direction: column;
+        gap: 15px;
+        font-size: 1rem;
     }
 }

@@ -553,6 +553,26 @@ API спроектирован с учётом безопасности, мас�
 Связаться с нами можно через форму обратной связи или по электронной почте:
 support@amiguess.ai
         `
+    },
+
+    privacy: {
+        title: 'Политика конфиденциальности',
+        content: `
+Мы заботимся о вашей конфиденциальности. Любые данные, которые вы предоставляете при использовании AmIGuess.AI, используются только для улучшения работы сервиса и никогда не передаются третьим лицам без вашего согласия.
+
+Если у вас есть вопросы о том, как мы обрабатываем ваши данные, напишите нам:
+📧 privacy@amiguess.ai
+        `
+    },
+
+    usage: {
+        title: 'Условия использования',
+        content: `
+Используя AmIGuess.AI, вы соглашаетесь с правилами нашего сервиса. Мы стремимся сделать взаимодействие с AI-ассистентом удобным, безопасным и полезным.
+
+Если что-то непонятно или вы хотите предложить изменения — просто свяжитесь с нами:
+📧 legal@amiguess.ai
+        `
     }
 };
 
@@ -617,6 +637,24 @@ document.addEventListener('keydown', (Event) => {
     }
 });
 
+// модалка для legal-links
+const legalLinks = document.querySelectorAll('.legal-links a');
+
+// открытие модалки
+legalLinks.forEach(link => {
+    link.addEventListener('click', (Event) => {
+        Event.preventDefault();
+
+        const key = link.dataset.key;
+        if (!modalData[key]) return;
+
+        footerModalTitle.textContent = modalData[key].title;
+        footerModalContent.textContent = modalData[key].content;
+
+        footerModal.classList.add('openModal');
+    });
+});
+
 // Форма сохраняет, введенный Email
 const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');
@@ -655,7 +693,26 @@ form.addEventListener('submit', (Event) => {
 const burger = document.getElementById('burger');
 const navLinks = document.getElementById('navLinks');
 
-burger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    burger.classList.toggle('active');
-});
+if (burger && navLinks) {
+    // Открытие/закрытие по клику на бургер
+    burger.addEventListener('click', (e) => {
+        e.stopPropagation(); // предотвращаем срабатывание клика по документу
+        navLinks.classList.toggle('active');
+        burger.classList.toggle('active');
+    });
+
+    // Закрытие при клике вне меню
+    document.addEventListener('click', (e) => {
+        if (!navLinks.contains(e.target) && !burger.contains(e.target)) {
+            navLinks.classList.remove('active');
+            burger.classList.remove('active');
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            navLinks.classList.remove('active');
+            burger.classList.remove('active');
+        }
+    });
+}
