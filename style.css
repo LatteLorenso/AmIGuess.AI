@@ -1184,6 +1184,7 @@ input[type="checkbox"] {
 .faq-card {
     background: var(--color-bg-tertiary);
     width: 55%;
+    align-content: center;
     padding: 20px;
     border: 1px solid var(--color-border-soft);
     transition: transform 0.6s ease;

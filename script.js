@@ -419,28 +419,29 @@ btnResult.addEventListener("click", () => {
     textResult.style.display = "flex";
 });
 
+// FAQ SECTION: Accordion
 const faqCards = document.querySelectorAll('.faq-card');
 
 faqCards.forEach(card => {
-    const accordion = card.querySelector('.faq-heading');
-    const panel = card.querySelector('.panel');
+    const accordion = card.querySelector('.panel');
 
-    accordion.addEventListener('click', () => {
+    card.addEventListener('click', () => {
         faqCards.forEach(other => {
             if (other !== card) {
                 other.classList.remove('active');
                 other.querySelector('.panel').style.maxHeight = null;
-                panel.style.marginTop = '15px';
+                other.querySelector('.panel').style.marginTop = '0px';
             }
         });
 
         card.classList.toggle('active');
 
         if (card.classList.contains('active')) {
-            panel.style.maxHeight = panel.scrollHeight + 'px';
+            accordion.style.marginTop = '15px';
+            accordion.style.maxHeight = accordion.scrollHeight + 'px';
         } else {
-            panel.style.maxHeight = null;
-            panel.style.marginTop = '0px';
+            accordion.style.maxHeight = null;
+            accordion.style.marginTop = '0px';
         }
     });
 });
