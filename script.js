@@ -446,6 +446,177 @@ faqCards.forEach(card => {
     });
 });
 
+// FOOTER-SECTION: information for links
+const modalData = {
+    about: {
+        title: 'О нас',
+        content: `
+AmIGuess — это интеллектуальная платформа прогнозирования, основанная на современных
+алгоритмах искусственного интеллекта и анализа данных.
+
+Мы создаём инструменты, которые помогают принимать решения на основе данных, а не догадок.
+Наша цель — сделать прогнозирование доступным, понятным и прозрачным как для бизнеса,
+так и для частных пользователей.
+
+Платформа постоянно развивается, обучаясь на новых данных и улучшая точность прогнозов.
+        `
+    },
+
+    AIassistant: {
+        title: 'Как работает AI-assistant',
+        content: `
+AI-assistant AmIGuess анализирует входные данные, выявляет скрытые закономерности и
+строит прогнозы на основе обученных моделей машинного обучения.
+
+В работе используются методы статистического анализа, нейросетевые модели и
+предиктивные алгоритмы. Система автоматически адаптируется под новые данные,
+что позволяет получать более точные результаты со временем.
+
+Все вычисления оптимизированы для быстрого ответа и минимальной нагрузки.
+        `
+    },
+
+    research: {
+        title: 'Исследования',
+        content: `
+В основе AmIGuess лежат современные исследования в области искусственного интеллекта,
+математической статистики и анализа больших данных.
+
+Мы изучаем поведение данных, тестируем модели на реальных сценариях и постоянно
+сравниваем результаты с эталонными показателями. Это позволяет нам улучшать
+качество прогнозов и снижать вероятность ошибок.
+
+Исследовательский подход — ключевая часть развития платформы.
+        `
+    },
+
+    method: {
+        title: 'Методология прогнозов',
+        content: `
+Методология прогнозирования AmIGuess строится на сочетании классических
+статистических методов и современных AI-алгоритмов.
+
+Перед построением прогноза данные проходят этапы очистки, нормализации и анализа.
+Затем система выбирает оптимальную модель для конкретного типа задачи.
+
+Каждый прогноз сопровождается оценкой достоверности, чтобы пользователь мог
+понимать уровень надёжности результата.
+        `
+    },
+
+    examples: {
+        title: 'Примеры прогнозов',
+        content: `
+AmIGuess применяется для анализа трендов, оценки вероятностей событий и
+прогнозирования будущих сценариев.
+
+Примеры использования включают анализ пользовательского поведения,
+оценку рисков, прогнозирование спроса и моделирование различных исходов.
+
+Платформа позволяет визуализировать результаты и сравнивать несколько сценариев
+для принятия более взвешенных решений.
+        `
+    },
+
+    integrations: {
+        title: 'Интеграции',
+        content: `
+AmIGuess поддерживает интеграции с внешними сервисами и платформами через API.
+
+Это позволяет встраивать прогнозы в существующие продукты, CRM-системы,
+аналитические панели и внутренние инструменты компаний.
+
+Гибкая архитектура делает интеграцию простой и масштабируемой.
+        `
+    },
+
+    api: {
+        title: 'API для разработчиков',
+        content: `
+API AmIGuess предоставляет доступ к функциям прогнозирования через HTTP-запросы.
+
+Разработчики могут отправлять данные, получать прогнозы и управлять параметрами моделей.
+API спроектирован с учётом безопасности, масштабируемости и удобства использования.
+
+Документация API помогает быстро начать работу и интегрировать сервис в любой проект.
+        `
+    },
+
+    support: {
+        title: 'Поддержка клиентов',
+        content: `
+Наша команда поддержки всегда готова помочь вам с использованием платформы.
+
+Мы отвечаем на вопросы, помогаем разобраться с функциональностью и принимаем
+предложения по улучшению сервиса.
+
+Связаться с нами можно через форму обратной связи или по электронной почте:
+support@amiguess.ai
+        `
+    }
+};
+
+// FOOTER-SECTION: общее модальное окно
+// ссылки футера
+const footerLinks = document.querySelectorAll('.footer-links a');
+
+// модалка
+const footerModal = document.getElementById('footer-modal');
+const footerModalTitle = footerModal.querySelector('.footer-modal-title');
+const footerModalContent = footerModal.querySelector('.footer-modal-content');
+
+// открытие модалки
+footerLinks.forEach(link => {
+    link.addEventListener('click', (Event) => {
+        Event.preventDefault();
+
+        const key = link.dataset.key;
+        if (!modalData[key]) return;
+
+        footerModalTitle.textContent = modalData[key].title;
+        footerModalContent.textContent = modalData[key].content;
+
+        footerModal.classList.add('openModal');
+    });
+});
+
+// общая функция закрытия модалки
+function closeFooterModal(footerModal) {
+    const footerModalWindow = footerModal.querySelector('.footer-modal-window');
+
+    footerModalWindow.classList.add('closeModal');
+
+    setTimeout(() => {
+        footerModal.classList.remove('openModal');
+        footerModalWindow.classList.remove('closeModal');
+    }, 400);
+}
+
+// закрытие модалки (по крестику, по нажатию вне оверлея окна)
+document.querySelectorAll('.footer-modal').forEach(footerModal => {
+    const footerModalClose = footerModal.querySelector('.footer-modal-close');
+    const footerModalOverlay = footerModal.querySelector('.footer-modal-overlay');
+
+    if (footerModalClose) {
+        footerModalClose.addEventListener('click', () => {
+            closeFooterModal(footerModal);
+        });
+    }
+
+    if (footerModalOverlay) {
+        footerModalOverlay.addEventListener('click', () => {
+            closeFooterModal(footerModal);
+        });
+    }
+});
+
+// Закрытие по ESC (UX)
+document.addEventListener('keydown', (Event) => {
+    if (Event.key === 'Escape') {
+        document.querySelectorAll('.footer-modal.openModal').forEach(footerModal => closeFooterModal(footerModal));
+    }
+});
+
 // Форма сохраняет, введенный Email
 const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');

@@ -439,7 +439,7 @@ nav ul li a:hover::after {
 }
 
 .modal-window.closing {
-    animation: modalFadeDown 0.4s ease; 
+    animation: modalFadeDown 0.4s ease;
 }
 
 /* Закрытие */
@@ -1275,6 +1275,82 @@ input[type="checkbox"] {
     justify-content: center;
     color: #fff;
     transition: 0.3s;
+}
+
+/* Модалка для футера */
+/* Основной контейнер модального окна */
+.footer-modal {
+    position: fixed;
+    inset: 0;
+    top: 15vh;
+    z-index: 1000;
+    display: none;
+}
+
+/* Активное состояние */
+.footer-modal.openModal {
+    display: block;
+}
+
+/* Затемнение */
+.footer-modal-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    cursor: pointer; /* курсор при наведении */
+    top: 0;
+    left: 0;
+}
+
+/* Окно модального контента */
+.footer-modal-window {
+    position: relative;
+    max-width: 500px; /* чуть шире, чтобы помещался текст */
+    margin: 10vh auto;
+    padding: 30px 40px;
+    background: var(--color-bg-secondary);
+    backdrop-filter: blur(40px);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    animation: modalFadeUp 0.4s ease;
+}
+
+/* Анимация закрытия */
+.footer-modal-window.closeModal {
+    animation: modalFadeDown 0.4s ease;
+}
+
+/* Кнопка закрытия */
+.footer-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 36px;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.footer-modal-close:hover {
+    color: var(--color-brand-primary);
+}
+
+/* Заголовок */
+.footer-modal-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* Контент модалки */
+.footer-modal-content {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text-primary);
 }
 
 /* Ссылки футера */
