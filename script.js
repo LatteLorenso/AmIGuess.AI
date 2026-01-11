@@ -35,6 +35,7 @@ const textInterval = setInterval(() => {
                     loader.remove();
                     siteContent.style.display = 'block';
                     siteContent.classList.add('fade-in');
+                    document.dispatchEvent(new Event('appReady'));
                 }, 600);
 
             }, 1100);
@@ -193,7 +194,26 @@ function logout() {
     // очищаем форму
     loginForm.reset();
     isLoggedIn = false;
+    // Удаляем пользователя
+    localStorage.removeItem('user');
 }
+
+// Проверка был ли вход до перезагрузки страницы
+document.addEventListener('appReady', () => {
+    const savedUser = localStorage.getItem('user');
+
+    if (!savedUser) return;
+
+    const user = JSON.parse(savedUser);
+
+    isLoggedIn = true;
+    showUser();
+
+    setTimeout(() => {
+        showToast(`С возвращением, ${user.fname} ${user.sname}!`, 'success');
+    }, 200);
+
+});
 
 // Log out
 const logoutModal = document.getElementById('logout-modal');
@@ -210,7 +230,6 @@ leaveBtn.addEventListener('click', (event) => {
     event.preventDefault(); // убираем переход по ссылке
     logoutModal.classList.remove('active');
     logout();
-    isLoggedIn = false;
     showToast(`Ждем вашего возвращения!`, 'success');
 });
 
@@ -244,6 +263,10 @@ loginForm.addEventListener('submit', async (event) => {
 
         if (result.success) {
             isLoggedIn = true;
+
+            // Сохраняем пользователя
+            localStorage.setItem('user', JSON.stringify(result.user));
+
             closeModal(loginModal);
             showUser();
             showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
@@ -314,7 +337,6 @@ function type() {
 
 // Запуск typewriter
 type();
-
 
 // Slider-section
 const sliderContainer = document.querySelector('.slider-container');
