@@ -1566,22 +1566,23 @@ input[type="checkbox"] {
     }
 
     .hero-title {
-        font-size: 3.5rem;
+        font-size: 3rem;
         width: 600px;
         flex-wrap: nowrap;
     }
 
-    .hero-description {
-        font-size: 1.1875rem;
-    }
-    
     .typewriter-text {
-        font-size: 1.5rem;
+        font-size: 1.125rem;
     }
 
     .cursor {
-        font-size: 1.5rem;
+        font-size: 1.125rem;
         animation: blink 1.5s step-end infinite;
+    }
+
+    .hero-description {
+        font-size: 1.1875rem;
+        margin-bottom: 1.5rem;
     }
 
     .hero-CTM .btn-primary {

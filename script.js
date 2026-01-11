@@ -468,6 +468,15 @@ faqCards.forEach(card => {
     });
 });
 
+// FOOTER-SECTION: общее модальное окно
+// ссылки футера
+const footerLinks = document.querySelectorAll('.footer-links a');
+
+// модалка
+const footerModal = document.getElementById('footer-modal');
+const footerModalTitle = footerModal.querySelector('.footer-modal-title');
+const footerModalContent = footerModal.querySelector('.footer-modal-content');
+
 // FOOTER-SECTION: information for links
 const modalData = {
     about: {
@@ -583,7 +592,7 @@ support@amiguess.ai
 Мы заботимся о вашей конфиденциальности. Любые данные, которые вы предоставляете при использовании AmIGuess.AI, используются только для улучшения работы сервиса и никогда не передаются третьим лицам без вашего согласия.
 
 Если у вас есть вопросы о том, как мы обрабатываем ваши данные, напишите нам:
-📧 privacy@amiguess.ai
+<br>📧 privacy@amiguess.ai
         `
     },
 
@@ -593,19 +602,10 @@ support@amiguess.ai
 Используя AmIGuess.AI, вы соглашаетесь с правилами нашего сервиса. Мы стремимся сделать взаимодействие с AI-ассистентом удобным, безопасным и полезным.
 
 Если что-то непонятно или вы хотите предложить изменения — просто свяжитесь с нами:
-📧 legal@amiguess.ai
+<br> 📧 legal@amiguess.ai
         `
     }
 };
-
-// FOOTER-SECTION: общее модальное окно
-// ссылки футера
-const footerLinks = document.querySelectorAll('.footer-links a');
-
-// модалка
-const footerModal = document.getElementById('footer-modal');
-const footerModalTitle = footerModal.querySelector('.footer-modal-title');
-const footerModalContent = footerModal.querySelector('.footer-modal-content');
 
 // открытие модалки
 footerLinks.forEach(link => {
@@ -616,7 +616,7 @@ footerLinks.forEach(link => {
         if (!modalData[key]) return;
 
         footerModalTitle.textContent = modalData[key].title;
-        footerModalContent.textContent = modalData[key].content;
+        footerModalContent.innerHTML = modalData[key].content;
 
         footerModal.classList.add('openModal');
     });
@@ -671,7 +671,7 @@ legalLinks.forEach(link => {
         if (!modalData[key]) return;
 
         footerModalTitle.textContent = modalData[key].title;
-        footerModalContent.textContent = modalData[key].content;
+        footerModalContent.innerHTML = modalData[key].content;
 
         footerModal.classList.add('openModal');
     });
