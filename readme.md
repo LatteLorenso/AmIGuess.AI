@@ -3,8 +3,8 @@
 ```bash
 # 1. Установите Node.js и MongoDB (или MongoDB Compass для удобного просмотра базы)
 # 2. Склонируйте репозиторий и перейдите в папку backend
-git clone https://github.com/ваш_репозиторий/AmIGuess.AI.git
-cd AmIGuess.AI/backend
+git clone https://github.com/LatteLorenso/AmIGuess.AI
+cd /backend
 
 # 3. Установите зависимости Node.js
 npm install express mongoose cors bcryptjs
