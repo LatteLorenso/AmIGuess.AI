@@ -145,7 +145,7 @@ img {
 }
 
 .section {
-    padding: 5rem 0 2rem;
+    padding: 2.5rem 0 2rem;
 }
 
 /* ====== PAGE LOADER ====== */
@@ -717,7 +717,7 @@ input[type="checkbox"] {
 .cursor {
     font-size: 1.75rem;
     animation: blink 1s step-end infinite;
-    color: #249dff;
+    color: white;
 }
 
 @keyframes blink {
@@ -1152,8 +1152,10 @@ input[type="checkbox"] {
 
 /* ====== MAIN SECTION: FAQ ====== */
 .faq-section {
+    padding: 40px 32px;
     margin-top: 32px;
-    background: var(--color-bg-main);
+    margin-bottom: 60px;
+    background: var(--color-bg-secondary);
 }
 
 .faq-container {
@@ -1228,7 +1230,7 @@ input[type="checkbox"] {
 /* ====== BACKGROUND LAYER: Am I Guess ? + Martix ====== */
 .background-title {
     position: absolute;
-    top: 285%;
+    top: 280%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 8vw;
