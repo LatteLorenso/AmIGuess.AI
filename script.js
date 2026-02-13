@@ -56,7 +56,7 @@ const textInterval = setInterval(() => {
 const canvas = document.getElementById("matrix-bg");
 const ctx = canvas.getContext("2d");
 
-const letters = "01АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯabcdefghijklmnopqrstuvwxyz";
+const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const fontSize = 16;
 
 let columns;
