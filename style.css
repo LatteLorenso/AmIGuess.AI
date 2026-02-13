@@ -834,9 +834,15 @@ input[type="checkbox"] {
 }
 
 /* Выравнивание иконки и текста */
-.text-slide i,
 .text-slide a {
-    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+}
+
+.text-slide i {
+    margin-right: 8px;
+    margin-bottom: 4px;
+    font-size: 1.2rem;
 }
 
 .text-slide:hover {
