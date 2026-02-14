@@ -86,7 +86,7 @@ function draw() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#00eaff81";
+    ctx.fillStyle = "#008cffcc";
 
     for (let i = 0; i < drops.length; i++) {
         const char = letters[Math.floor(Math.random() * letters.length)];
@@ -165,18 +165,35 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-document.querySelectorAll('.container-title').forEach(container => {
-    const modalTitle = container.querySelector('.modal-title');
-    const modalTitleIcon = container.querySelector('.modal-icon');
+// Анимация Хеддера (LogIn)
+document.querySelectorAll('.container-title-login').forEach(container => {
+    const modalTitleLogin = container.querySelector('.modal-title-login');
+    const modalTitleIconLogin = container.querySelector('.modal-icon-login');
     
-    modalTitle.addEventListener('mouseover', () => {
-        modalTitle.classList.add('hovering');
-        modalTitleIcon.classList.add('active');
+    modalTitleLogin.addEventListener('mouseover', () => {
+        modalTitleLogin.classList.add('hovering');
+        modalTitleIconLogin.classList.add('active');
     });
     
-    modalTitle.addEventListener('mouseout', () => {
-        modalTitleIcon.classList.remove('active');
-        modalTitle.classList.remove('hovering');
+    modalTitleLogin.addEventListener('mouseout', () => {
+        modalTitleIconLogin.classList.remove('active');
+        modalTitleLogin.classList.remove('hovering');
+    });
+});
+
+// Анимация Хеддера (LogOut)
+document.querySelectorAll('.container-title-logout').forEach(container => {
+    const modalTitleLogout = container.querySelector('.modal-title-logout');
+    const modalTitleIconLogout = container.querySelector('.modal-icon-logout');
+    
+    modalTitleLogout.addEventListener('mouseover', () => {
+        modalTitleLogout.classList.add('hovering');
+        modalTitleIconLogout.classList.add('active');
+    });
+    
+    modalTitleLogout.addEventListener('mouseout', () => {
+        modalTitleIconLogout.classList.remove('active');
+        modalTitleLogout.classList.remove('hovering');
     });
 });
 

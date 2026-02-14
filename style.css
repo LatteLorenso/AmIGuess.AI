@@ -430,9 +430,9 @@ nav ul li a:hover::after {
 /* Закрытие */
 .modal-close {
     position: absolute;
-    top: 14px;
-    right: 18px;
-    font-size: 36px;
+    top: 24px;
+    right: 20px;
+    font-size: 42px;
     background: none;
     border: none;
     color: var(--color-text-muted);
@@ -445,49 +445,13 @@ nav ul li a:hover::after {
 }
 
 /* Тексты */
-.container-title {
+.container-title-login,
+.container-title-logout {
     display: flex;
     justify-content: center;
     flex-direction: row;
     align-items: center;
-}
-
-.modal-title
-{
-    margin-top: 30px;
-    color: var(--color-text-main);
-    text-align: center;
-    font-size: 32px;
-    font-weight: bold;
-    text-decoration: none;
-    transform: translateX(0);
-    transition: color 0.2s ease, transform 0.5s ease, text-shadow 0.4s ease;
-    white-space: nowrap;
-    line-height: 1.6;
-    margin-bottom: 30px;
-}
-
-.modal-icon {
-    font-size: 32px;
-    font-weight: 900;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.4s ease, transform 0.5s ease;
-}
-
-.modal-icon.active {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.modal-title span {
-    color: var(--color-brand-primary);
-}
-
-.modal-title.hovering {
-    color: var(--color-brand-primary);
-    transform: translateX(10px);
-    text-shadow: 0 0 30px rgba(0, 140, 255, 0.3);
+    margin-top: -49px;
 }
 
 .modal-subtitle {
@@ -498,6 +462,43 @@ nav ul li a:hover::after {
 }
 
 /* ====== LOGIN WINDOW ====== */
+.modal-title-login
+{
+    margin-top: 30px;
+    color: var(--color-text-main);
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    text-decoration: none;
+    transform: translateX(-12px);
+    transition: color 0.2s ease, transform 0.5s ease, text-shadow 0.4s ease;
+    white-space: nowrap;
+    line-height: 1.6;
+    margin-bottom: 23px;
+}
+
+.modal-icon-login {
+    font-size: 32px;
+    font-weight: 900;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.5s ease;
+}
+
+.modal-title-login span {
+    color: var(--color-brand-primary);
+}
+
+.modal-icon-login.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.modal-title-login.hovering {
+    color: var(--color-brand-primary);
+    transform: translateX(10px);
+    text-shadow: 0 0 30px rgba(0, 140, 255, 0.3);
+}
+
 .login-form, .logout-form {
     display: flex;
     flex-direction: column;
@@ -541,9 +542,9 @@ input[type="checkbox"] {
 
 /* Кнопка login */
 .login-form .btn-submit {
-    margin-top: 8px;
     padding: 10px 14px;
     background: var(--color-brand-primary);
+    letter-spacing: 0.5px;
     font-size: 18px;
     font-weight: 600;
     font-family: var(--code-font);
@@ -577,13 +578,57 @@ input[type="checkbox"] {
 }
 
 /* ====== LOGOUT WINDOW ====== */
+.modal-title-logout
+{
+    margin-top: 30px;
+    color: var(--color-text-main);
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    text-decoration: none;
+    transform: translateX(20px);
+    transition: color 0.2s ease, transform 0.5s ease, text-shadow 0.4s ease;
+    white-space: nowrap;
+    line-height: 1.6;
+    margin-bottom: 23px;
+}
+
+.modal-title-logout span {
+    color: var(--color-brand-primary);
+}
+
+.modal-title-logout.active {
+    opacity: 1;
+    /* transform: translateX(-20px); */
+}
+
+.modal-title-logout.hovering {
+    color: var(--color-brand-primary);
+    transform: translateX(-10px);
+    text-shadow: 0 0 30px rgba(0, 140, 255, 0.3);
+}
+
+.modal-icon-logout {
+    font-size: 32px;
+    font-weight: 900;
+    opacity: 0;
+    color: var(--color-accent-question);
+    transition: opacity 0.4s ease, transform 0.5s ease;
+}
+
+.modal-icon-logout.active {
+    opacity: 1;
+    color: var(--color-accent-question);
+    transform: translateX(0);
+}
+
 /* Кнопка logout */
 .btn-logout {
-    margin-top: 8px;
     padding: 10px 14px;
     width: 90%;
     margin: 0 auto;
     background: var(--color-accent-question);
+    letter-spacing: 0.5px;
     font-size: 18px;
     font-weight: 600;
     font-family: var(--code-font);
@@ -1043,12 +1088,12 @@ input[type="checkbox"] {
     transform: translateX(0);
     opacity: 1;
     margin: 0 auto;
-    background: var(--color-brand-primary);
+    background: #cccccc;
     border: none;
     border-radius: var(--radius-sm);
     font-family: var(--code-font);
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     font-size: 0.975rem;
     padding: 10px 25px;
@@ -1061,7 +1106,7 @@ input[type="checkbox"] {
 
 .btn-scan:hover {
     color: #cccccc;
-    background: var(--color-btn-second-darker);
+    background: var(--color-brand-primary);
     box-shadow: var(--color-brand-glow-soft);
 }
 
@@ -1084,7 +1129,7 @@ input[type="checkbox"] {
     border-radius: var(--radius-sm);
     font-family: var(--code-font);
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
     font-size: 0.975rem;
     padding: 10px 25px;
@@ -1096,8 +1141,8 @@ input[type="checkbox"] {
 }
 
 .btn-result:hover {
-    color: #cccccc;
-    background: var(--color-btn-second-darker);
+    color: var(--color-btn-text);
+    background: #cccccc;
     box-shadow: var(--color-brand-glow);
 }
 
@@ -1178,7 +1223,7 @@ input[type="checkbox"] {
 }
 
 .faq-card {
-    background: var(--color-bg-tertiary);
+    background: var(--color-bg-glass);
     width: 55%;
     align-content: center;
     padding: 20px;
@@ -1345,11 +1390,18 @@ input[type="checkbox"] {
     animation: modalFadeDown 0.4s ease;
 }
 
+.footer-modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0 30px 0;
+}
+
 /* Кнопка закрытия */
 .footer-modal-close {
     position: absolute;
-    top: 14px;
-    right: 18px;
+    top: 20px;
+    right: 20px;
     font-size: 36px;
     background: none;
     border: none;
@@ -1367,7 +1419,7 @@ input[type="checkbox"] {
     text-align: center;
     font-size: 1.6rem;
     font-weight: 700;
-    margin: 15px 0 15px 0;
+    margin-top: -19px;
 }
 
 /* Контент модалки */
@@ -1556,16 +1608,21 @@ input[type="checkbox"] {
         font-size: 46px;
     }
 
-    .modal-icon {
+    .modal-icon-login {
         opacity: 1;
         transition: none;
     }
     
-    .modal-icon.active {
+    .modal-icon-login.active {
         transform: translateX(-10px);
     }
 
-    .modal-title.hovering {
+    .modal-icon-logout.active {
+        transform: translateX(-10px);
+    }
+
+    .modal-title-login.hovering,
+    .modal-title-logout.hovering {
         transform: translateX(0);
     }
 
@@ -1829,11 +1886,16 @@ input[type="checkbox"] {
         transition: none;
     }
     
-    #modal-icon.active {
+    #modal-icon-login.active {
         transform: translateX(-10px);
     }
 
-    .modal-title.hovering {
+    .modal-icon-logout.active {
+        transform: translateX(-10px);
+    }
+
+    .modal-title.hovering,
+    .modal-title-logout.hovering {
         transform: translateX(0);
     }
 
