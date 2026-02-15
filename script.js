@@ -232,23 +232,30 @@ document.addEventListener('appReady', () => {
 
 });
 
+// Переход по ссылке к Регистрации/Входу
 const reg = document.getElementById('registration');
 
 const regModal = document.getElementById('reg-modal');
+const regBtn = document.getElementById('btn-reg');
 
 reg.addEventListener('click', (event) => {
     event.preventDefault(); // убираем переход по ссылке
-    // Закрываем модальное окно Входа
+    // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Регистрации
     regModal.classList.add('active');
 });
 
-const regBtn = document.getElementById('btn-reg');
+const login = document.getElementById('login');
 
-regBtn.addEventListener('click', () => {
-    // showToast(`Вы успешно зарегистрировались!`, 'success');
+login.addEventListener('click', (event) => {
+    event.preventDefault(); // убираем переход по ссылке
+    // Закрываем каждое открытое модальное окно
+    document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
+    // Открываем модальное окно Входа
+    loginModal.classList.add('active');
 });
+
 
 // Log out
 const logoutModal = document.getElementById('logout-modal');
