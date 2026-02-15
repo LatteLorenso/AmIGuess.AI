@@ -26,10 +26,10 @@ const User = mongoose.model('User', userSchema);
 
 // Вход в аккаунт
 app.post('/login', async (req, res) => {
-    const { email, fname, sname, password } = req.body;
+    const { email, password } = req.body;
 
     // Проверка, что все поля заполнены
-    if (!email || !fname || !sname || !password) {
+    if (!email || !password) {
         return res.status(400).json({ success: false, message: 'Заполните все поля' });
     }
 
@@ -37,18 +37,18 @@ app.post('/login', async (req, res) => {
         // Проверяем email
         const user = await User.findOne({ email: email.toLowerCase().trim() });
         if (!user) {
-            return res.status(401).json({ success: false, field: 'email', message: 'Неверные данные для входа' });
+            return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email' });
         }
 
-        // Проверяем имя
-        if (user.fname !== fname.trim()) {
-            return res.status(401).json({ success: false, field: 'fname', message: 'Неверное имя: Возможно неверный регистр или пропущены символы' });
-        }
+        // // Проверяем имя
+        // if (user.fname !== fname.trim()) {
+        //     return res.status(401).json({ success: false, field: 'fname', message: 'Неверное имя: Возможно неверный регистр или пропущены символы' });
+        // }
 
-        // Проверяем фамилию
-        if (user.sname !== sname.trim()) {
-            return res.status(401).json({ success: false, field: 'sname', message: 'Неверная фамилия: Возможно неверный регистр или пропущены символы' });
-        }
+        // // Проверяем фамилию
+        // if (user.sname !== sname.trim()) {
+        //     return res.status(401).json({ success: false, field: 'sname', message: 'Неверная фамилия: Возможно неверный регистр или пропущены символы' });
+        // }
 
         // Проверяем пароль
         const passwordMatch = await bcrypt.compare(password, user.password);
@@ -61,6 +61,7 @@ app.post('/login', async (req, res) => {
         res.json({
             success: true,
             user: {
+                _id: user._id,
                 fname: user.fname,
                 sname: user.sname,
                 email: user.email

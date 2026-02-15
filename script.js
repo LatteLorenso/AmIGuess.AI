@@ -247,7 +247,7 @@ reg.addEventListener('click', (event) => {
 const regBtn = document.getElementById('btn-reg');
 
 regBtn.addEventListener('click', () => {
-    showToast(`Вы успешно зарегистрировались!`, 'success');
+    // showToast(`Вы успешно зарегистрировались!`, 'success');
 });
 
 // Log out
@@ -280,11 +280,26 @@ loginForm.addEventListener('submit', async (event) => {
 
     const formData = new FormData(loginForm);
 
+    const email = formData.get('email').trim();
+    const password = formData.get('password');
+
+    // Валидация на клиенте
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showToast('Неверный формат Email', 'error');
+        loginForm.querySelector('input[name="email"]').classList.add('input-error');
+        return;
+    }
+
+    if (password.length < 6) {
+        showToast('Пароль должен содержать не менее 6 символов!', 'error');
+        loginForm.querySelector('input[name="password"]').classList.add('input-error');
+        return;
+    }
+
     const data = {
-        email: formData.get('email'),
-        fname: formData.get('fname'),
-        sname: formData.get('sname'),
-        password: formData.get('password')
+        email: email,
+        password: password
     };
 
     try {
@@ -307,9 +322,14 @@ loginForm.addEventListener('submit', async (event) => {
             showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
         } else {
             showToast(result.message, 'error');
+
+            // Подсветка полей при ошибке
+            if (result.field) {
+                loginForm.querySelector(`input[name="${result.field}"]`).classList.add('input-error');
+            }
         }
     } catch (error) {
-        showToast('error');
+        showToast('Произошла непредвиденная ошибка при регистрации. Попробуйте позже.', 'error');
     }
 });
 

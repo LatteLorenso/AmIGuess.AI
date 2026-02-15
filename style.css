@@ -542,8 +542,8 @@ input[type="checkbox"] {
     margin-left: 10px;
 }
 
-/* Кнопка login */
-.login-form .btn-submit {
+/* Кнопка login/registration */
+.login-form .btn-submit, #btn-reg {
     padding: 10px 14px;
     background: var(--color-brand-primary);
     letter-spacing: 0.5px;
@@ -558,24 +558,16 @@ input[type="checkbox"] {
     transition: color 0.3s ease, background 0.3s ease;
 }
 
-.btn-submit:hover {
+.btn-submit:hover,
+#btn-reg:hover {
     color: #000;
     background: #cccccc;
 }
 
+/* Кнопка registration */
 .reg-form #btn-reg {
-    padding: 10px 14px;
-    background: var(--color-brand-primary);
-    letter-spacing: 0.5px;
-    font-size: 18px;
-    font-weight: 600;
-    font-family: var(--code-font);
-    text-transform: uppercase;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    color: var(--color-text-main);
-    transition: color 0.3s ease, background 0.3s ease;
+    margin-top: 10px;
+    letter-spacing: 0px;
 }
 
 .modal-hint {
