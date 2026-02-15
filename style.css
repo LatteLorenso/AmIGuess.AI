@@ -1608,30 +1608,35 @@ input[type="checkbox"] {
         pointer-events: auto;
     }
 
-    .modal-window {
-        margin: 9vh auto;
+    #modal-window-logout {
+        margin: 20vh auto;
     }
 
     .modal-close {
-        font-size: 46px;
+        top: 15px;
+        right: 25px;
+        font-size: 52px;
     }
 
     .modal-icon-login {
-        opacity: 1;
+        opacity: 0;
         transition: none;
     }
     
     .modal-icon-login.active {
-        transform: translateX(-10px);
+        transform: translateX(0);
+    }
+
+    .modal-title-login.hovering {
+        transform: translateX(10px);
     }
 
     .modal-icon-logout.active {
-        transform: translateX(-10px);
+        transform: translateX(0);
     }
 
-    .modal-title-login.hovering,
     .modal-title-logout.hovering {
-        transform: translateX(0);
+        transform: translateX(-10px);
     }
 
     .login-form input {
@@ -1899,12 +1904,12 @@ input[type="checkbox"] {
     }
 
     .modal-icon-logout.active {
-        transform: translateX(-10px);
+        transform: translateX(0);
     }
 
     .modal-title.hovering,
     .modal-title-logout.hovering {
-        transform: translateX(0);
+        transform: translateX(-10px);
     }
 
     .login-form input {
