@@ -106,7 +106,7 @@
                         <input 
                             type="password" 
                             name="password" 
-                            placeholder="●●●●●●"
+                            placeholder="Пароль"
                             required
                         >
 
@@ -130,8 +130,67 @@
                     </form>
             
                     <p class="modal-hint">
-                        Нет аккаунта? <a href="#">Создать</a>
+                        Нет аккаунта? <a id="registration">Создать</a>
                     </p>
+                </div>
+            </div>
+
+            <!-- ====== REGISTRATION MODAL ====== -->
+            <div class="modal" id="reg-modal">
+                <div class="modal-overlay"></div>
+            
+                <div class="modal-window">
+                    <button class="modal-close" aria-label="Закрыть">&times;</button>
+            
+                    <div class="container-title-login">
+                        <i class="fa-solid fa-arrow-right-to-bracket modal-icon-login"></i>
+                        <h3 class="modal-title-login"></i>AmIGuess<span>.AI</span></h3>
+                    </div>
+                    <p class="modal-subtitle">
+                        Зарегистрируйтесь, чтобы получить доступ к прогнозам и аналитике AmIGuess.AI
+                    </p>
+            
+                    <form class="reg-form" id="reg-form">
+                        <input 
+                            type="email" 
+                            name="email" 
+                            placeholder="Email"
+                            required
+                        >
+
+                        <input 
+                            type="text" 
+                            name="fname" 
+                            placeholder="Имя"
+                            required
+                        >
+
+                        <input 
+                            type="text" 
+                            name="sname" 
+                            placeholder="Фамилия"
+                            required
+                        >
+            
+                        <input 
+                            type="password" 
+                            name="password" 
+                            placeholder="Пароль"
+                            required
+                        >
+                        <input 
+                            type="password" 
+                            name="repeat-password" 
+                            placeholder="Повторите пароль"
+                            required
+                        >
+                        </div>
+
+                        
+                        <button type="submit" class="btn-submit" id="btn-reg">
+                            Зарегистрироваться
+                        </button>
+                    </form>
                 </div>
             </div>
 

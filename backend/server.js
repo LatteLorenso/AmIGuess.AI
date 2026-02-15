@@ -35,26 +35,26 @@ app.post('/login', async (req, res) => {
 
     try {
         // Проверяем email
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
         if (!user) {
-            return res.status(404).json({ success: false, field: 'email', message: 'Пользователь с таким email не найден', field: 'email' });
+            return res.status(401).json({ success: false, field: 'email', message: 'Неверные данные для входа' });
         }
 
         // Проверяем имя
-        if (user.fname !== fname) {
-            return res.status(401).json({ success: false, field: 'fname', message: 'Неверное имя: Возможно неверный регистр или пропущены символы', field: 'fname' });
+        if (user.fname !== fname.trim()) {
+            return res.status(401).json({ success: false, field: 'fname', message: 'Неверное имя: Возможно неверный регистр или пропущены символы' });
         }
 
         // Проверяем фамилию
-        if (user.sname !== sname) {
-            return res.status(401).json({ success: false, field: 'sname', message: 'Неверная фамилия: Возможно неверный регистр или пропущены символы', field: 'sname' });
+        if (user.sname !== sname.trim()) {
+            return res.status(401).json({ success: false, field: 'sname', message: 'Неверная фамилия: Возможно неверный регистр или пропущены символы' });
         }
 
         // Проверяем пароль
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ success: false, field: 'password', message: 'Неверный пароль: Возможно неверный регистр или пропущены символы', field: 'password' });
+            return res.status(401).json({ success: false, field: 'password', message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
         }
 
         // Всё совпадает — возвращаем данные пользователя
@@ -69,6 +69,98 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Endpoint для проверки существования пользователя
+app.post('/check-user', async (req, res) => {
+    try {
+        const { email, fname, sname } = req.body;
+
+        // Проверка наличия данных
+        if (!email || !fname || !sname) {
+            return res.status(400).json({ success: false, message: 'Не все данные предоставлены' });
+        }
+
+        const errors = {};
+        let hasErrors = false;
+
+        // Проверка Email
+        const existingEmail = await User.findOne({ email: email.toLowerCase().trim() });
+        if (existingEmail) {
+            errors.emailExists = true;
+            hasErrors = true;
+        }
+
+        // Проверка ФИ
+        const existingName = await User.findOne({
+            fname: fname.toLowerCase().trim(),
+            sname: sname.toLowerCase().trim()
+        });
+        if (existingName) {
+            errors.nameExists = true;
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            return res.json({ success: false, ...errors });
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Ошибка валидации пользователя:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Endpoint для Регистрации
+app.post('/register', async (req, res) => {
+    try {
+        const { email, fname, sname, password } = req.body;
+
+        // Доп. валидация на сервере
+        if (!email || !fname || !sname || !password) {
+            return res.status(400).json({ success: false, message: 'Все поля обязательны для заполнения' });
+        }
+
+        // Проверка существования пользователя
+        const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+        if (existingUser) {
+            return res.status(400).json({ success: false, message: 'Пользователь с таким Email уже существует' });
+        }
+
+        // Хеширование пароля
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Создание нового пользователя
+        const newUser = new User({
+            email: email.toLowerCase().trim(),
+            fname: fname.trim(),
+            sname: sname.trim(),
+            password: hashedPassword
+        });
+
+        await newUser.save();
+
+        res.json({
+            success: true,
+            message: 'Регистрация успешна!',
+            user: {
+                _id: newUser._id,
+                email: newUser.email,
+                fname: newUser.fname,
+                sname: newUser.sname
+            }
+        });
+    } catch (error) {
+        console.error('Ошибка регистрации:', error);
+        
+        // Обработка ошибки уникальности
+        if (error.code === 11000) {
+            return res.status(400).json({ success: false, message: 'Пользователь с такими данными уже существует' });
+        }
+        
+        res.status(500).json({ success: false, message: 'Ошибка при регистрации' });
     }
 });
 

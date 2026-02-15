@@ -116,7 +116,7 @@ window.addEventListener("resize", () => {
     animationInterval = setInterval(draw, 50);
 });
 
-// Modal Window Log in/Log out
+// Modal Window Log in/Registration/Log out
 
 let isLoggedIn = false; // глобально для скрипта
 
@@ -232,6 +232,24 @@ document.addEventListener('appReady', () => {
 
 });
 
+const reg = document.getElementById('registration');
+
+const regModal = document.getElementById('reg-modal');
+
+reg.addEventListener('click', (event) => {
+    event.preventDefault(); // убираем переход по ссылке
+    // Закрываем модальное окно Входа
+    document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
+    // Открываем модальное окно Регистрации
+    regModal.classList.add('active');
+});
+
+const regBtn = document.getElementById('btn-reg');
+
+regBtn.addEventListener('click', () => {
+    showToast(`Вы успешно зарегистрировались!`, 'success');
+});
+
 // Log out
 const logoutModal = document.getElementById('logout-modal');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -244,13 +262,13 @@ logoutBtn.addEventListener('click', (event) => {
 const leaveBtn = document.querySelector('.btn-logout');
 
 leaveBtn.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    // event.preventDefault(); // убираем переход по ссылке
     logoutModal.classList.remove('active');
     logout();
     showToast(`Ждем вашего возвращения!`, 'success');
 });
 
-// Подключение формы к серверу
+// Подключение формы Входа к серверу
 const loginForm = document.getElementById('login-form');
 
 loginForm.addEventListener('submit', async (event) => {
@@ -294,6 +312,121 @@ loginForm.addEventListener('submit', async (event) => {
         showToast('error');
     }
 });
+
+// Подключение формы Регистрации к серверу
+const regForm = document.getElementById('reg-form');
+
+regForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    document.querySelectorAll('#reg-form input').forEach(input => {
+        input.classList.remove('input-error');
+    });
+
+    const formData = new FormData(regForm);
+
+    const email = formData.get('email').trim();
+    const fname = formData.get('fname').trim();
+    const sname = formData.get('sname').trim();
+    const password = formData.get('password');
+    const repeatPassword = formData.get('repeat-password');
+
+    // Проверка совпадения пароля и его длины
+    if (repeatPassword !== password) {
+        showToast('Пароли не совпадают', 'error');
+        regForm.querySelector('input[name="repeat-password"]').classList.add('input-error');
+        return;
+    }
+    if (password.length < 6) {
+        showToast('Пароль должен содержать минимально 6 символов', 'error');
+        regForm.querySelector('input[name="password"]').classList.add('input-error');
+        regForm.querySelector('input[name="repeat-password"]').classList.add('input-error');
+        return;
+    }
+
+    // Подготовка данных для отправки в backend
+    const data = {
+        email: formData.get('email'),
+        fname: formData.get('fname'),
+        sname: formData.get('sname'),
+        password: formData.get('password'),
+        repeatPassword: formData.get('repeat-password')
+    };
+
+    try {
+        const checkResponse = await fetch('http://localhost:3000/check-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, fname, sname })
+        });
+
+        const checkResult = await checkResponse.json();
+
+        if (!checkResult.success) {
+
+            if (checkResult.emailExists) {
+                showToast('Пользователь с таким Email уже существует', 'error');
+                regForm.querySelector('input[name="email"]').classList.add('input-error');
+            }
+
+            if (checkResult.nameExists) {
+                showToast('Пользователь с таким ФИ уже существует', 'error');
+                regForm.querySelector('input[name="fname"]').classList.add('input-error');
+                regForm.querySelector('input[name="sname"]').classList.add('input-error');
+            }
+
+            return;
+        }
+
+        // Отправка данных на сервер для регистрации
+        const response = await fetch('http://localhost:3000/register', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            isLoggedIn = true;
+
+            // Сохраняем пользователя
+            localStorage.setItem('user', JSON.stringify(result.user));
+
+            closeModal(regModal);
+            showUser();
+            showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+        } else {
+            showToast(result.message || 'Ошибка при регистрации', 'error');
+
+            // Показ ошибок валидации от сервера
+            if (result.errors) {
+                Object.keys(result.errors).forEach(field => {
+                    const input = regForm.querySelector('input[name="${field}"]');
+                    if (input) {
+                        input.classList.add('input-error');
+                    }
+                });
+            }
+        }
+    } catch (error) {
+        showToast('Произошла непредвиденная ошибка при регистрации. Попробуйте позже.', 'error');
+    }
+});
+
+// Добавление паролей в реальном времени
+const passwordInput = regForm.querySelector('input[name="password"]');
+const repeatPasswordInput = regForm.querySelector('input[name="repeat-password"]');
+
+if (passwordInput && repeatPasswordInput) {
+    repeatPasswordInput.addEventListener('input', () => {
+        if (passwordInput.value !== repeatPasswordInput.value && repeatPasswordInput.value !== '') {
+            repeatPasswordInput.classList.add('input-error');
+        } else {
+            repeatPasswordInput.classList.remove('input-error');
+        }
+    });
+}
 
 // Require login for download AmIGuess AI-assistant
 const passloginModal = document.getElementById('passing-login-modal');
