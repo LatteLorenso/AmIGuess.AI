@@ -291,9 +291,25 @@ header
     height: 70px;
     background-color: var(--color-bg-header);
     backdrop-filter: blur(20px);
-    display: flex;
-    align-items: center;
     padding: 0 24px;
+}
+
+.main-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.main-header .header-left {
+    justify-self: start;
+}
+.main-header .header-center {
+    justify-self: center;
+}
+.main-header .header-right {
+    justify-self: end;
 }
 
 .logo
@@ -317,11 +333,9 @@ header
 
 nav
 {
-    margin: 0 auto;
     display: flex;
     align-items: center;
-    padding: 15px 0 15px 0;
-    background: var(--color-bg-glass);
+    margin: 0 auto;
 }
 
 nav ul
@@ -330,6 +344,8 @@ nav ul
     align-items: center;
     gap: 20px;
     list-style: none;
+    background: var(--color-bg-glass);
+    padding: 15px 0 15px 0;
 }
 
 nav ul li a {
@@ -761,10 +777,11 @@ input[type="checkbox"] {
 .typewriter-text {
     white-space: nowrap;
     display: inline-block;
-    transform-origin: left center;
+    /* transform-origin: left center; */
     font-size: 2rem;
     font-weight: 600;
     color: var(--color-brand-primary);
+    min-height: 60px;
 }
 
 .cursor {
@@ -1014,19 +1031,22 @@ input[type="checkbox"] {
     padding-bottom: 40px;
 }
 
-.forecast-title {
+.forecast-intro-text {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     text-align: left;
+    gap: 10px;
+    padding: 0 0 0 24px;
+}
+
+.forecast-title {
     font-size: 32px;
     text-transform: uppercase;
-    margin-bottom: -20px;
 }
 
 .forecast-description {
     color: var(--color-text-muted);
     font-size: 1.125rem;
-    padding-left: 15px;
 }
 
 /* Контейнер прогресс-бара */
@@ -1727,8 +1747,8 @@ input[type="checkbox"] {
         align-items: center;
     }
 
-    .forecast-title {
-        font-size: 2rem;
+    .forecast-intro-text {
+        text-align: center;
     }
 
     .forecast-description {
@@ -1985,8 +2005,8 @@ input[type="checkbox"] {
         align-items: center;
     }
 
-    .forecast-title {
-        font-size: 2rem;
+    .forecast-intro-text {
+        text-align: center;
     }
 
     .forecast-description {
@@ -2013,7 +2033,6 @@ input[type="checkbox"] {
     }
 
     .faq-title {
-        font-size: 2rem;
         text-align: center;
     }
 

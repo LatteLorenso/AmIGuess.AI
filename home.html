@@ -34,12 +34,12 @@
         <canvas id="matrix-bg"></canvas>
     
         <!-- ====== HEADER: NAVIGATION + LOG IN/LOG OUT ====== -->
-        <header>
-            <div class="logo-container">
+        <header class="main-header">
+            <div class="header-left">
                 <a href="#main" class="logo">AmIGuess<span>.AI</span></a>
             </div>
             
-            <nav>
+            <nav class="header-center">
                 <ul id="navLinks">
                     <li><a href="#main">Главная</a></li>
                     <li><a href="#card">Наши возможности</a></li>
@@ -50,20 +50,22 @@
             </nav>
 
             <!-- Бургер кнопка -->
-            <div class="burder-overlay">
-                <div class="burger" id="burger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+            <div class="header-right">
+                <div class="burder-overlay">
+                    <div class="burger" id="burger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </div>
-            </div>
-            
-            <div>
-                <li class="container-user" style="display: none;">
-                    <a class="logout" id="logoutBtn">Выход из системы</a>
-                </li>
-                    <a class="login" id="loginBtn">Вход в систему</a>
-                    <a href="#email-form" class="subsBtn">Подписаться</a>
+                
+                <div>
+                    <li class="container-user" style="display: none;">
+                        <a class="logout" id="logoutBtn">Выход из системы</a>
+                    </li>
+                        <a class="login" id="loginBtn">Вход в систему</a>
+                        <a href="#email-form" class="subsBtn">Подписаться</a>
+                </div>
             </div>
 
             <!-- ====== LOGIN MODAL ====== -->
@@ -309,8 +311,10 @@
             <!-- ====== MAIN SECTION: START-FORECAST ====== -->
             <section class="forecast-section" id="start-forecast">
                 <div class="container forecast-container">
-                    <h2 class="forecast-title">Старт прогноза</h2>
-                    <p class="forecast-description">AI анализирует данные и строит прогноз на основе ваших показателей.</p>
+                    <section class="forecast-intro-text">
+                        <h2 class="forecast-title">Старт прогноза</h2>
+                        <p class="forecast-description">AI анализирует данные и строит прогноз на основе ваших показателей.</p>
+                    </section>
 
                     <div class="progress-block-container">
                         <div class="percentage">
