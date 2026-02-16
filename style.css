@@ -782,6 +782,7 @@ input[type="checkbox"] {
     font-weight: 600;
     color: var(--color-brand-primary);
     min-height: 60px;
+    will-change: width;
 }
 
 .cursor {
