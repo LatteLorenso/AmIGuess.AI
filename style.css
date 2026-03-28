@@ -458,7 +458,7 @@ nav ul li a:hover::after {
 /* Закрытие */
 .modal-close {
     position: absolute;
-    top: 24px;
+    top: 15px;
     right: 20px;
     font-size: 42px;
     background: none;
@@ -474,7 +474,8 @@ nav ul li a:hover::after {
 
 /* Тексты */
 .container-title-login,
-.container-title-logout {
+.container-title-logout,
+.container-title-settings {
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -679,6 +680,132 @@ input[type="checkbox"] {
 .btn-logout:hover {
     color: #000;
     background: #cccccc;
+}
+
+/* ====== SETTINGS WINDOW ====== */
+#modal-window-settings {
+    max-width: 80%;
+}
+
+.modal-title-settings {
+    margin-top: 30px;
+    color: var(--color-text-main);
+    text-align: center;
+    font-size: 1.7rem;
+    white-space: nowrap;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/* .modal-subtitle-settings {
+    color: var(--color-text-main);
+    font-size: 1rem;
+    white-space: nowrap;
+    line-height: 1.6;
+    margin-bottom: 25px;
+} */
+
+.menu-settings {
+    display: grid;
+    grid-template-columns: 25% auto;
+    gap: 50px;
+    height: 500px;
+    margin-bottom: 35px;
+}
+
+.left-side {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+}
+
+.left-side-option {
+    background-color: var(--color-bg-modal);
+    backdrop-filter: blur(4px);
+    color: var(--color-text-main);
+    font-size: 1rem;
+    line-height: 1.6;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.left-side-option:hover {
+    background-color: var(--color-bg-glass);
+}
+
+.left-side-option.active {
+    color: var(--color-text-main);
+    background-color: var(--color-brand-primary);
+}
+
+.settings-panel {
+    display: none;
+    justify-content: center;
+}
+
+.settings-panel.active {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.title-options {
+    font-size: 2rem;
+    line-height: 1.6;
+    text-align: left;
+    color: var(--color-text-main);
+    margin-bottom: 10px;
+}
+
+.subtitle-option {
+    color: var(--color-text-main);
+    font-size: 1rem;
+    white-space: nowrap;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.btn-settings {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-accept {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-main);
+    border: 2px solid var(--color-border-soft);
+    padding: 8px 20px;
+    font-weight: bold;
+    cursor: not-allowed;
+    font-size: 15px;
+    transition: border 0.2s ease;
+}
+
+.btn-accept.active {
+    background-color: var(--color-brand-primary);
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-main);
+    border: 2px solid var(--color-border-soft);
+    padding: 8px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: border 0.2s ease;
+}
+
+.btn-accept:hover {
+    border: 2px solid var(--color-brand-primary);
+}
+
+.btn-cancel:hover {
+    border: 2px solid var(--color-accent-question);
 }
 
 /* Уведомление об успешном/неуспешном входе пользователя */
@@ -1440,8 +1567,8 @@ input[type="checkbox"] {
 /* Кнопка закрытия */
 .footer-modal-close {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 15px;
+    right: 25px;
     font-size: 2.550rem;
     background: none;
     border: none;
@@ -1459,7 +1586,7 @@ input[type="checkbox"] {
     text-align: center;
     font-size: 1.6rem;
     font-weight: 700;
-    margin-top: -16px;
+    margin-top: -20px;
 }
 
 /* Контент модалки */
@@ -1871,7 +1998,7 @@ input[type="checkbox"] {
 
     .footer-modal-close {
         top: 15px;
-        right: 20px;
+        right: 25px;
         font-size: 2.550rem;
     }
 

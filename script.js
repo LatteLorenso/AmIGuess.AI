@@ -197,12 +197,53 @@ document.querySelectorAll('.container-title-logout').forEach(container => {
     });
 });
 
+// Скрываем кнопку входа из аккаунта/Показываем кнопку выхода из аккаунта
 const userContainer = document.querySelector('.container-user');
 
 function showUser() {
     loginBtn.style.display = 'none';
     userContainer.style.display = 'inline';
 }
+
+// Модальное окно Settings (Открытие)
+const btnSettings = document.getElementById('settings');
+const modalSettings = document.getElementById('settings-modal');
+
+btnSettings.addEventListener('click', (event) => {
+    event.preventDefault;
+    modalSettings.classList.add('active');
+});
+
+// Боковое меню (Показ соответствующих настроек по нажатию на пункт из бокового меню)
+const containerMenu = document.getElementById('container-menu');
+const containerOption = document.getElementById('aside-options');
+const mainMenu = document.getElementById('main-side');
+const selectedOption = document.querySelectorAll('.settings-panel');
+
+const menuOptions = document.querySelectorAll('.left-side-option');
+
+function activateOption(button) {
+    menuOptions.forEach(btn => btn.classList.remove('active'));
+
+    button.classList.add('active');
+
+    selectedOption.forEach(panel => {
+        panel.classList.remove('active');
+    });
+
+    const targetID = button.getAttribute('data-target');
+    const targetPanel = document.getElementById(targetID);
+
+    if (targetPanel) {
+        targetPanel.classList.add('active');
+    }
+}
+
+menuOptions.forEach(button => {
+    button.addEventListener('click', () => {
+        activateOption(button);
+    });
+});
 
 function logout() {
     loginBtn.style.display = 'inline';

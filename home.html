@@ -65,7 +65,7 @@
                     </li>
                         <a class="login" id="loginBtn">Вход в систему</a>
                         <a href="#email-form" class="subsBtn">Подписаться</a>
-                        <a class="settings">
+                        <a id="settings" class="settings">
                             <i class="fa-solid fa-gear"></i>
                         </a>
                 </div>
@@ -80,7 +80,7 @@
             
                     <div class="container-title-login">
                         <i class="fa-solid fa-arrow-right-to-bracket modal-icon-login"></i>
-                        <h3 class="modal-title-login"></i>AmIGuess<span>.AI</span></h3>
+                        <h3 class="modal-title-login">AmIGuess<span>.AI</span></h3>
                     </div>
                     <p class="modal-subtitle">
                         Авторизуйтесь, чтобы получить доступ к прогнозам и аналитике AmIGuess.AI
@@ -135,7 +135,7 @@
             
                     <div class="container-title-login">
                         <i class="fa-solid fa-arrow-right-to-bracket modal-icon-login"></i>
-                        <h3 class="modal-title-login"></i>AmIGuess<span>.AI</span></h3>
+                        <h3 class="modal-title-login">AmIGuess<span>.AI</span></h3>
                     </div>
                     <p class="modal-subtitle">
                         Зарегистрируйтесь, чтобы получить доступ к прогнозам и аналитике AmIGuess.AI
@@ -195,7 +195,7 @@
                     <button class="modal-close" aria-label="Закрыть">&times;</button>
             
                     <div class="container-title-logout">
-                        <h3 class="modal-title-logout"></i>AmIGuess<span>.AI</span></h3>
+                        <h3 class="modal-title-logout">AmIGuess<span>.AI</span></h3>
                         <i class="fa-solid fa-arrow-right-from-bracket modal-icon-logout"></i>
                     </div>
                     <p class="modal-subtitle">
@@ -207,6 +207,49 @@
                             Выйти
                         </button>
                     </form>
+                </div>
+            </div>
+
+            <!-- ====== SETTINGS MODAL ====== -->
+            <div class="modal" id="settings-modal">
+                <div class="modal-overlay"></div>
+
+                <div class="modal-window" id="modal-window-settings">
+                    <button class="modal-close" artia-label="Закрыть">&times;</button>
+
+                    <div class="container-title-settings">
+                        <h3 class="modal-title-settings">Settings</h3>
+                    </div>
+                    <!-- <p class="modal-subtitle-settings">
+                        Information
+                    </p> -->
+
+                    <div id="container-menu" class="menu-settings">
+                        <aside id="aside-options" class="left-side">
+                            <h4 class="left-side-option active" data-target="main-settings">Общие настройки</h4>
+                            <h4 class="left-side-option" data-target="safety-settings">Безопасность аккаунта</h4>
+                            <h4 class="left-side-option" data-target="FAQ">FAQ</h4>
+                        </aside>
+                        <aside class="main-side">
+                            <section id="main-settings" class="settings-panel active">
+                                <h3 class="title-options">Общие настройки</h3>
+                                <p class="subtitle-option">Та-та-та</p>
+                            </section>
+                            <section id="safety-settings" class="settings-panel">
+                                <h3 class="title-options">Безопасность аккаунта</h3>
+                                <p class="subtitle-option">Включить двухэтапную аутентификацию</p>
+                            </section>
+                            <section id="FAQ" class="settings-panel">
+                                <h3 class="title-options">FAQ</h3>
+                                <p class="subtitle-option">Бла-бла-бла</p>
+                            </section>
+                        </aside>
+                    </div>
+
+                    <section class="btn-settings">
+                        <button class="btn-accept" type="button">Сохранить изменения</button>
+                        <button class="btn-cancel" type="button">Отменить изменения</button>
+                    </section>
                 </div>
             </div>
         </header>
