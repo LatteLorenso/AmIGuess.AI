@@ -245,7 +245,141 @@ menuOptions.forEach(button => {
     });
 });
 
-// Функция включения настройки
+// Двухфакторная Аутентификация: Включение
+// Получение данных текущего пользователя
+const getCurrentUserEmail = () => {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) return null;
+
+    try {
+        return JSON.parse(userJson).email || null;
+    } catch (error) {
+        console.error('Ошибка парсинга user из localStorage:', error);
+        return null;
+    }
+};
+
+// Временное хранение секрета
+let temp2FASecret = '';
+
+// Кнопка включения 2FA
+const btnEnable2FA = document.getElementById('enable-2fa');
+const btnDisable2FA = document.getElementById('disable-2fa');
+
+if (btnEnable2FA) {
+    btnEnable2FA.addEventListener('click', async () => {
+        if (!isLoggedIn) {
+            showToast('Сначала войдите в аккаунт', 'error');
+            return;
+        }
+
+        const email = getCurrentUserEmail();
+        if (!email) {
+            showToast('Ошибка: не удалось получить email', 'error');
+            return;
+        }
+
+        const originalText = btnEnable2FA.textContent;
+        btnEnable2FA.disabled = true;
+        btnEnable2FA.textContent = 'Проверка...';
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);``
+            const data = await response.json();
+
+            if (data.success) {
+                if (data.isEnabled) {
+                    showToast('2FA уже включен');
+                    btnDisable2FA.classList.add('active');
+                } else {
+                    await start2FASetup(email);
+                }
+            } else {
+                showToast(`Ошибка: ${data.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке 2FA:', error);
+            showToast('Ошибка соединения с сервером', 'error');
+        } finally {
+            btnEnable2FA.disabled = true;
+            btnEnable2FA.textContent = originalText;
+        }
+    });
+}
+
+// Запуск настройки 2FA
+async function generateQRCode(email) {
+    const container = document.getElementById('qr-container');
+    container.innerHTML = '<p>Генерация</p>';
+
+    try {
+        const res = await fetch('http://localhost:3000/api/2fa/setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            temp2FASecret = data.secret;
+            container.innerHTML = `
+                <img src="${data.qrcode}" alt="QR" style="width:200px; height:200px;">
+                <p style="font-size:1rem;color:var(--color-text-main);">Вручную: <b>${data.secret}</b></p>
+            `;
+        } else {
+            container.innerHTML = `<p class="error">${data.message}</p>`;
+        }
+    } catch (error) {
+        container.innerHTML = '<p class="error">Ошибка сети</p>';
+    }
+}
+
+// Подтверждение
+async function confirm2FA(email) {
+    const token = document.getElementById('input-2fa-token').value.trim();
+
+    if (!token || !token.length !== 6) {
+        showToast('Введите 6-значный код из приложения', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch('http://localhost:3000/api/2fa/verify-setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, secret: temp2FASecret })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            showToast('2FA успешно включен!', 'success');
+        } else {
+            showToast(`${data.message}`);
+        }
+    } catch (error) {
+        showToast('Ошибка соединения:', 'error');
+    }
+}
+
+async function start2FASetup(email) {
+    const containerFor2FA = document.getElementById('container-2fa');
+
+    containerFor2FA.innerHTML = `
+        <h4>Настройка 2FA</h4>
+        <p>1. Отсканируйте QR-код:</p>
+        <div id="qr-container" style="text-align:center; margin: 20px 0px;">
+            <button id="btn-generate-qr">Показать QR-код</button>
+        </div>
+        <p>2. Введите код из приложения:</p>
+        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="padding: 8px; width: 100%; margin-bottom: 10px;">
+        <button id="btn-confirm-enable" style="width: 100%; padding: 10px; background: #008cff; color: var(--color-text-main); border: none;">
+            Подтвердить
+        </button>
+    `
+
+    document.getElementById('btn-generate-qr').addEventListener('click', () => generateQRCode(email));
+    document.getElementById('btn-confirm-enable').addEventListener('click', () => verifyAndEnable2FA(email));
+}
 
 
 function logout() {

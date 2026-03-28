@@ -19,7 +19,10 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     fname: { type: String, required: true },
     sname: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    twoFactorSecret: { type: String, select: false }, // select: false гарантирует, что секрет не "утечёт" при обычных findOne() — его нужно будет явно запрашивать через .select('+twoFactorSecret').
+    isTwoFactorSecret: { type: Boolean, default: false },
+    backupCodes: [{ type: String }]
 });
 
 const User = mongoose.model('User', userSchema);
@@ -40,21 +43,21 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email' });
         }
 
-        // // Проверяем имя
-        // if (user.fname !== fname.trim()) {
-        //     return res.status(401).json({ success: false, field: 'fname', message: 'Неверное имя: Возможно неверный регистр или пропущены символы' });
-        // }
-
-        // // Проверяем фамилию
-        // if (user.sname !== sname.trim()) {
-        //     return res.status(401).json({ success: false, field: 'sname', message: 'Неверная фамилия: Возможно неверный регистр или пропущены символы' });
-        // }
-
         // Проверяем пароль
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
             return res.status(401).json({ success: false, field: 'password', message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
+        }
+
+        if (user.isTwoFactorEnabled) {
+            if (!twoFactorCode) {
+                return res.status(403).json({
+                    success: false,
+                    requires2FA: true,
+                    message: 'Требуется код двухфакторной аутентификации'
+                });
+            }
         }
 
         // Всё совпадает — возвращаем данные пользователя
@@ -162,6 +165,152 @@ app.post('/register', async (req, res) => {
         }
         
         res.status(500).json({ success: false, message: 'Ошибка при регистрации' });
+    }
+});
+
+const speakeasy = require('speakeasy');
+const qrcode = require('qrcode');
+
+// Двухфакторная Аутентификация: Эндпоинт получения статуса 2FA
+app.get('/api/2fa/status', async (req, res) => {
+    const { email } = req.query;
+
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email обязателен' });
+    }
+
+    try {
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        res.json({
+            success: true,
+            isEnabled: user.isTwoFactorEnabled
+        });
+    } catch (error) {
+        console.log('Ошибка получения статуса 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт настройки 2FA
+app.post('/api/2fa/setup', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email обязателен' });
+    }
+
+    try {
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        const secret = speakeasy.generateSecret({
+            name: `AmIGuess.AI (${user.email})`,
+            issuer: `AmIGuess.AI`
+        });
+
+        const qrCodeDataURL = await qrcode.toDataURL(secret.otpauth_url);
+
+        res.json({
+            success: true,
+            secret: secret.base32,
+            qrcode: qrCodeDataURL,
+            otpauthUrl: secret.otpauth_url
+        });
+    } catch (error) {
+        console.error('Ошибка настройки 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт подтверждения настройки 2FA (пользователь отсканировал QR - ввел код из приложения - мы проверяем и только после сохраняем в БД)
+app.post('/api/2fa/verify-setup', async (req, res) => {
+    const { email, token, secret } = req.body;
+
+    if (!email || !token || !secret) {
+        return res.status(400).json({ success: false, message: 'Заполните все поля' });
+    }
+
+    try {
+        const verified = speakeasy.totp.verify({
+            secret: secret,
+            encoding: 'base32',
+            token: token,
+            window: 1 // +- 30 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
+        });
+
+        if (!verified) {
+            return res.status(400).json({ success: false, message: 'Неверный код' });
+        }
+
+        // Код верный, сохраняем в БД
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        user.twoFactorSecret = secret;
+        user.isTwoFactorEnabled = true;
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: '2FA Успешно включен!',
+        });
+    } catch (error) {
+        console.error('Ошибка подтверждения 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт отключения 2FA (требует подтверждения)
+app.post('/api/2fa/disable', async (req, res) => {
+    const { email, password, token } = req.body;
+
+    if (!email | !password | !token) {
+        return res.status(400).json({ success: false, message: 'Заполните все поля' });
+    }
+
+    try {
+        const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+twoFactorSecret');
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ success: false, message: 'Неверный пароль' });
+        }
+
+        const verified = speakeasy.totp.verify({
+            secret: user.TwoFactorSecret,
+            encoding: 'base32',
+            token: token,
+            window: 1
+        });
+
+        if (!verified) {
+            return res.status(400).json({ success: false, message: 'Неверный код 2FA' });
+        }
+
+        user.isTwoFactorSecret = false;
+        user.TwoFactorSecret = undefined;
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: '2FA успешно отключен'
+        });
+    } catch (error) {
+        console.log('Ошибка отключения 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
     }
 });
 
