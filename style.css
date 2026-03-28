@@ -382,7 +382,8 @@ nav ul li a:hover::after {
 
 .login,
 .subsBtn,
-.logout
+.logout,
+.settings
 {
     background-color: var(--color-bg-secondary);
     color: var(--color-text);
@@ -401,6 +402,17 @@ nav ul li a:hover::after {
 
 .subsBtn:hover {
     border: 2px solid var(--color-accent-question);
+}
+
+.settings {
+    align-items: center;
+    font-size: 16px;
+    transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.settings:hover {
+    background-color: #000000;
+    border: 2px solid var(--color-brand-primary);
 }
 
 /* ====== MODAL BASE ====== */
@@ -1452,7 +1464,6 @@ input[type="checkbox"] {
 
 /* Контент модалки */
 .footer-modal-content {
-    /* width: 560px; */
     font-size: 1rem;
     line-height: 1.6;
     color: var(--color-text-muted);
@@ -1891,7 +1902,7 @@ input[type="checkbox"] {
     }
 }
 /* Смартфоны 768px */
-@media (min-width: 767px) and (max-width: 1440px) {
+@media (min-width: 767px) and (max-width: 1450px) {
     html {
         font-size: 1.125rem;
         scroll-behavior: smooth;
