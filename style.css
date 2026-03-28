@@ -1556,12 +1556,17 @@ input[type="checkbox"] {
 
 /* ====== Бургер-меню ====== */
 /* Бургер (скрыт на экранах больше 1440px) */
+.burger-overlay {
+    position: relative;
+    top: 4px;
+    right: 40px;
+}
+
 .burger {
+    position: absolute;
     display: none;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    margin-right: 25px;
     width: 25px;
     height: 20px;
     cursor: pointer;
