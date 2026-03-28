@@ -7,9 +7,9 @@ git clone https://github.com/LatteLorenso/AmIGuess.AI
 cd backend
 
 # 3. Установите зависимости Node.js
-npm install express mongoose cors bcryptjs
+npm install express mongoose cors bcryptjs speakease qrcode
 
-# 4. Добавьте начальных пользователей (админа и обычного пользователя)
+# 3.5. Опционально. Добавьте начальных пользователей (админа и обычного пользователя)
 node seed.js
 
 # 5. Запустите сервер

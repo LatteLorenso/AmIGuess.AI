@@ -262,6 +262,12 @@ const getCurrentUserEmail = () => {
 // Временное хранение секрета
 let temp2FASecret = '';
 
+// Форматирование секрета для отображения (группы по 4 символа)
+const formatSecret = (secret, groupSize = 4) => {
+    if (!secret) return '';
+    return secret.replace(/\s/g, '').match(new RegExp(`.{1,${groupSize}}`, 'g'))?.join(' ') || secret;
+};
+
 // Кнопка включения 2FA
 const btnEnable2FA = document.getElementById('enable-2fa');
 const btnDisable2FA = document.getElementById('disable-2fa');
@@ -279,9 +285,7 @@ if (btnEnable2FA) {
             return;
         }
 
-        const originalText = btnEnable2FA.textContent;
-        btnEnable2FA.disabled = true;
-        btnEnable2FA.textContent = 'Проверка...';
+            btnEnable2FA.classList.add('disable');
 
         try {
             const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);``
@@ -300,9 +304,6 @@ if (btnEnable2FA) {
         } catch (error) {
             console.error('Ошибка при проверке 2FA:', error);
             showToast('Ошибка соединения с сервером', 'error');
-        } finally {
-            btnEnable2FA.disabled = true;
-            btnEnable2FA.textContent = originalText;
         }
     });
 }
@@ -322,9 +323,12 @@ async function generateQRCode(email) {
 
         if (data.success) {
             temp2FASecret = data.secret;
+
+            const formattedSecret = formatSecret(data.secret);
+
             container.innerHTML = `
-                <img src="${data.qrcode}" alt="QR" style="width:200px; height:200px;">
-                <p style="font-size:1rem;color:var(--color-text-main);">Вручную: <b>${data.secret}</b></p>
+                <img src="${data.qrcode}" alt="QR" style="display:flex; justify-self:center; margin-bottom:10px; width:200px; height:200px;">
+                <p style="font-size:1rem; text-align:left;">Вручную: <b>${formattedSecret}</b></p>
             `;
         } else {
             container.innerHTML = `<p class="error">${data.message}</p>`;
@@ -367,12 +371,12 @@ async function start2FASetup(email) {
     containerFor2FA.innerHTML = `
         <h4>Настройка 2FA</h4>
         <p>1. Отсканируйте QR-код:</p>
-        <div id="qr-container" style="text-align:center; margin: 20px 0px;">
-            <button id="btn-generate-qr">Показать QR-код</button>
+        <div id="qr-container" style="text-align:center; margin: 20px 0px 10px;">
+            <button id="btn-generate-qr" style="padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">Показать QR-код</button>
         </div>
         <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="padding: 8px; width: 100%; margin-bottom: 10px;">
-        <button id="btn-confirm-enable" style="width: 100%; padding: 10px; background: #008cff; color: var(--color-text-main); border: none;">
+        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;">
+        <button id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
             Подтвердить
         </button>
     `
