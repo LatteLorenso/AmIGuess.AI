@@ -765,6 +765,7 @@ input[type="checkbox"] {
     white-space: nowrap;
     line-height: 1.6;
     margin-bottom: 25px;
+    cursor: none;
 }
 
 .btn-settings {
@@ -1399,6 +1400,10 @@ input[type="checkbox"] {
     transition: transform 0.6s ease;
 }
 
+.faq-card.active {
+    background: rgba(255,255,255, 0.02);
+}
+
 .faq-heading {
     display: flex;
     flex-direction: row;
@@ -1406,7 +1411,7 @@ input[type="checkbox"] {
     transition: color 0.3s;
 }
 
-.active, .faq-card:hover {
+.faq-card:hover {
     cursor: pointer;
     color: var(--color-brand-primary);
 }

@@ -679,9 +679,11 @@ faqCards.forEach(card => {
         if (card.classList.contains('active')) {
             accordion.style.marginTop = '15px';
             accordion.style.maxHeight = accordion.scrollHeight + 'px';
+            faqCards.classList.add('active');
         } else {
             accordion.style.maxHeight = null;
             accordion.style.marginTop = '0px';
+            faqCards.classList.remove('active');
         }
     });
 });
