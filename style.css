@@ -761,17 +761,49 @@ input[type="checkbox"] {
 
 .subtitle-option {
     color: var(--color-text-main);
-    font-size: 1rem;
+    font-size: 1.125rem;
     white-space: nowrap;
     line-height: 1.6;
     margin-bottom: 25px;
-    cursor: none;
+}
+
+.subtitle-option i {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 .btn-settings {
     display: flex;
     gap: 15px;
     justify-content: center;
+}
+
+.container-btn-turn {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.btn-turn-on,
+.btn-turn-off {
+    width: 200px;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-main);
+    border: 2px solid var(--color-border-soft);
+    padding: 8px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.4s ease;
+}
+
+.btn-turn-on:hover {
+    background-color: var(--color-brand-primary);
+}
+
+.btn-turn-off:hover {
+    background-color: var(--color-accent-question);
 }
 
 .btn-accept {

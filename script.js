@@ -222,7 +222,7 @@ const selectedOption = document.querySelectorAll('.settings-panel');
 
 const menuOptions = document.querySelectorAll('.left-side-option');
 
-function activateOption(button) {
+function activatePanel(button) {
     menuOptions.forEach(btn => btn.classList.remove('active'));
 
     button.classList.add('active');
@@ -241,9 +241,12 @@ function activateOption(button) {
 
 menuOptions.forEach(button => {
     button.addEventListener('click', () => {
-        activateOption(button);
+        activatePanel(button);
     });
 });
+
+// Функция включения настройки
+
 
 function logout() {
     loginBtn.style.display = 'inline';
