@@ -1212,15 +1212,15 @@ input[type="checkbox"] {
 .install-a-href a {
     color: var(--color-brand-primary);
     text-decoration: underline;
-    transition: color 0.3s ease background 0.4s ease;
+    transition: color 0.3s ease, background 0.4s ease;
 }
 
 .install-a-href a:hover {
     text-decoration: none;
+    color: var(--color-text-main);
 }
 
 .install-a-href a:active {
-    color: var(--color-text-main);
     background: rgba(30, 143, 255, 0.878);
 }
 
