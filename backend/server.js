@@ -245,7 +245,7 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
         });
 
         if (!verified) {
-            return res.status(400).json({ success: false, message: 'Неверный код' });
+            return res.status(400).json({ success: false, message: 'Неверный код из приложения 2FA' });
         }
 
         // Код верный, сохраняем в БД
@@ -271,9 +271,10 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
 
 // Двухфакторная Аутентификация: Эндпоинт отключения 2FA (требует подтверждения)
 app.post('/api/2fa/disable', async (req, res) => {
-    const { email, password, token } = req.body;
+    const email = req.headers['x-user-email'];
+    const { password, token } = req.body;
 
-    if (!email | !password | !token) {
+    if (!password || !token) {
         return res.status(400).json({ success: false, message: 'Заполните все поля' });
     }
 
@@ -285,22 +286,22 @@ app.post('/api/2fa/disable', async (req, res) => {
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).json({ success: false, message: 'Неверный пароль' });
+            return res.status(401).json({ success: false, message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
         }
 
         const verified = speakeasy.totp.verify({
-            secret: user.TwoFactorSecret,
+            secret: user.twoFactorSecret,
             encoding: 'base32',
             token: token,
             window: 1
         });
 
         if (!verified) {
-            return res.status(400).json({ success: false, message: 'Неверный код 2FA' });
+            return res.status(400).json({ success: false, message: 'Неверный код из приложения 2FA' });
         }
 
         user.isTwoFactorEnabled = false;
-        user.TwoFactorSecret = undefined;
+        user.twoFactorSecret = undefined;
 
         await user.save();
 
@@ -310,7 +311,7 @@ app.post('/api/2fa/disable', async (req, res) => {
         });
     } catch (error) {
         console.log('Ошибка отключения 2FA:', error);
-        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+        res.status(500).json({ success: false, message: 'Ошибка сервера: ' + error.message });
     }
 });
 
