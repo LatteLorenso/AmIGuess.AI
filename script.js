@@ -342,7 +342,7 @@ async function generateQRCode(email) {
 async function confirm2FA(email) {
     const token = document.getElementById('input-2fa-token').value.trim();
 
-    if (!token || !token.length !== 6) {
+    if (!token || token.length !== 6) {
         showToast('Введите 6-значный код из приложения', 'error');
         return;
     }
@@ -375,14 +375,14 @@ async function start2FASetup(email) {
             <button id="btn-generate-qr" style="padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">Показать QR-код</button>
         </div>
         <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;">
+        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="input:focus; padding:8px; width:100%; margin:10px 0px; font-size:1rem;">
         <button id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
             Подтвердить
         </button>
     `
 
     document.getElementById('btn-generate-qr').addEventListener('click', () => generateQRCode(email));
-    document.getElementById('btn-confirm-enable').addEventListener('click', () => verifyAndEnable2FA(email));
+    document.getElementById('btn-confirm-enable').addEventListener('click', () => confirm2FA(email));
 }
 
 

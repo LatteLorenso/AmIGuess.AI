@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     sname: { type: String, required: true },
     password: { type: String, required: true },
     twoFactorSecret: { type: String, select: false }, // select: false гарантирует, что секрет не "утечёт" при обычных findOne() — его нужно будет явно запрашивать через .select('+twoFactorSecret').
-    isTwoFactorSecret: { type: Boolean, default: false },
+    isTwoFactorEnabled: { type: Boolean, default: false },
     backupCodes: [{ type: String }]
 });
 
@@ -299,7 +299,7 @@ app.post('/api/2fa/disable', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Неверный код 2FA' });
         }
 
-        user.isTwoFactorSecret = false;
+        user.isTwoFactorEnabled = false;
         user.TwoFactorSecret = undefined;
 
         await user.save();
