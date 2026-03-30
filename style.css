@@ -551,9 +551,9 @@ nav ul li a:hover::after {
     border-color: var(--color-brand-primary);
 }
 
-input[type="password"]::placeholder {
+/* input[type="password"]::placeholder {
     font-size: 18px;
-}
+} */
 
 .checkbox-form {
     flex-direction: row;
@@ -804,8 +804,14 @@ input[type="checkbox"] {
     margin-bottom: 10px;
 }
 
-.btn-turn-on.disable {
+.btn-turn-on.disable,
+.btn-turn-off.disable {
     display: none;
+}
+
+.btn-turn-on.active,
+.btn-turn-off.active {
+    display: block;
 }
 
 .btn-turn-off {
@@ -820,10 +826,6 @@ input[type="checkbox"] {
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.4s ease;
-}
-
-.btn-turn-off.active {
-    display: block;
 }
 
 .btn-turn-on:hover {

@@ -222,11 +222,13 @@ const selectedOption = document.querySelectorAll('.settings-panel');
 
 const menuOptions = document.querySelectorAll('.left-side-option');
 
-function activatePanel(button) {
+async function activatePanel(button) {
+    // 1. Управление активными классами меню
     menuOptions.forEach(btn => btn.classList.remove('active'));
 
     button.classList.add('active');
 
+    // 2. Переключение панелей
     selectedOption.forEach(panel => {
         panel.classList.remove('active');
     });
@@ -237,6 +239,10 @@ function activatePanel(button) {
     if (targetPanel) {
         targetPanel.classList.add('active');
     }
+
+    if (targetID === 'safety-settings') {
+        await loadAndUpdate2FAStatus();
+    }
 }
 
 menuOptions.forEach(button => {
@@ -245,7 +251,10 @@ menuOptions.forEach(button => {
     });
 });
 
-// Двухфакторная Аутентификация: Включение
+// Двухфакторная Аутентификация:
+
+// Включение 2FA
+
 // Получение данных текущего пользователя
 const getCurrentUserEmail = () => {
     const userJson = localStorage.getItem('user');
@@ -268,6 +277,25 @@ const formatSecret = (secret, groupSize = 4) => {
     return secret.replace(/\s/g, '').match(new RegExp(`.{1,${groupSize}}`, 'g'))?.join(' ') || secret;
 };
 
+// Проверка статуса 2FA и изменение UI
+async function loadAndUpdate2FAStatus() {
+    const email = getCurrentUserEmail();
+    if (!email || !isLoggedIn) return;
+    
+    try {
+        const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
+        const data = await response.json();
+
+        if (data.success) {
+            // Обновление UI
+            update2FAUI(data.isEnabled);
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки статуса 2FA:', error);
+        showToast('Не удалось загрузить настройки:', 'error');
+    }
+}
+
 // Обновление интерфейса на основе флага isTwoFactorEnabled
 function update2FAUI(isEnabled) {
     const btnEnable = document.getElementById('enable-2fa');
@@ -276,16 +304,20 @@ function update2FAUI(isEnabled) {
     if (isEnabled) {
         if (btnEnable) {
             btnEnable.classList.add('disable');
+            btnEnable.classList.remove('active');
         }
         if (btnDisable) {
             btnDisable.classList.add('active');
+            btnDisable.classList.remove('disable');
         }
     } else {
         if (btnEnable) {
             btnEnable.classList.remove('disable');
+            btnEnable.classList.add('active');
         }
         if (btnDisable) {
             btnDisable.classList.remove('active');
+            btnDisable.classList.add('disable');
     }
 
     console.log('UI обновлен: isTwoFactorEnabled = ', isEnabled);
@@ -316,8 +348,7 @@ if (btnEnable2FA) {
 
             if (data.success) {
                 if (data.isEnabled) {
-                    const isTwoFactorEnabled = data.isEnabled;
-                    update2FAUI(isTwoFactorEnabled);
+                    update2FAUI(data.isEnabled);
                     showToast('2FA уже включен');
                     
                 } else {
@@ -333,129 +364,7 @@ if (btnEnable2FA) {
     });
 }
 
-// Кнопка отключения 2FA
-const btnDisable2FA = document.getElementById('disable-2fa');
-
-if (btnDisable2FA) {
-    btnDisable2FA.addEventListener('click', async () => {
-        if (!isLoggedIn) {
-            showToast('Чтобы продолжить войдите в аккаунт', 'error');
-            return;
-        }
-
-        const email = getCurrentUserEmail();
-        if (!email) {
-            showToast('Ошибка: не удалось получить email', 'error');
-            return;
-        }
-        
-        btnDisable2FA.classList.remove('active');
-
-        try {
-            const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
-            const data = await response.json();
-
-            if (data.success) {
-                if (!data.isEnabled) {
-                    const isTwoFactorEnabled = data.isEnabled;
-                    update2FAUI(isTwoFactorEnabled);
-                    showToast('2FA уже отключен', 'error');
-                } else {
-                    await disable2FADOM();
-                }
-            } else {
-                showToast(`Ошибка: ${data.message}`, 'error');
-            }
-        } catch (error) {
-            console.error('Ошибка при проверке 2FA', error);
-            showToast('Ошибка соединения с сервером', 'error');
-        }
-    });
-}
-
-// Функция отключения 2FA
-async function disable2FA() {
-    const passwordInput = document.getElementById('input-disable-password');
-    const tokenInput = document.getElementById('input-disable-token');
-
-    const password = passwordInput?.value || '';
-    const token = tokenInput?.value.trim() || '';
-
-    if (!password) {
-        showToast('Введите пароль', 'error');
-        passwordInput?.focus();
-        return;
-    }
-
-    if (!token || token.length !== 6) {
-        showToast('Введите 6-значный код из приложения', 'error');
-        tokenInput?.focus();
-        return;
-    }
-
-    try {
-        const res = await fetch('http://localhost:3000/api/2fa/disable', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'X-User-Email': getCurrentUserEmail()
-            },
-            body: JSON.stringify({ password, token })
-        });
-        
-        const data = await res.json();
-        
-        if (data.success) {
-            showToast('2FA отключен', 'success');
-    
-            const container2FAOff = document.getElementById('container-2fa');
-            if (container2FAOff) {
-                container2FAOff.innerHTML = '';
-            }
-            
-            btnEnable2FA.classList.remove('disable');
-
-        } else {
-            showToast(data.message, 'error');
-        }
-    } catch (error) {
-        console.error('Ошибка отключения 2FA:', error);
-        showToast('Ошибка соединения', 'error');
-    }
-}
-
-// Отключение 2FA: DOM innerHTML
-async function disable2FADOM() {
-    const container2FAOff = document.getElementById('container-2fa');
-    const email = getCurrentUserEmail();
-
-    container2FAOff.innerHTML = `
-        <h4>Отключение 2FA</h4>
-        <p style="font-size:1rem;">Для аккаунта - <strong>${email}</strong></p>
-        <p>1. Введите пароль:</p>
-        <input type="password" id="input-disable-password" placeholder="Пароль" style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;">
-        <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;">
-        <button id="btn-disable-confirm" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer; box-sizing:border-box;">
-            Подтвердить
-        </button>
-        <p style="margin:10px 0px;">3. Удалите код из приложения</p>
-        `
-
-    document.getElementById('btn-disable-confirm').addEventListener('click', () => disable2FA());
-    document.getElementById('input-disable-password').addEventListener('keydown', (event) => {
-        if (event.code === "Enter") {
-            document.getElementById('input-disable-token').focus();
-        }
-    });
-    document.getElementById('input-disable-token').addEventListener('keydown', (event) => {
-        if (event.code === "Enter") {
-            disable2FA();
-        }
-    });
-}
-
-// Запуск настройки 2FA
+// Ассинхронная функция настройки 2FA
 async function generateQRCode(email) {
     const container = document.getElementById('qr-container');
     const btnGenerateQr = document.getElementById('btn-generate-qr');
@@ -552,6 +461,128 @@ async function start2FASetup(email) {
     });
 }
 
+// Отключение 2FA
+
+// Кнопка отключения 2FA
+const btnDisable2FA = document.getElementById('disable-2fa');
+
+if (btnDisable2FA) {
+    btnDisable2FA.addEventListener('click', async () => {
+        if (!isLoggedIn) {
+            showToast('Чтобы продолжить войдите в аккаунт', 'error');
+            return;
+        }
+
+        const email = getCurrentUserEmail();
+        if (!email) {
+            showToast('Ошибка: не удалось получить email', 'error');
+            return;
+        }
+        
+        btnDisable2FA.classList.remove('active');
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
+            const data = await response.json();
+
+            if (data.success) {
+                if (!data.isEnabled) {
+                    update2FAUI(data.isEnabled);
+                    showToast('2FA уже отключен', 'error');
+                } else {
+                    await disable2FADOM();
+                }
+            } else {
+                showToast(`Ошибка: ${data.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке 2FA', error);
+            showToast('Ошибка соединения с сервером', 'error');
+        }
+    });
+}
+
+// Ассинхронная функция отключения 2FA
+async function disable2FA() {
+    const passwordInput = document.getElementById('input-disable-password');
+    const tokenInput = document.getElementById('input-disable-token');
+
+    const password = passwordInput?.value || '';
+    const token = tokenInput?.value.trim() || '';
+
+    if (!password) {
+        showToast('Введите пароль', 'error');
+        passwordInput?.focus();
+        return;
+    }
+
+    if (!token || token.length !== 6) {
+        showToast('Введите 6-значный код из приложения', 'error');
+        tokenInput?.focus();
+        return;
+    }
+
+    try {
+        const res = await fetch('http://localhost:3000/api/2fa/disable', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-User-Email': getCurrentUserEmail()
+            },
+            body: JSON.stringify({ password, token })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('2FA отключен', 'success');
+    
+            const container2FAOff = document.getElementById('container-2fa');
+            if (container2FAOff) {
+                container2FAOff.innerHTML = '';
+            }
+            
+            btnEnable2FA.classList.remove('disable');
+
+        } else {
+            showToast(data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Ошибка отключения 2FA:', error);
+        showToast('Ошибка соединения', 'error');
+    }
+}
+
+// Отключение 2FA: DOM innerHTML
+async function disable2FADOM() {
+    const container2FAOff = document.getElementById('container-2fa');
+    const email = getCurrentUserEmail();
+
+    container2FAOff.innerHTML = `
+        <h4>Отключение 2FA</h4>
+        <p style="font-size:1rem; margin-bottom:10px;">Для аккаунта - <strong>${email}</strong></p>
+        <p>1. Введите пароль:</p>
+        <input type="password" id="input-disable-password" placeholder="Пароль" style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;">
+        <p>2. Введите код из приложения:<br>
+        (после успешного подтверждения, можете удалить код из приложения)</p>
+        <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;">
+        <button id="btn-disable-confirm" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer; box-sizing:border-box;">
+            Подтвердить
+        </button>
+        `
+
+    document.getElementById('btn-disable-confirm').addEventListener('click', () => disable2FA());
+    document.getElementById('input-disable-password').addEventListener('keydown', (event) => {
+        if (event.code === "Enter") {
+            document.getElementById('input-disable-token').focus();
+        }
+    });
+    document.getElementById('input-disable-token').addEventListener('keydown', (event) => {
+        if (event.code === "Enter") {
+            disable2FA();
+        }
+    });
+}
 
 function logout() {
     loginBtn.style.display = 'inline';
