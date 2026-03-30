@@ -240,6 +240,7 @@ async function activatePanel(button) {
         targetPanel.classList.add('active');
     }
 
+    // 3. Если открыта панель безопасности - запускаем await функцию, проверяющая статус включенного 2FA
     if (targetID === 'safety-settings') {
         await loadAndUpdate2FAStatus();
     }
@@ -339,8 +340,9 @@ if (btnEnable2FA) {
             showToast('Ошибка: не удалось получить email', 'error');
             return;
         }
-        
+
         btnEnable2FA.classList.add('disable');
+        btnEnable2FA.classList.remove('active');
 
         try {
             const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
@@ -352,7 +354,7 @@ if (btnEnable2FA) {
                     showToast('2FA уже включен');
                     
                 } else {
-                    await start2FASetup(email);
+                    await start2FASetupDOM(email);
                 }
             } else {
                 showToast(`Ошибка: ${data.message}`, 'error');
@@ -436,7 +438,7 @@ async function confirm2FA(email) {
 }
 
 // Настройка 2FA: DOM innerHTML
-async function start2FASetup(email) {
+async function start2FASetupDOM(email) {
     const containerFor2FA = document.getElementById('container-2fa');
 
     containerFor2FA.innerHTML = `
@@ -480,6 +482,7 @@ if (btnDisable2FA) {
         }
         
         btnDisable2FA.classList.remove('active');
+        btnDisable2FA.classList.add('disable');
 
         try {
             const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
@@ -490,7 +493,7 @@ if (btnDisable2FA) {
                     update2FAUI(data.isEnabled);
                     showToast('2FA уже отключен', 'error');
                 } else {
-                    await disable2FADOM();
+                    await disable2FASetupDOM();
                 }
             } else {
                 showToast(`Ошибка: ${data.message}`, 'error');
@@ -554,7 +557,7 @@ async function disable2FA() {
 }
 
 // Отключение 2FA: DOM innerHTML
-async function disable2FADOM() {
+async function disable2FASetupDOM() {
     const container2FAOff = document.getElementById('container-2fa');
     const email = getCurrentUserEmail();
 
