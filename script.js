@@ -238,6 +238,12 @@ async function activatePanel(button) {
 
     if (targetPanel) {
         targetPanel.classList.add('active');
+        
+        // 🔹 НОВОЕ: Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
+        if (targetID === 'safety-settings') {
+            const container = document.getElementById('container-2fa');
+            if (container) container.innerHTML = btnEnable2FA.classList.add(active);
+        }
     }
 
     // 3. Если открыта панель безопасности - запускаем await функцию, проверяющая статус включенного 2FA
@@ -600,8 +606,19 @@ function logout() {
     isLoggedIn = false;
     // Удаляем пользователя
     localStorage.removeItem('user');
-    // очищаем UI settings
-    
+    // исходные UI settings-modal
+
+    // 🔹 Сброс вкладок на первую
+    document.querySelectorAll('.settings-panel').forEach((panel, index) => {
+        panel.classList.toggle('active', index === 0);
+    });
+    document.querySelectorAll('.left-side-option').forEach((tab, index) => {
+        tab.classList.toggle('active', index === 0);
+    });
+
+    // 🔹 НОВОЕ: Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
+    const container = document.getElementById('container-2fa');
+    if (container) container.innerHTML = btnEnable2FA.classList.add('active');
 }
 
 // Проверка был ли вход до перезагрузки страницы
