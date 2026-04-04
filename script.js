@@ -371,7 +371,7 @@ async function generateQRCode(email) {
     const container = document.getElementById('qr-container');
     const btnGenerateQr = document.getElementById('btn-generate-qr');
     const input2FAToken = document.getElementById('input-2fa-token');
-    container.innerHTML = '<p>Генерация</p>';
+    container.innerHTML = '<p>Генерация...</p>';
 
     if (btnGenerateQr) {
         input2FAToken?.focus();
@@ -442,16 +442,18 @@ async function start2FASetupDOM(email) {
     const containerFor2FA = document.getElementById('container-2fa');
 
     containerFor2FA.innerHTML = `
+    <form>
         <h4>Настройка 2FA</h4>
         <p>1. Отсканируйте QR-код:</p>
         <div id="qr-container" style="text-align:center; margin: 20px 0px 10px;">
             <button id="btn-generate-qr" style="padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">Показать QR-код</button>
         </div>
         <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;">
+        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;" required>
         <button id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
             Подтвердить
         </button>
+    </form>
     `
 
     document.getElementById('btn-generate-qr').addEventListener('click', () => generateQRCode(email));
@@ -562,27 +564,29 @@ async function disable2FASetupDOM() {
     const email = getCurrentUserEmail();
 
     container2FAOff.innerHTML = `
+    <form>
         <h4>Отключение 2FA</h4>
         <p style="font-size:1rem; margin-bottom:10px;">Для аккаунта - <strong>${email}</strong></p>
         <p>1. Введите пароль:</p>
-        <input type="password" id="input-disable-password" placeholder="Пароль" style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;">
+        <input type="password" id="input-disable-password" placeholder="Пароль" style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;" required>
         <p>2. Введите код из приложения:<br>
         (после успешного подтверждения, можете удалить код из приложения)</p>
-        <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;">
+        <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;" required>
         <button id="btn-disable-confirm" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer; box-sizing:border-box;">
             Подтвердить
         </button>
-        `
+    </form>
+    `
 
     document.getElementById('btn-disable-confirm').addEventListener('click', () => disable2FA());
     document.getElementById('input-disable-password').addEventListener('keydown', (event) => {
         if (event.code === "Enter") {
-            document.getElementById('input-disable-token').focus();
+            document.getElementById('btn-disable-confirm').focus();
         }
     });
     document.getElementById('input-disable-token').addEventListener('keydown', (event) => {
         if (event.code === "Enter") {
-            disable2FA();
+            document.getElementById('btn-disable-confirm').focus();
         }
     });
 }
@@ -596,6 +600,8 @@ function logout() {
     isLoggedIn = false;
     // Удаляем пользователя
     localStorage.removeItem('user');
+    // очищаем UI settings
+    
 }
 
 // Проверка был ли вход до перезагрузки страницы
