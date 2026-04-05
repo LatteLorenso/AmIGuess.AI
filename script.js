@@ -434,7 +434,6 @@ async function confirm2FA(email) {
                 btnEnable2FA.classList.add('disable');
                 btnDisable2FA.classList.add('active');
             }
-
         } else {
             showToast(`${data.message}`, 'error');
         }
@@ -548,13 +547,12 @@ async function disable2FA() {
         if (data.success) {
             showToast('2FA отключен', 'success');
     
-            const container2FAOff = document.getElementById('container-2fa');
-            if (container2FAOff) {
-                container2FAOff.innerHTML = '';
+            const container = document.getElementById('container-2fa');
+            if (container) {
+                container.innerHTML = '';
+                btnEnable2FA.classList.add('active');
+                btnDisable2FA.classList.add('disable');
             }
-            
-            btnEnable2FA.classList.remove('disable');
-
         } else {
             showToast(data.message, 'error');
         }
@@ -566,10 +564,10 @@ async function disable2FA() {
 
 // Отключение 2FA: DOM innerHTML
 async function disable2FASetupDOM() {
-    const container2FAOff = document.getElementById('container-2fa');
+    const container = document.getElementById('container-2fa');
     const email = getCurrentUserEmail();
 
-    container2FAOff.innerHTML = `
+    container.innerHTML = `
     <form>
         <h4>Отключение 2FA</h4>
         <p style="font-size:1rem; margin-bottom:10px;">Для аккаунта - <strong>${email}</strong></p>
@@ -606,9 +604,9 @@ function logout() {
     isLoggedIn = false;
     // Удаляем пользователя
     localStorage.removeItem('user');
-    // исходные UI settings-modal
 
-    // 🔹 Сброс вкладок на первую
+    // исходные UI settings-modal
+    // Сброс вкладок на первую
     document.querySelectorAll('.settings-panel').forEach((panel, index) => {
         panel.classList.toggle('active', index === 0);
     });
@@ -616,10 +614,13 @@ function logout() {
         tab.classList.toggle('active', index === 0);
     });
 
-    // 🔹 НОВОЕ: Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
+    // Очищаем динамический контейнер перед загрузкой (предотвращает дубли)
     const container = document.getElementById('container-2fa');
-    btnEnable2FA.classList.add('active');
-    if (container) container.innerHTML = '';
+    if (container) {
+        container.innerHTML = '';
+        btnEnable2FA.classList.add('active');
+        btnDisable2FA.classList.add('disable');
+    }
 }
 
 // Проверка был ли вход до перезагрузки страницы
