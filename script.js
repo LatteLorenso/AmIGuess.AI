@@ -618,7 +618,8 @@ function logout() {
 
     // 🔹 НОВОЕ: Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
     const container = document.getElementById('container-2fa');
-    if (container) container.innerHTML = btnEnable2FA.classList.add('active');
+    btnEnable2FA.classList.add('active');
+    if (container) container.innerHTML = '';
 }
 
 // Проверка был ли вход до перезагрузки страницы
