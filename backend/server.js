@@ -230,13 +230,18 @@ app.post('/api/2fa/setup', async (req, res) => {
 
 // Двухфакторная Аутентификация: Эндпоинт подтверждения настройки 2FA (пользователь отсканировал QR - ввел код из приложения - мы проверяем и только после сохраняем в БД)
 app.post('/api/2fa/verify-setup', async (req, res) => {
-    const { email, token, secret } = req.body;
-
-    if (!email || !token || !secret) {
-        return res.status(400).json({ success: false, message: 'Заполните все поля' });
-    }
-
     try {
+        const { email, token, secret } = req.body;
+        
+        if (!email || !token || !secret) {
+            return res.status(400).json({ success: false, message: 'Заполните все поля' });
+        }
+
+        // Строгая валидация формата токена
+        if (!/^\d{6}$/.test(token)) {
+            return res.status(400).json({ success: false, message: 'Токен должен быть 6-значным' });
+        }
+
         const verified = speakeasy.totp.verify({
             secret: secret,
             encoding: 'base32',
@@ -245,7 +250,7 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
         });
 
         if (!verified) {
-            return res.status(400).json({ success: false, message: 'Неверный код из приложения 2FA' });
+            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA' });
         }
 
         // Код верный, сохраняем в БД
@@ -256,7 +261,6 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
 
         user.twoFactorSecret = secret;
         user.isTwoFactorEnabled = true;
-
         await user.save();
 
         res.json({
@@ -297,7 +301,7 @@ app.post('/api/2fa/disable', async (req, res) => {
         });
 
         if (!verified) {
-            return res.status(400).json({ success: false, message: 'Неверный код из приложения 2FA' });
+            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA' });
         }
 
         user.isTwoFactorEnabled = false;
