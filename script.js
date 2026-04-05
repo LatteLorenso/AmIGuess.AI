@@ -466,7 +466,7 @@ async function start2FASetupDOM(email) {
     document.getElementById('btn-confirm-enable').addEventListener('click', () => confirm2FA(email));
     document.getElementById('input-2fa-token').addEventListener('keydown', (event) => {
         if (event.code === "Enter") {
-            confirm2FA(email);
+            document.getElementById('btn-confirm-enable').focus();
         }
     });
 }
