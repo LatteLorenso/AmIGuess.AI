@@ -242,7 +242,10 @@ async function activatePanel(button) {
         // 🔹 НОВОЕ: Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
         if (targetID === 'safety-settings') {
             const container = document.getElementById('container-2fa');
-            if (container) container.innerHTML = btnEnable2FA.classList.add(active);
+            if (container) {
+                container.innerHTML = '';
+                update2FAUI();
+            }
         }
     }
 
@@ -418,6 +421,8 @@ async function confirm2FA(email) {
         return;
     }
 
+    document.getElementById('btn-confirm-enable').disabled = true;
+
     try {
         const res = await fetch('http://localhost:3000/api/2fa/verify-setup', {
             method: 'POST',
@@ -532,6 +537,8 @@ async function disable2FA() {
         tokenInput?.focus();
         return;
     }
+
+    document.getElementById('btn-disable-confirm').disabled = true;
 
     try {
         const res = await fetch('http://localhost:3000/api/2fa/disable', {
