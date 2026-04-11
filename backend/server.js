@@ -237,15 +237,19 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Заполните все поля' });
         }
 
+        // Ставим верхний регистр, убираем пробелы
+        const cleanToken = token.replace(/\s/g, '');
+        const cleanSecret = secret.replace(/\s/g, '').toUpperCase();
+
         // Строгая валидация формата токена
-        if (!/^\d{6}$/.test(token)) {
+        if (!/^\d{6}$/.test(cleanToken)) {
             return res.status(400).json({ success: false, message: 'Токен должен быть 6-значным' });
         }
 
         const verified = speakeasy.totp.verify({
-            secret: secret,
+            secret: cleanSecret,
             encoding: 'base32',
-            token: token,
+            token: cleanToken,
             window: 1 // +- 30 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
         });
 
@@ -259,13 +263,13 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
             return res.status(404).json({ success: false, message: 'Пользователь не найден' });
         }
 
-        user.twoFactorSecret = secret;
+        user.twoFactorSecret = cleanSecret;
         user.isTwoFactorEnabled = true;
         await user.save();
 
         res.json({
             success: true,
-            message: '2FA Успешно включен!',
+            message: '2FA Успешно включен',
         });
     } catch (error) {
         console.error('Ошибка подтверждения 2FA:', error);
@@ -275,16 +279,15 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
 
 // Двухфакторная Аутентификация: Эндпоинт отключения 2FA (требует подтверждения)
 app.post('/api/2fa/disable', async (req, res) => {
-    const email = req.headers['x-user-email'];
-    const { password, token } = req.body;
-
-    if (!password || !token) {
-        return res.status(400).json({ success: false, message: 'Заполните все поля' });
-    }
-
     try {
+        const email = req.headers['x-user-email'];
+        const { password, token } = req.body;
+
+        if (!password || !token) {
+            return res.status(400).json({ success: false, message: 'Заполните все поля' });
+        }
         const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+twoFactorSecret');
-        if (!user) {
+        if (!user || !user.twoFactorSecret) {
             return res.status(404).json({ success: false, message: 'Пользователь не найден' });
         }
 
@@ -293,10 +296,14 @@ app.post('/api/2fa/disable', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
         }
 
+        // Ставим верхний регистр, убираем пробелы
+        const cleanToken = token.replace(/\s/g, '');
+        const cleanSecret = user.twoFactorSecret.replace(/\s/g, '').toUpperCase();
+
         const verified = speakeasy.totp.verify({
-            secret: user.twoFactorSecret,
+            secret: cleanSecret,
             encoding: 'base32',
-            token: token,
+            token: cleanToken,
             window: 1
         });
 

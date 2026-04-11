@@ -430,7 +430,7 @@ async function confirm2FA(email) {
         return;
     }
 
-    document.getElementById('btn-confirm-enable').disabled = true;
+    // document.getElementById('btn-confirm-enable').disabled = true;
 
     try {
         const res = await fetch('http://localhost:3000/api/2fa/verify-setup', {
@@ -547,7 +547,7 @@ async function disable2FA() {
         return;
     }
 
-    document.getElementById('btn-disable-confirm').disabled = true;
+    // document.getElementById('btn-disable-confirm').disabled = true;
 
     try {
         const res = await fetch('http://localhost:3000/api/2fa/disable', {
