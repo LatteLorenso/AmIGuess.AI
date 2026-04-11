@@ -627,6 +627,26 @@ async function disable2FASetupDOM() {
     });
 }
 
+// Включение 2FA при входе
+
+// Кнопка включения 2FA при входе
+const btnOnLogin2FA = document.getElementById('enable-2fa-onlogin');
+
+if (btnOnLogin2FA) {
+    btnOnLogin2FA.addEventListener('click', async () => {
+        if (!isLoggedIn) {
+            showToast('Чтобы продолжить войдите в аккаунт', 'error');
+            return;
+        }
+
+        const email = getCurrentUserEmail();
+        if (!email) {
+            showToast('Ошибка: не удалось получить email', 'error');
+            return;
+        }
+    });
+}
+
 function logout() {
     loginBtn.style.display = 'inline';
     userContainer.style.display = 'none';
