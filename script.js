@@ -427,6 +427,7 @@ async function confirm2FA(email) {
 
     if (!token || token.length !== 6) {
         showToast('Введите 6-значный код из приложения', 'error');
+        token?.focus();
         return;
     }
 
@@ -438,6 +439,7 @@ async function confirm2FA(email) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, token, secret: temp2FASecret })
         });
+
         const data = await res.json();
 
         if (data.success) {
@@ -453,6 +455,7 @@ async function confirm2FA(email) {
             showToast(`${data.message}`, 'error');
         }
     } catch (error) {
+        token?.focus();
         showToast('Ошибка соединения', 'error');
     }
 }
@@ -482,6 +485,9 @@ async function start2FASetupDOM(email) {
         if (event.code === "Enter") {
             document.getElementById('btn-confirm-enable').focus();
         }
+        // if (!data.success) {
+        //     document.getElementById('input-2fa-token')?.focus();
+        // }
     });
 }
 
