@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     twoFactorSecret: { type: String, select: false }, // select: false гарантирует, что секрет не "утечёт" при обычных findOne() — его нужно будет явно запрашивать через .select('+twoFactorSecret').
     isTwoFactorEnabled: { type: Boolean, default: false },
+    require2FAOnLogin: { type: Boolean, default: false },
     backupCodes: [{ type: String }]
 });
 
@@ -250,7 +251,7 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
             secret: cleanSecret,
             encoding: 'base32',
             token: cleanToken,
-            window: 2 // +- 30 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
+            window: 2 // +- 60 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
         });
 
         if (!verified) {
@@ -305,7 +306,7 @@ app.post('/api/2fa/disable', async (req, res) => {
             secret: cleanSecret,
             encoding: 'base32',
             token: cleanToken,
-            window: 2
+            window: 2 // +- 60 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
         });
 
         if (!verified) {
@@ -324,6 +325,36 @@ app.post('/api/2fa/disable', async (req, res) => {
     } catch (error) {
         console.log('Ошибка отключения 2FA:', error);
         res.status(500).json({ success: false, message: 'Ошибка сервера: ' + error.message });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт включения 2FA при входе
+app.post('/api/2fa/require-onlogin', async (req, res) => {
+    try {
+        const email = req.headers['x-user-email'];
+        const { enable } = req.body;
+
+        if (email === undefined || typeof enable !== 'boolean') {
+            return res.status(400).json({ success: false, message: 'Некорректные данные' });
+        }
+
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        if (enable && !user.isTwoFactorEnabled) {
+            return res.status(400).json({ success: false, message: 'Сначала включите 2FA' });
+        }
+
+        user.require2FAOnLogin = enable;
+        await user.save();
+
+        res.json({ success: true, message: enable ? '2FA при входе включена' : '2FA при входе выключена' });
+
+    } catch (error) {
+        console.error('Ошибка переключения 2FA при входе:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
     }
 });
 
