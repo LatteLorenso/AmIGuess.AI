@@ -790,6 +790,18 @@ input[type="checkbox"] {
     gap: 10px;
 }
 
+/* Включение/Отключение кнопок (2fa) */
+.btn-turn-on.active,
+.btn-turn-off.active {
+    display: block;
+}
+
+.btn-turn-on.disable,
+.btn-turn-off.disable {
+    display: none;
+}
+
+/* Стили кнопки включения */
 .btn-turn-on {
     width: 200px;
     background-color: var(--color-bg-secondary);
@@ -804,16 +816,12 @@ input[type="checkbox"] {
     margin-bottom: 10px;
 }
 
-.btn-turn-on.disable,
-.btn-turn-off.disable {
-    display: none;
+/* Наведение на кнопку включения */
+.btn-turn-on:hover {
+    background-color: var(--color-brand-primary);
 }
 
-.btn-turn-on.active,
-.btn-turn-off.active {
-    display: block;
-}
-
+/* Стили кнопки выключения */
 .btn-turn-off {
     display: none;
     width: 200px;
@@ -828,17 +836,24 @@ input[type="checkbox"] {
     transition: background-color 0.4s ease;
 }
 
-.btn-turn-on:hover {
-    background-color: var(--color-brand-primary);
-}
-
+/* Наведение на кнопку выключения */
 .btn-turn-off:hover {
     background-color: var(--color-accent-question);
 }
 
+/* qr-code img (центровка) */
 .qr-code-img {
     display: flex;
     justify-content: center;
+}
+
+/* Включение/Отключение секции (при входе) */
+.onlogin-2fa.active {
+    display: block;
+}
+
+.onlogin-2fa.disable {
+    display: none;
 }
 
 .btn-accept {

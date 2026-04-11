@@ -310,6 +310,7 @@ async function loadAndUpdate2FAStatus() {
 function update2FAUI(isEnabled) {
     const btnEnable = document.getElementById('enable-2fa');
     const btnDisable = document.getElementById('disable-2fa');
+    const require2FAOnLogin = document.getElementById('onlogin-2fa');
 
     if (isEnabled) {
         if (btnEnable) {
@@ -320,6 +321,10 @@ function update2FAUI(isEnabled) {
             btnDisable.classList.add('active');
             btnDisable.classList.remove('disable');
         }
+        if (require2FAOnLogin) {
+            require2FAOnLogin.classList.add('active');
+            require2FAOnLogin.classList.remove('disable');
+        }
     } else {
         if (btnEnable) {
             btnEnable.classList.remove('disable');
@@ -328,10 +333,14 @@ function update2FAUI(isEnabled) {
         if (btnDisable) {
             btnDisable.classList.remove('active');
             btnDisable.classList.add('disable');
+        }
+        if (require2FAOnLogin) {
+            require2FAOnLogin.classList.remove('active');
+            require2FAOnLogin.classList.add('disable');
+        }
     }
-
+    
     console.log('UI обновлен: isTwoFactorEnabled = ', isEnabled);
-}
 }
 
 // Кнопка включения 2FA
