@@ -384,7 +384,7 @@ if (btnEnable2FA) {
     });
 }
 
-// Ассинхронная функция настройки 2FA
+// Асинхронная функция настройки 2FA
 async function generateQRCode(email) {
     const container = document.getElementById('qr-container');
     const btnGenerateQr = document.getElementById('btn-generate-qr');
@@ -424,6 +424,7 @@ async function generateQRCode(email) {
 // Подтверждение 2FA
 async function confirm2FA(email) {
     const token = document.getElementById('input-2fa-token').value.trim();
+    const inputToken = document.getElementById('input-2fa-token');
 
     if (!token || token.length !== 6) {
         showToast('Введите 6-значный код из приложения', 'error');
@@ -453,10 +454,12 @@ async function confirm2FA(email) {
             }
         } else {
             showToast(`${data.message}`, 'error');
+            inputToken?.focus();
+            inputToken.select();
         }
     } catch (error) {
-        token?.focus();
         showToast('Ошибка соединения', 'error');
+        inputToken?.focus();
     }
 }
 
@@ -472,7 +475,7 @@ async function start2FASetupDOM(email) {
             <button id="btn-generate-qr" style="padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">Показать QR-код</button>
         </div>
         <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;" required>
+        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" autocomplete='off' style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;" required>
         <button id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
             Подтвердить
         </button>
@@ -482,7 +485,8 @@ async function start2FASetupDOM(email) {
     document.getElementById('btn-generate-qr').addEventListener('click', () => generateQRCode(email));
     document.getElementById('btn-confirm-enable').addEventListener('click', () => confirm2FA(email));
     document.getElementById('input-2fa-token').addEventListener('keydown', (event) => {
-        if (event.code === "Enter") {
+        if (event.key === "Enter") {
+            event.preventDefault();
             document.getElementById('btn-confirm-enable').focus();
         }
         // if (!data.success) {
@@ -533,29 +537,30 @@ if (btnDisable2FA) {
     });
 }
 
-// Ассинхронная функция отключения 2FA
+// Асинхронная функция отключения 2FA
 async function disable2FA() {
-    const passwordInput = document.getElementById('input-disable-password');
-    const tokenInput = document.getElementById('input-disable-token');
-
-    const password = passwordInput?.value || '';
-    const token = tokenInput?.value.trim() || '';
-
-    if (!password) {
-        showToast('Введите пароль', 'error');
-        passwordInput?.focus();
-        return;
-    }
-
-    if (!token || token.length !== 6) {
-        showToast('Введите 6-значный код из приложения', 'error');
-        tokenInput?.focus();
-        return;
-    }
-
-    // document.getElementById('btn-disable-confirm').disabled = true;
-
     try {
+        const passwordInput = document.getElementById('input-disable-password');
+        const inputToken = document.getElementById('input-disable-token');
+    
+        const password = passwordInput?.value || '';
+        const token = inputToken?.value.trim() || '';
+    
+        if (!password) {
+            showToast('Введите пароль', 'error');
+            passwordInput?.focus();
+            return;
+        }
+    
+        if (!token || token.length !== 6) {
+            showToast('Введите 6-значный код из приложения', 'error');
+            inputToken?.focus();
+            return;
+        }
+    
+        // document.getElementById('btn-disable-confirm').disabled = true;
+
+    
         const res = await fetch('http://localhost:3000/api/2fa/disable', {
             method: 'POST',
             headers: { 
@@ -578,10 +583,12 @@ async function disable2FA() {
             }
         } else {
             showToast(data.message, 'error');
+            passwordInput?.focus();
         }
     } catch (error) {
         console.error('Ошибка отключения 2FA:', error);
         showToast('Ошибка соединения', 'error');
+        passwordInput?.focus();
     }
 }
 
@@ -607,12 +614,14 @@ async function disable2FASetupDOM() {
 
     document.getElementById('btn-disable-confirm').addEventListener('click', () => disable2FA());
     document.getElementById('input-disable-password').addEventListener('keydown', (event) => {
-        if (event.code === "Enter") {
+        if (event.key === "Enter") {
+            event.preventDefault();
             document.getElementById('btn-disable-confirm').focus();
         }
     });
     document.getElementById('input-disable-token').addEventListener('keydown', (event) => {
-        if (event.code === "Enter") {
+        if (event.key === "Enter") {
+            event.preventDefault();
             document.getElementById('btn-disable-confirm').focus();
         }
     });

@@ -250,7 +250,7 @@ app.post('/api/2fa/verify-setup', async (req, res) => {
             secret: cleanSecret,
             encoding: 'base32',
             token: cleanToken,
-            window: 1 // +- 30 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
+            window: 2 // +- 30 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
         });
 
         if (!verified) {
@@ -294,6 +294,7 @@ app.post('/api/2fa/disable', async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(401).json({ success: false, message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
+            
         }
 
         // Ставим верхний регистр, убираем пробелы
@@ -304,7 +305,7 @@ app.post('/api/2fa/disable', async (req, res) => {
             secret: cleanSecret,
             encoding: 'base32',
             token: cleanToken,
-            window: 1
+            window: 2
         });
 
         if (!verified) {
