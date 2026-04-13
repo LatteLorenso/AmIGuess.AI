@@ -311,6 +311,7 @@ function update2FAUI(isEnabled) {
     const btnEnable = document.getElementById('enable-2fa');
     const btnDisable = document.getElementById('disable-2fa');
     const require2FAOnLogin = document.getElementById('onlogin-2fa');
+    // const btn2FAOnLogin = document.getElementById('enable-2fa-onlogin');
 
     if (isEnabled) {
         if (btnEnable) {
@@ -643,6 +644,31 @@ if (btnOnLogin2FA) {
         if (!email) {
             showToast('Ошибка: не удалось получить email', 'error');
             return;
+        }
+
+        const enable = true;
+
+        try {
+            const response = await fetch('http://localhost:3000/api/2fa/require-onlogin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-user-email': email },
+                body: JSON.stringify({ enable })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Включен 2FA при входе', 'success');
+
+                if (window.userSettings) {
+                    window.userSettings.require2FAOnLogin = enable;
+                }
+            } else {
+                showToast(`Ошибка: ${data.message}`, 'error')
+            }
+        } catch (error) {
+            console.error('Ошибка отключения 2FA:', error);
+            showToast('Ошибка соединения', `${data.message}`, 'error');
         }
     });
 }
