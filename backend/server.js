@@ -188,7 +188,8 @@ app.get('/api/2fa/status', async (req, res) => {
 
         res.json({
             success: true,
-            isEnabled: user.isTwoFactorEnabled
+            isEnabled: user.isTwoFactorEnabled,
+            is2FAOnLoginEnabled: user.require2FAOnLogin
         });
     } catch (error) {
         console.log('Ошибка получения статуса 2FA:', error);
@@ -314,6 +315,7 @@ app.post('/api/2fa/disable', async (req, res) => {
         }
 
         user.isTwoFactorEnabled = false;
+        user.is2FAOnLoginEnabled = false;
         user.twoFactorSecret = undefined;
 
         await user.save();
@@ -344,13 +346,13 @@ app.post('/api/2fa/require-onlogin', async (req, res) => {
         }
 
         if (enable && !user.isTwoFactorEnabled) {
-            return res.status(400).json({ success: false, message: 'Сначала включите 2FA' });
+            return res.status(400).json({ success: false, message: 'Для продолжения включите 2FA' });
         }
 
         user.require2FAOnLogin = enable;
         await user.save();
 
-        res.json({ success: true, message: enable ? '2FA при входе включена' : '2FA при входе выключена' });
+        res.json({ success: true, message: enable ? '2FA при входе включен' : '2FA при входе выключен' });
 
     } catch (error) {
         console.error('Ошибка переключения 2FA при входе:', error);

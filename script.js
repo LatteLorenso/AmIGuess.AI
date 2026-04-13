@@ -298,7 +298,7 @@ async function loadAndUpdate2FAStatus() {
 
         if (data.success) {
             // Обновление UI
-            update2FAUI(data.isEnabled);
+            update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
         }
     } catch (error) {
         console.error('Ошибка загрузки статуса 2FA:', error);
@@ -307,11 +307,12 @@ async function loadAndUpdate2FAStatus() {
 }
 
 // Обновление интерфейса на основе флага isTwoFactorEnabled
-function update2FAUI(isEnabled) {
+function update2FAUI(isEnabled, is2FAOnLoginEnabled) {
     const btnEnable = document.getElementById('enable-2fa');
     const btnDisable = document.getElementById('disable-2fa');
     const require2FAOnLogin = document.getElementById('onlogin-2fa');
-    // const btn2FAOnLogin = document.getElementById('enable-2fa-onlogin');
+    const btnEnable2FAOnLogin = document.getElementById('enable-2fa-onlogin');
+    const btnDisable2FAOnLogin = document.getElementById('disable-2fa-onlogin');
 
     if (isEnabled) {
         if (btnEnable) {
@@ -338,6 +339,26 @@ function update2FAUI(isEnabled) {
         if (require2FAOnLogin) {
             require2FAOnLogin.classList.remove('active');
             require2FAOnLogin.classList.add('disable');
+        }
+    }
+
+    if (is2FAOnLoginEnabled) {
+        if (btnEnable2FAOnLogin) {
+            btnEnable2FAOnLogin.classList.add('disable');
+            btnEnable2FAOnLogin.classList.remove('active');
+        }
+        if (btnDisable2FAOnLogin) {
+            btnDisable2FAOnLogin.classList.add('active');
+            btnDisable2FAOnLogin.classList.remove('disable');
+        }
+    } else {
+        if (btnEnable2FAOnLogin) {
+            btnEnable2FAOnLogin.classList.remove('disable');
+            btnEnable2FAOnLogin.classList.add('active');
+        }
+        if (btnDisable2FAOnLogin) {
+            btnDisable2FAOnLogin.classList.remove('active');
+            btnDisable2FAOnLogin.classList.add('disable');
         }
     }
     
@@ -477,7 +498,7 @@ async function start2FASetupDOM(email) {
         </div>
         <p>2. Введите код из приложения:</p>
         <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" autocomplete='off' style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;" required>
-        <button id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
+        <button type="button" id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
             Подтвердить
         </button>
     </form>
@@ -607,7 +628,7 @@ async function disable2FASetupDOM() {
         <p>2. Введите код из приложения:<br>
         (после успешного подтверждения, можете удалить код из приложения)</p>
         <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;" required>
-        <button id="btn-disable-confirm" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer; box-sizing:border-box;">
+        <button type="button" id="btn-disable-confirm" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer; box-sizing:border-box;">
             Подтвердить
         </button>
     </form>
@@ -635,6 +656,7 @@ const btnOnLogin2FA = document.getElementById('enable-2fa-onlogin');
 
 if (btnOnLogin2FA) {
     btnOnLogin2FA.addEventListener('click', async () => {
+
         if (!isLoggedIn) {
             showToast('Чтобы продолжить войдите в аккаунт', 'error');
             return;
@@ -658,17 +680,19 @@ if (btnOnLogin2FA) {
             const data = await response.json();
 
             if (data.success) {
-                showToast('Включен 2FA при входе', 'success');
-
-                if (window.userSettings) {
-                    window.userSettings.require2FAOnLogin = enable;
+                if (data.is2FAOnLoginEnabled) {
+                    update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
+                    showToast('2FA при входе уже включен', 'success');
+                } else {
+                    showToast('Включен 2FA при входе', 'success');
+                    update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
                 }
             } else {
-                showToast(`Ошибка: ${data.message}`, 'error')
+                showToast(data.message, 'error');
             }
         } catch (error) {
-            console.error('Ошибка отключения 2FA:', error);
-            showToast('Ошибка соединения', `${data.message}`, 'error');
+            console.error('Ошибка включения 2FA при входе:', error);
+            showToast('Ошибка соединения', 'error');
         }
     });
 }
