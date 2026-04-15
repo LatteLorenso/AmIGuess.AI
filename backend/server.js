@@ -346,19 +346,46 @@ app.post('/api/2fa/require-onlogin', async (req, res) => {
         }
 
         if (enable && !user.isTwoFactorEnabled) {
-            return res.status(400).json({ success: false, message: 'Для продолжения включите 2FA' });
+            return res.status(400).json({ success: false, message: 'Для продолжения включите основной 2FA' });
+        }
+
+        if (user.require2FAOnLogin === enable) {
+            return res.json({
+                success: true,
+                message: enable ? '2FA при входе успешно включен' : '2FA при входе успешно выключен',
+                is2FAOnLoginEnabled: enable,
+                changed: false
+             });
         }
 
         user.require2FAOnLogin = enable;
         await user.save();
-
-        res.json({ success: true, message: enable ? '2FA при входе включен' : '2FA при входе выключен' });
 
     } catch (error) {
         console.error('Ошибка переключения 2FA при входе:', error);
         res.status(500).json({ success: false, message: 'Ошибка сервера' });
     }
 });
+
+// app.post('/api/2fa/disable-require-onlogin', async (req, res) => {
+//     try {
+//         const email = req.headers['x-user-email'];
+//         const { disable } = req.body;
+
+//         if (email === undefined || typeof disable !== 'boolean') {
+//             return res.status(400).json({ success: false, message: 'Некорректные данные' });
+//         }
+
+//         const user = await User.findOne({ email: email.toLowerCase().trim() });
+//         if (!user) {
+//             return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+//         }
+
+//         if (disable && !user.isTwoFactorEnabled) {
+//             return res.status(400).json({ success: false, message: 'Для продолжения включите 2FA' });
+//         }
+//     }
+// });
 
 // Подключение сервера
 app.listen(PORT, () => {

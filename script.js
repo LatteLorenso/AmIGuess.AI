@@ -649,53 +649,67 @@ async function disable2FASetupDOM() {
     });
 }
 
-// Включение 2FA при входе
+// Включение/Отключение 2FA при входе
+async function toggle2FAOnLogin(enable) {
+    
+    if (!isLoggedIn) {
+        showToast('Чтобы продолжить войдите в аккаунт', 'error');
+        return;
+    }
+
+    const email = getCurrentUserEmail();
+    if (!email) {
+        showToast('Ошибка: не удалось получить email', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/2fa/require-onlogin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-user-email': email },
+            body: JSON.stringify({ enable })
+        });
+
+        return await response.json();
+    } catch (error) {
+        console.error('Ошибка проверки статуса включения/отключения 2FA при входе', error);
+        showToast('Ошибка проверки', 'error');
+    }
+}
 
 // Кнопка включения 2FA при входе
-const btnOnLogin2FA = document.getElementById('enable-2fa-onlogin');
-
-if (btnOnLogin2FA) {
-    btnOnLogin2FA.addEventListener('click', async () => {
-
-        if (!isLoggedIn) {
-            showToast('Чтобы продолжить войдите в аккаунт', 'error');
-            return;
+document.getElementById('enable-2fa-onlogin').addEventListener('click', async () => {
+    const result = await toggle2FAOnLogin(true);
+    showToast(result.message, result.success ? 'success' : 'error');
+    if (result.success) {
+        if (result.is2FAOnLoginEnabled) {
+            showToast('2FA при входе уже включен', 'success');
+            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
+        } else {
+            showToast('Включен 2FA при входе', 'success');
+            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
         }
+    } else {
+        showToast(result.message, 'error');
+    }
+});
 
-        const email = getCurrentUserEmail();
-        if (!email) {
-            showToast('Ошибка: не удалось получить email', 'error');
-            return;
+// Кнопка отключения 2FA при входе
+document.getElementById('disable-2fa-onlogin').addEventListener('click', async () => {
+    const result = await toggle2FAOnLogin(false);
+    showToast(result.message, result.success ? 'success' : 'error');
+    if (result.success) {
+        if (result.is2FAOnLoginEnabled) {
+            showToast('2FA при входе уже включен', 'success');
+            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
+        } else {
+            showToast('Включен 2FA при входе', 'success');
+            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
         }
-
-        const enable = true;
-
-        try {
-            const response = await fetch('http://localhost:3000/api/2fa/require-onlogin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-user-email': email },
-                body: JSON.stringify({ enable })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                if (data.is2FAOnLoginEnabled) {
-                    update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
-                    showToast('2FA при входе уже включен', 'success');
-                } else {
-                    showToast('Включен 2FA при входе', 'success');
-                    update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
-                }
-            } else {
-                showToast(data.message, 'error');
-            }
-        } catch (error) {
-            console.error('Ошибка включения 2FA при входе:', error);
-            showToast('Ошибка соединения', 'error');
-        }
-    });
-}
+    } else {
+        showToast(result.message, 'error');
+    }
+});
 
 function logout() {
     loginBtn.style.display = 'inline';
