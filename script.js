@@ -239,7 +239,7 @@ async function activatePanel(button) {
     if (targetPanel) {
         targetPanel.classList.add('active');
         
-        // 🔹 НОВОЕ: Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
+        // 3. Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
         if (targetID === 'safety-settings') {
             const container = document.getElementById('container-2fa');
             if (container) {
@@ -249,7 +249,7 @@ async function activatePanel(button) {
         }
     }
 
-    // 3. Если открыта панель безопасности - запускаем await функцию, проверяющая статус включенного 2FA
+    // 4. Если открыта панель безопасности - запускаем await функцию, проверяющая статус включенного 2FA
     if (targetID === 'safety-settings') {
         await loadAndUpdate2FAStatus();
     }
