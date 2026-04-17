@@ -352,14 +352,21 @@ app.post('/api/2fa/require-onlogin', async (req, res) => {
         if (user.require2FAOnLogin === enable) {
             return res.json({
                 success: true,
-                message: enable ? '2FA при входе успешно включен' : '2FA при входе успешно выключен',
+                message: enable ? '2FA при входе уже включен' : '2FA при входе уже выключен',
                 is2FAOnLoginEnabled: enable,
                 changed: false
-             });
+            });
         }
 
         user.require2FAOnLogin = enable;
         await user.save();
+
+        res.json({
+            success: true,
+            message: enable ? '2FA при входе успешно включен' : '2FA при входе успешно выключен',
+            is2FAOnLoginEnabled: user.require2FAOnLogin,
+            changed: true
+        });
 
     } catch (error) {
         console.error('Ошибка переключения 2FA при входе:', error);

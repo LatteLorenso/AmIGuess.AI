@@ -471,8 +471,8 @@ async function confirm2FA(email) {
             const container = document.getElementById('container-2fa');
             if (container) {
                 container.innerHTML = '';
-                update2FAUI();
             }
+            update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
         } else {
             showToast(`${data.message}`, 'error');
             inputToken?.focus();
@@ -602,11 +602,8 @@ async function disable2FA() {
             const container = document.getElementById('container-2fa');
             if (container) {
                 container.innerHTML = '';
-                btnEnable2FA.classList.remove('disable');
-                btnEnable2FA.classList.add('active');
-                btnEnable2FA.classList.remove('active');
-                btnDisable2FA.classList.add('disable');
             }
+            update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
         } else {
             showToast(data.message, 'error');
 
@@ -696,34 +693,26 @@ async function toggle2FAOnLogin(enable) {
 // Кнопка включения 2FA при входе
 document.getElementById('enable-2fa-onlogin').addEventListener('click', async () => {
     const result = await toggle2FAOnLogin(true);
-    showToast(result.message, result.success ? 'success' : 'error');
     if (result.success) {
-        if (result.is2FAOnLoginEnabled) {
-            showToast('2FA при входе уже включен', 'success');
-            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
-        } else {
-            showToast('Включен 2FA при входе', 'success');
-            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
-        }
+        const msg = result.changed ? '2FA при входе включен' : 'Уже включен';
+
+        showToast(msg, result.changed ? 'success' : 'info');
+        loadAndUpdate2FAStatus();
     } else {
-        showToast(result.message, 'error');
+        showToast(result.message || 'Ошибка соединения', 'error');
     }
 });
 
 // Кнопка отключения 2FA при входе
 document.getElementById('disable-2fa-onlogin').addEventListener('click', async () => {
     const result = await toggle2FAOnLogin(false);
-    showToast(result.message, result.success ? 'success' : 'error');
     if (result.success) {
-        if (result.is2FAOnLoginEnabled) {
-            showToast('2FA при входе уже включен', 'success');
-            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
-        } else {
-            showToast('Включен 2FA при входе', 'success');
-            update2FAUI(result.isEnabled, result.is2FAOnLoginEnabled);
-        }
+        const msg = result.changed ? '2FA при входе отключен' : 'Уже отключен';
+
+        showToast(msg, result.changed ? 'success' : 'info');
+        loadAndUpdate2FAStatus();
     } else {
-        showToast(result.message, 'error');
+        showToast(result.message || 'Ошибка соединения', 'error');
     }
 });
 
