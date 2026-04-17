@@ -488,6 +488,10 @@ async function confirm2FA(email) {
 // Настройка 2FA: DOM innerHTML
 async function start2FASetupDOM(email) {
     const containerFor2FA = document.getElementById('container-2fa');
+    if (containerFor2FA) {
+        document.getElementById('onlogin-2fa').classList.remove('active');
+        document.getElementById('onlogin-2fa').classList.add('disable');
+    }
 
     containerFor2FA.innerHTML = `
     <form>
@@ -600,12 +604,21 @@ async function disable2FA() {
             const container = document.getElementById('container-2fa');
             if (container) {
                 container.innerHTML = '';
+                btnEnable2FA.classList.remove('disable');
                 btnEnable2FA.classList.add('active');
+                btnEnable2FA.classList.remove('active');
                 btnDisable2FA.classList.add('disable');
             }
         } else {
             showToast(data.message, 'error');
-            passwordInput?.focus();
+
+            if (data.errorField === "password") {
+                passwordInput?.focus();
+            } else if (data.errorField === "token") {
+                inputToken?.focus();
+            } else {
+                passwordInput?.focus();
+            }
         }
     } catch (error) {
         console.error('Ошибка отключения 2FA:', error);
@@ -617,6 +630,10 @@ async function disable2FA() {
 // Отключение 2FA: DOM innerHTML
 async function disable2FASetupDOM() {
     const container = document.getElementById('container-2fa');
+    if (container) {
+        document.getElementById('onlogin-2fa').classList.remove('active');
+        document.getElementById('onlogin-2fa').classList.add('disable');
+    }
     const email = getCurrentUserEmail();
 
     container.innerHTML = `

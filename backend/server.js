@@ -295,7 +295,7 @@ app.post('/api/2fa/disable', async (req, res) => {
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
-            return res.status(401).json({ success: false, message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
+            return res.status(401).json({ success: false, message: 'Неверный пароль: Возможно неверный регистр или пропущены символы', errorField: 'password' });
             
         }
 
@@ -311,7 +311,7 @@ app.post('/api/2fa/disable', async (req, res) => {
         });
 
         if (!verified) {
-            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA' });
+            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA', errorField: 'token' });
         }
 
         user.isTwoFactorEnabled = false;
