@@ -315,7 +315,7 @@ app.post('/api/2fa/disable', async (req, res) => {
         }
 
         user.isTwoFactorEnabled = false;
-        user.is2FAOnLoginEnabled = false;
+        user.require2FAOnLogin = false;
         user.twoFactorSecret = undefined;
 
         await user.save();

@@ -471,17 +471,15 @@ async function confirm2FA(email) {
             const container = document.getElementById('container-2fa');
             if (container) {
                 container.innerHTML = '';
-                btnEnable2FA.classList.add('disable');
-                btnDisable2FA.classList.add('active');
+                update2FAUI();
             }
         } else {
             showToast(`${data.message}`, 'error');
             inputToken?.focus();
-            inputToken.select();
+            inputToken?.select();
         }
     } catch (error) {
         showToast('Ошибка соединения', 'error');
-        inputToken?.focus();
     }
 }
 
@@ -614,6 +612,7 @@ async function disable2FA() {
 
             if (data.errorField === "password") {
                 passwordInput?.focus();
+                passwordInput?.select();
             } else if (data.errorField === "token") {
                 inputToken?.focus();
             } else {
