@@ -126,6 +126,41 @@
                 </div>
             </div>
 
+            <!-- ====== LOGIN-2FA MODAL ====== -->
+            <div class="modal" id="login-2fa-modal">
+                <div class="modal-overlay"></div>
+            
+                <div class="modal-window">
+                    <button class="modal-close" aria-label="Закрыть">&times;</button>
+            
+                    <div class="container-title-login">
+                        <i class="fa-solid fa-arrow-right-to-bracket modal-icon-login"></i>
+                        <h3 class="modal-title-login">AmIGuess<span>.AI</span></h3>
+                    </div>
+                    <p class="modal-subtitle">
+                        Введите код двухфакторной авторизации, чтобы получить доступ к аккаунту AmIGuess.AI
+                    </p>
+            
+                    <form class="login-form" id="login-2fa-form">
+                        <input 
+                            type="text" 
+                            name="2fa-code" 
+                            placeholder="Код из приложения"
+                            required
+                        >
+
+            
+                        <button type="submit" class="btn-submit">
+                            Подтвердить
+                        </button>
+                    </form>
+            
+                    <p class="modal-hint">
+                        Нет аккаунта? <a id="registration">Создать</a>
+                    </p>
+                </div>
+            </div>
+
             <!-- ====== REGISTRATION MODAL ====== -->
             <div class="modal" id="reg-modal">
                 <div class="modal-overlay"></div>

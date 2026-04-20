@@ -850,14 +850,18 @@ loginForm.addEventListener('submit', async (event) => {
         const result = await response.json();
 
         if (result.success) {
-            isLoggedIn = true;
+            if (result.isTwoFactorEnabled && result.require2FAOnLogin) {
+                
+            } else {
+                isLoggedIn = true;
 
-            // Сохраняем пользователя
-            localStorage.setItem('user', JSON.stringify(result.user));
-
-            closeModal(loginModal);
-            showUser();
-            showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+                // Сохраняем пользователя
+                localStorage.setItem('user', JSON.stringify(result.user));
+    
+                closeModal(loginModal);
+                showUser();
+                showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+            }
         } else {
             showToast(result.message, 'error');
 
@@ -869,6 +873,37 @@ loginForm.addEventListener('submit', async (event) => {
     } catch (error) {
         showToast('Произошла непредвиденная ошибка при регистрации. Попробуйте позже.', 'error');
     }
+});
+
+// Модалка для ввода 2FA-кода
+const login2FAModal = document.getElementById('login-2fa-modal');
+const login2FAForm = document.getElementById('login-2fa-form');
+
+// Проверка статуса 2FA и Вход в аккаунт
+async function loadAndLogInToAccount() {
+    const email = getCurrentUserEmail();
+    if (!email) return;
+    
+    try {
+        const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
+        const data = await response.json();
+
+        if (data.success) {
+            // Обновление UI
+            
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки статуса 2FA:', error);
+        showToast('Не удалось загрузить настройки:', 'error');
+    }
+}
+
+login.addEventListener('click', (event) => {
+    event.preventDefault(); // убираем переход по ссылке
+    // Закрываем каждое открытое модальное окно
+    document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
+    // Открываем модальное окно Входа
+    loginModal.classList.add('active');
 });
 
 // Подключение формы Регистрации к серверу
