@@ -308,6 +308,7 @@ async function loadAndUpdate2FAStatus() {
 
 // Обновление интерфейса на основе флага isTwoFactorEnabled
 function update2FAUI(isEnabled, is2FAOnLoginEnabled) {
+
     const btnEnable = document.getElementById('enable-2fa');
     const btnDisable = document.getElementById('disable-2fa');
     const require2FAOnLogin = document.getElementById('onlogin-2fa');
@@ -362,7 +363,7 @@ function update2FAUI(isEnabled, is2FAOnLoginEnabled) {
         }
     }
     
-    console.log('UI обновлен: isTwoFactorEnabled = ', isEnabled);
+    // console.log('UI обновлен: isTwoFactorEnabled = ', isEnabled);
 }
 
 // Кнопка включения 2FA
@@ -450,7 +451,7 @@ async function confirm2FA(email) {
 
     if (!token || token.length !== 6) {
         showToast('Введите 6-значный код из приложения', 'error');
-        token?.focus();
+        inputToken?.focus();
         return;
     }
 
@@ -467,12 +468,13 @@ async function confirm2FA(email) {
 
         if (data.success) {
             showToast('2FA успешно включен!', 'success');
+            update2FAUI(true, data.is2FAOnLoginEnabled);
             
             const container = document.getElementById('container-2fa');
             if (container) {
                 container.innerHTML = '';
             }
-            update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
+            
         } else {
             showToast(`${data.message}`, 'error');
             inputToken?.focus();
@@ -598,12 +600,12 @@ async function disable2FA() {
         
         if (data.success) {
             showToast('2FA отключен', 'success');
+            update2FAUI(false, false);
     
             const container = document.getElementById('container-2fa');
             if (container) {
                 container.innerHTML = '';
             }
-            update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
         } else {
             showToast(data.message, 'error');
 

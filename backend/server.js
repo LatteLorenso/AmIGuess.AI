@@ -374,26 +374,6 @@ app.post('/api/2fa/require-onlogin', async (req, res) => {
     }
 });
 
-// app.post('/api/2fa/disable-require-onlogin', async (req, res) => {
-//     try {
-//         const email = req.headers['x-user-email'];
-//         const { disable } = req.body;
-
-//         if (email === undefined || typeof disable !== 'boolean') {
-//             return res.status(400).json({ success: false, message: 'Некорректные данные' });
-//         }
-
-//         const user = await User.findOne({ email: email.toLowerCase().trim() });
-//         if (!user) {
-//             return res.status(404).json({ success: false, message: 'Пользователь не найден' });
-//         }
-
-//         if (disable && !user.isTwoFactorEnabled) {
-//             return res.status(400).json({ success: false, message: 'Для продолжения включите 2FA' });
-//         }
-//     }
-// });
-
 // Подключение сервера
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
