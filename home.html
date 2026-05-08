@@ -91,6 +91,7 @@
                             type="email" 
                             name="email" 
                             placeholder="Email"
+                            autocomplete="on"
                             required
                         >
             
@@ -98,6 +99,7 @@
                             type="password" 
                             name="password" 
                             placeholder="Пароль"
+                            autocomplete="off"
                             required
                         >
 
@@ -141,10 +143,10 @@
                         Введите код двухфакторной авторизации, чтобы получить доступ к аккаунту AmIGuess.AI
                     </p>
             
-                    <form class="login-form" id="login-2fa-form">
+                    <form class="login-form" id="login-2fa-form" autocomplete="off">
                         <input 
                             type="text" 
-                            name="2fa-code" 
+                            name="token" 
                             placeholder="Код из приложения"
                             required
                         >
@@ -182,6 +184,7 @@
                             name="email" 
                             placeholder="Email"
                             autofocus="autofocus"
+                            autocomplete="on"
                             required
                         >
 
@@ -189,6 +192,7 @@
                             type="text" 
                             name="fname" 
                             placeholder="Имя"
+                            autocomplete="off"
                             required
                         >
 
@@ -196,6 +200,7 @@
                             type="text" 
                             name="sname" 
                             placeholder="Фамилия"
+                            autocomplete="off"
                             required
                         >
             
@@ -203,12 +208,14 @@
                             type="password" 
                             name="password" 
                             placeholder="Пароль"
+                            autocomplete="off"
                             required
                         >
                         <input 
                             type="password" 
                             name="repeat-password" 
                             placeholder="Повторите пароль"
+                            autocomplete="off"
                             required
                         >
                         

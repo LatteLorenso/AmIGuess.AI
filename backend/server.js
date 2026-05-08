@@ -2,6 +2,8 @@ const express = require('express'); // легкое подключение се�
 const cors = require('cors'); // позволяем браузеру связываться с разными адресами
 const mongoose = require('mongoose'); // Связь между бэкендом и MongoDB (позволяет читать/писать данные в БД через JS)
 const bcrypt = require('bcryptjs'); // для хеширования паролей
+const crypto = require('crypto');
+const { Temporal } = require ('@js-temporal/polyfill');
 
 const app = express();
 const PORT = 3000;
@@ -23,12 +25,14 @@ const userSchema = new mongoose.Schema({
     twoFactorSecret: { type: String, select: false }, // select: false гарантирует, что секрет не "утечёт" при обычных findOne() — его нужно будет явно запрашивать через .select('+twoFactorSecret').
     isTwoFactorEnabled: { type: Boolean, default: false },
     require2FAOnLogin: { type: Boolean, default: false },
+    tempToken: { type: String, default: false },
+    tempTokenExpires: { type: Date, default: null, select: false },
     backupCodes: [{ type: String }]
 });
 
 const User = mongoose.model('User', userSchema);
 
-// Вход в аккаунт
+// Вход в аккаунт (1)
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -41,24 +45,35 @@ app.post('/login', async (req, res) => {
         // Проверяем email
         const user = await User.findOne({ email: email.toLowerCase().trim() });
         if (!user) {
-            return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email' });
+            return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email', errorField: 'email' });
         }
 
         // Проверяем пароль
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ success: false, field: 'password', message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
+            return res.status(401).json({ success: false, field: 'password', message: 'Неверный пароль: Возможно неверный регистр или пропущены символы', errorField: 'password' });
         }
 
-        if (user.isTwoFactorEnabled) {
-            if (!twoFactorCode) {
-                return res.status(403).json({
-                    success: false,
-                    requires2FA: true,
-                    message: 'Требуется код двухфакторной аутентификации'
-                });
-            }
+        if (user.isTwoFactorEnabled && user.require2FAOnLogin) {
+            // Генерируем временный пропуск
+            const tempToken = crypto.randomBytes(32).toString('hex');
+            user.tempToken = tempToken;
+            // Время исчезновения пропуска
+            const temporalTime = Temporal.Now.instant();
+            // Добавляем +5 минут к текущему моменту времени
+            const tempTokenExpiresTemporal = temporalTime.add({ minutes: 5 }); 
+            // Temporal Object to Date Object for MongoDB
+            const tempTokenExpiresDate = new Date(tempTokenExpiresTemporal.epochMilliseconds);
+            user.tempTokenExpires = tempTokenExpiresDate;
+            await user.save();
+
+            return res.json({
+                success: true,
+                requires2FA: true,
+                tempToken: tempToken,
+                message: 'Введите код для подтверждения'
+            });
         }
 
         // Всё совпадает — возвращаем данные пользователя
@@ -71,6 +86,79 @@ app.post('/login', async (req, res) => {
                 email: user.email
             }
         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Вход в аккаунт (2) - подтверждение через 2FA-код
+app.post('/api/auth/verify-login-2fa', async (req, res) => {
+    const { tempToken, token, email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Отсуствует email' });
+    }
+
+    if (!tempToken) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Временный токен потерян'
+        });
+    }
+
+    if (!token || !/^\d{6}$/.test(token)) {
+        return res.status(400).json({ success: false, message: 'Токен должен содержать 6 символов' });
+    }
+
+    try {
+        const user = await User.findOne({
+            email: email.toLowerCase().trim(),
+            tempToken: tempToken
+        }).select('+twoFactorSecret +tempTokenExpires');
+
+        if (user && user.tempTokenExpires) {
+            const dbInstant = Temporal.Instant.fromEpochMilliseconds(user.tempTokenExpires.getTime());
+            const nowInstant = Temporal.Now.instant();
+            
+            if (Temporal.Instant.compare(dbInstant, nowInstant) > 0) {
+                // Пропускаем else-блок - идём дальше
+            } else {
+                return res.status(401).json({ success: false, message: 'Сессия истекла' });
+            }
+        } else {
+            return res.status(401).json({ success: false, message: 'Неверный токен/Токен не найден' });
+        }
+
+        // Ставим верхний регистр, убираем пробелы
+        const cleanToken = token.replace(/\s/g, '');
+
+        const verified = speakeasy.totp.verify({
+            secret: user.twoFactorSecret,
+            encoding: 'base32',
+            token: cleanToken,
+            window: 2
+        });
+
+        if (!verified) {
+            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA', errorField: 'token' });
+        }
+
+        // Код верный - очищаем временный допуск, входим в аккаунт
+        user.tempToken = undefined;
+        user.tempTokenExpires = undefined;
+        await user.save();
+        
+        res.json({
+            success: true,
+            user: {
+                _id: user._id,
+                fname: user.fname,
+                sname: user.sname,
+                email: user.email
+            }
+        });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Ошибка сервера' });

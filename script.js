@@ -145,12 +145,14 @@ document.querySelectorAll('.modal').forEach(modal => {
     const closeBtn = modal.querySelector('.modal-close');
     const overlay = modal.querySelector('.modal-overlay');
 
+    // Закрытие по крестику
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             closeModal(modal);
         });
     }
 
+    // Закрытие по клику вне меню
     if (overlay) {
         overlay.addEventListener('click', () => {
             closeModal(modal);
@@ -777,6 +779,7 @@ reg.addEventListener('click', (event) => {
     regModal.classList.add('active');
 });
 
+// Есть аккаунт ссылка (modal-hint)
 const login = document.getElementById('login');
 
 login.addEventListener('click', (event) => {
@@ -816,41 +819,51 @@ loginForm.addEventListener('submit', async (event) => {
         input.classList.remove('input-error');
     });
 
-    const formData = new FormData(loginForm);
-
-    const email = formData.get('email').trim();
-    const password = formData.get('password');
+    const emailInput = document.querySelector("input[name='email']");
+    const email = emailInput?.value.trim();
+    const passwordInput = document.querySelector("input[name='password']");
+    const password = passwordInput?.value.trim();
 
     // Валидация на клиенте
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         showToast('Неверный формат Email', 'error');
-        loginForm.querySelector('input[name="email"]').classList.add('input-error');
+        loginForm.querySelector("input[name='email']").classList.add('input-error');
         return;
     }
 
-    if (password.length < 6) {
+    if (passwordInput.length < 6) {
         showToast('Пароль должен содержать не менее 6 символов!', 'error');
-        loginForm.querySelector('input[name="password"]').classList.add('input-error');
+        loginForm.querySelector("input[name='password']").classList.add('input-error');
         return;
     }
-
-    const data = {
-        email: email,
-        password: password
-    };
 
     try {
         const response = await fetch('http://localhost:3000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
         });
 
         const result = await response.json();
 
         if (result.success) {
-            if (result.isTwoFactorEnabled && result.require2FAOnLogin) {
+            if (result.requires2FA) {
+                // Сохраняем временный пропуск на клиенте
+                localStorage.setItem('temp_2fa_token', result.tempToken);
+                localStorage.setItem('temp_2fa_email', email);
+
+                // Закрываем прошлую модалку и открываем новую
+                closeModal(loginModal);
+                showToast('Введите код из приложения для подтверждения входа', 'success');
+                setTimeout(() => login2FAModal.classList.add('active'), 300);
+                if (passwordInput) {
+                    passwordInput.value = '';
+                }
+                login2FAForm.querySelector("input[name='token'").focus();
                 
             } else {
                 isLoggedIn = true;
@@ -858,7 +871,7 @@ loginForm.addEventListener('submit', async (event) => {
                 // Сохраняем пользователя
                 localStorage.setItem('user', JSON.stringify(result.user));
     
-                closeModal(loginModal);
+                setTimeout(() => closeModal(loginModal), 300);
                 showUser();
                 showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
             }
@@ -871,7 +884,8 @@ loginForm.addEventListener('submit', async (event) => {
             }
         }
     } catch (error) {
-        showToast('Произошла непредвиденная ошибка при регистрации. Попробуйте позже.', 'error');
+        console.error(error);
+        showToast('Произошла ошибка при входе. Попробуйте позже.', 'error');
     }
 });
 
@@ -879,23 +893,74 @@ loginForm.addEventListener('submit', async (event) => {
 const login2FAModal = document.getElementById('login-2fa-modal');
 const login2FAForm = document.getElementById('login-2fa-form');
 
-// Проверка статуса 2FA и Вход в аккаунт
-async function loadAndLogInToAccount() {
-    const email = getCurrentUserEmail();
-    if (!email) return;
-    
-    try {
-        const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
-        const data = await response.json();
+if (login2FAModal) {
+    login2FAForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-        if (data.success) {
-            // Обновление UI
-            
+        const tokenInput = document.querySelector("input[name='token']");
+        const token = tokenInput?.value.trim();
+
+        if (!token || token.length !== 6) {
+            showToast('Токен должен содержать 6 символов', 'error');
+            tokenInput?.focus();
+            return;
         }
-    } catch (error) {
-        console.error('Ошибка загрузки статуса 2FA:', error);
-        showToast('Не удалось загрузить настройки:', 'error');
-    }
+        
+        const tempToken = localStorage.getItem('temp_2fa_token');
+        const email = localStorage.getItem('temp_2fa_email');
+
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/verify-login-2fa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tempToken: tempToken,
+                    token: token,
+                    email: email
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                localStorage.removeItem('temp_2fa_token');
+                localStorage.removeItem('temp_2fa_email');
+
+                isLoggedIn = true;
+
+                // Сохраняем пользователя
+                localStorage.setItem('user', JSON.stringify(result.user));
+    
+                closeModal(login2FAModal);
+                showUser();
+                login2FAForm.reset();
+                showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+            } else {
+                const message = result.message?.toLowerCase() || '';
+
+                if (message.includes('сессия') || message.includes('истекла') || message.includes('истек')) {
+                    localStorage.removeItem('temp_2fa_token');
+                    localStorage.removeItem('temp_2fa_email');
+                    
+                    // Закрываем текущую модалку и открываем прошлую
+                    closeModal(login2FAModal);
+                    showToast('Сессия истекла. Пожалуйста, войдите снова', 'success');
+                    setTimeout(() => loginModal.classList.add('active'), 300);
+                    login2FAForm.reset();
+                }
+                showToast(result.message, 'error');
+
+                if (result.errorField === 'token') {
+                    tokenInput?.classList.add('input-error');
+                    setTimeout(() => tokenInput?.classList.remove('input-error'), 2000);
+                }
+            }
+
+        } catch (error) {
+            console.error('Ошибка 2FA:', error);
+            showToast('Ошибка соединения с сервером', 'error');
+        }
+    });
 }
 
 login.addEventListener('click', (event) => {
@@ -927,13 +992,13 @@ regForm.addEventListener('submit', async (event) => {
     // Проверка совпадения пароля и его длины
     if (repeatPassword !== password) {
         showToast('Пароли не совпадают', 'error');
-        regForm.querySelector('input[name="repeat-password"]').classList.add('input-error');
+        regForm.querySelector("input[name='repeat-password']").classList.add('input-error');
         return;
     }
     if (password.length < 6) {
         showToast('Пароль должен содержать минимально 6 символов', 'error');
-        regForm.querySelector('input[name="password"]').classList.add('input-error');
-        regForm.querySelector('input[name="repeat-password"]').classList.add('input-error');
+        regForm.querySelector("input[name='password']").classList.add('input-error');
+        regForm.querySelector("input[name='repeat-password']").classList.add('input-error');
         return;
     }
 
@@ -964,8 +1029,8 @@ regForm.addEventListener('submit', async (event) => {
 
             if (checkResult.nameExists) {
                 showToast('Пользователь с таким ФИ уже существует', 'error');
-                regForm.querySelector('input[name="fname"]').classList.add('input-error');
-                regForm.querySelector('input[name="sname"]').classList.add('input-error');
+                regForm.querySelector("input[name='fname']").classList.add('input-error');
+                regForm.querySelector("input[name='sname']").classList.add('input-error');
             }
 
             return;
@@ -995,7 +1060,7 @@ regForm.addEventListener('submit', async (event) => {
             // Показ ошибок валидации от сервера
             if (result.errors) {
                 Object.keys(result.errors).forEach(field => {
-                    const input = regForm.querySelector('input[name="${field}"]');
+                    const input = regForm.querySelector(`input[name="${field}"]`);
                     if (input) {
                         input.classList.add('input-error');
                     }
@@ -1008,8 +1073,8 @@ regForm.addEventListener('submit', async (event) => {
 });
 
 // Добавление паролей в реальном времени
-const passwordInput = regForm.querySelector('input[name="password"]');
-const repeatPasswordInput = regForm.querySelector('input[name="repeat-password"]');
+const passwordInput = regForm.querySelector("input[name='password']");
+const repeatPasswordInput = regForm.querySelector("input[name='repeat-password']");
 
 if (passwordInput && repeatPasswordInput) {
     repeatPasswordInput.addEventListener('input', () => {
