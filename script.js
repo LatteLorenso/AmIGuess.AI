@@ -1497,7 +1497,7 @@ function showToast(message, type = 'success') {
     // const text = container.querySelector('.toast-message');
 
     const toast = document.createElement('div');
-    toast.className = `toast show ${type}`;
+    toast.className = `toast ${type}`;
     toast.textContent = message;
 
     container.appendChild(toast);
