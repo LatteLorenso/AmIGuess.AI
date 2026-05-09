@@ -1491,10 +1491,8 @@ legalLinks.forEach(link => {
 const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');
 
-// !Не закончен алёрт!
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
-    // const text = container.querySelector('.toast-message');
 
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
@@ -1504,16 +1502,13 @@ function showToast(message, type = 'success') {
 
     requestAnimationFrame(() => toast.classList.add('show'));
 
-    // text.textContent = message;
-
-    // container.className = `toast show ${type}`;
-
-    setTimeout(() => {
+    const removeToast = () => {
         toast.classList.remove('show');
-        toast.addEventListener('transitionend', () => {
-            toast.remove();
-        }, { once: true });
-    }, 3000);
+        toast.classList.add('hide');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    }
+
+    setTimeout(removeToast, 3000);
 }
 
 form.addEventListener('submit', (Event) => {
@@ -1526,9 +1521,7 @@ form.addEventListener('submit', (Event) => {
         localStorage.setItem('subscribedEmails', JSON.stringify(emails)); // JSON.stringify - из массива в строку
         console.log('Текущий email:', email);
         console.log('Список записанных emails:', JSON.parse(localStorage.getItem('subscribedEmails')));
-        // showToast();
         input.value = ''; // Очищаем поле после добавления Email
-
     }
 });
 
