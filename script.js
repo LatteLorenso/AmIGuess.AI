@@ -503,7 +503,7 @@ async function start2FASetupDOM(email) {
             <button id="btn-generate-qr" style="padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">Показать QR-код</button>
         </div>
         <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-2fa-token" placeholder="123 456" maxlength="6" autocomplete='off' style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;" required>
+        <input type="text" id="input-2fa-token" placeholder="123456" maxlength="6" autocomplete='off' style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;" required>
         <button type="button" id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
             Подтвердить
         </button>
@@ -726,6 +726,7 @@ function logout() {
 
     // очищаем форму
     loginForm.reset();
+    regForm.reset();
     isLoggedIn = false;
     // Удаляем пользователя
     localStorage.removeItem('user');
@@ -776,7 +777,7 @@ reg.addEventListener('click', (event) => {
     // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Регистрации
-    regModal.classList.add('active');
+    setTimeout(() => regModal.classList.add('active'), 150);
 });
 
 // Есть аккаунт ссылка (modal-hint)
@@ -787,7 +788,7 @@ login.addEventListener('click', (event) => {
     // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Входа
-    loginModal.classList.add('active');
+    setTimeout(() => loginModal.classList.add('active'), 150);
 });
 
 
@@ -803,8 +804,7 @@ logoutBtn.addEventListener('click', (event) => {
 const leaveBtn = document.querySelector('.btn-logout');
 
 leaveBtn.addEventListener('click', (event) => {
-    // event.preventDefault(); // убираем переход по ссылке
-    logoutModal.classList.remove('active');
+    setTimeout(() => closeModal(logoutModal), 150);
     logout();
     showToast(`Ждем вашего возвращения!`, 'success');
 });
@@ -859,7 +859,7 @@ loginForm.addEventListener('submit', async (event) => {
                 // Закрываем прошлую модалку и открываем новую
                 closeModal(loginModal);
                 showToast('Введите код из приложения для подтверждения входа', 'success');
-                setTimeout(() => login2FAModal.classList.add('active'), 300);
+                setTimeout(() => login2FAModal.classList.add('active'), 150);
                 if (passwordInput) {
                     passwordInput.value = '';
                 }
@@ -871,7 +871,7 @@ loginForm.addEventListener('submit', async (event) => {
                 // Сохраняем пользователя
                 localStorage.setItem('user', JSON.stringify(result.user));
     
-                setTimeout(() => closeModal(loginModal), 300);
+                setTimeout(() => closeModal(loginModal), 150);
                 showUser();
                 showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
             }

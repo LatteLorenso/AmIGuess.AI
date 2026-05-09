@@ -59,7 +59,7 @@ app.post('/login', async (req, res) => {
             // Генерируем временный пропуск
             const tempToken = crypto.randomBytes(32).toString('hex');
             user.tempToken = tempToken;
-            // Время исчезновения пропуска
+            // Время истечение пропуска
             const temporalTime = Temporal.Now.instant();
             // Добавляем +5 минут к текущему моменту времени
             const tempTokenExpiresTemporal = temporalTime.add({ minutes: 5 }); 
