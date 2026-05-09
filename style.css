@@ -891,23 +891,35 @@ input[type="checkbox"] {
     border: 2px solid var(--color-accent-question);
 }
 
-/* Уведомление об успешном/неуспешном входе пользователя */
-.toast {
+/* Уведомление об успешном/неуспешном действиях пользователя */
+.toast-container {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    min-width: 240px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 15px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.toast {
+    pointer-events: auto;
     padding: 20px;
     border-radius: 12px;
     background: var(--color-bg-secondary);
-    color: #fff;
-    font-size: 1rem;
     opacity: 0;
     transform: translateY(20px);
-    pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 1000;
+    font-size: 1rem;
+    color: #fff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    word-wrap: break-word;
+    min-width: 240px;
+    max-width: 100%;
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 /* Активное состояние */

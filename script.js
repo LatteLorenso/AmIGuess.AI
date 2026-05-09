@@ -1493,15 +1493,26 @@ const input = document.getElementById('email-input');
 
 // !Не закончен алёрт!
 function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');
-    const text = toast.querySelector('.toast-message');
+    const container = document.getElementById('toast-container');
+    // const text = container.querySelector('.toast-message');
 
-    text.textContent = message;
-
+    const toast = document.createElement('div');
     toast.className = `toast show ${type}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    // text.textContent = message;
+
+    // container.className = `toast show ${type}`;
 
     setTimeout(() => {
         toast.classList.remove('show');
+        toast.addEventListener('transitionend', () => {
+            toast.remove();
+        }, { once: true });
     }, 3000);
 }
 
