@@ -1494,6 +1494,9 @@ const input = document.getElementById('email-input');
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
 
+    // Ограничение на 3+ тоста одновременно
+    if (container.childElementCount >= 3) return;
+
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = message;
