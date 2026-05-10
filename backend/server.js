@@ -45,7 +45,7 @@ app.post('/login', async (req, res) => {
         // Проверяем email
         const user = await User.findOne({ email: email.toLowerCase().trim() });
         if (!user) {
-            return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email', errorField: 'email' });
+            return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email: Возможно пользователь не зарегистрирован', errorField: 'email' });
         }
 
         // Проверяем пароль
