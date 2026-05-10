@@ -469,7 +469,7 @@ async function confirm2FA(email) {
         const data = await res.json();
 
         if (data.success) {
-            showToast('2FA успешно включен!', 'success');
+            showToast('2FA успешно включен', 'success');
             update2FAUI(true, data.is2FAOnLoginEnabled);
             
             const container = document.getElementById('container-2fa');
@@ -517,9 +517,6 @@ async function start2FASetupDOM(email) {
             event.preventDefault();
             document.getElementById('btn-confirm-enable').focus();
         }
-        // if (!data.success) {
-        //     document.getElementById('input-2fa-token')?.focus();
-        // }
     });
 }
 
@@ -601,7 +598,7 @@ async function disable2FA() {
         const data = await res.json();
         
         if (data.success) {
-            showToast('2FA отключен', 'success');
+            showToast('2FA успешно отключен', 'success');
             update2FAUI(false, false);
     
             const container = document.getElementById('container-2fa');
@@ -1021,18 +1018,15 @@ regForm.addEventListener('submit', async (event) => {
         const checkResult = await checkResponse.json();
 
         if (!checkResult.success) {
-
             if (checkResult.emailExists) {
                 showToast('Пользователь с таким Email уже существует', 'error');
                 regForm.querySelector('input[name="email"]').classList.add('input-error');
             }
-
             if (checkResult.nameExists) {
                 showToast('Пользователь с таким ФИ уже существует', 'error');
                 regForm.querySelector("input[name='fname']").classList.add('input-error');
                 regForm.querySelector("input[name='sname']").classList.add('input-error');
             }
-
             return;
         }
 
