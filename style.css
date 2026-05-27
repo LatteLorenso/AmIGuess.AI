@@ -755,7 +755,7 @@ input[type="checkbox"] {
 }
 
 .title-options {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 400;
     line-height: 1.6;
     text-align: left;
@@ -763,31 +763,45 @@ input[type="checkbox"] {
     margin-bottom: 10px;
 }
 
-.subtitle-option {
-    color: var(--color-text-main);
+.title-options i {
+    margin-right: 10px;
     font-size: 1.2rem;
-    font-weight: 400;
-    white-space: nowrap;
-    line-height: 1.6;
-    margin-bottom: 15px;
 }
 
-.subtitle-option i {
-    margin-right: 10px;
-    font-size: 1.1rem;
+.section-2fa {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-2fa {
+    margin-top: -20px;
+}
+
+.container-enable-2fa {
+    display: flex;
+    flex-direction: column;
+}
+
+.subtitle-option {
+    color: var(--color-text-main);
+    font-size: 1.3rem;
+    font-weight: 400;
+    flex-wrap: wrap;
+    line-height: 1.6;
 }
 
 .btn-settings {
-    display: flex;
+    display: none;
     gap: 15px;
     justify-content: center;
-    margin-top: 80px;
+    /* margin-top: 80px; */
 }
 
 .container-btn-turn {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    margin-top: 15px;
 }
 
 /* Включение/Отключение кнопок (2fa) */
@@ -804,11 +818,13 @@ input[type="checkbox"] {
 /* Стили кнопки включения */
 .btn-turn-on {
     width: 200px;
+    height: 45px;
     background-color: var(--color-bg-secondary);
     color: var(--color-text-main);
     border: 2px solid var(--color-border-soft);
     padding: 8px 20px;
     font-weight: bold;
+    text-wrap: nowrap;
     text-align: center;
     cursor: pointer;
     font-size: 1rem;
@@ -825,11 +841,13 @@ input[type="checkbox"] {
 .btn-turn-off {
     display: none;
     width: 200px;
+    height: 45px;
     background-color: var(--color-bg-secondary);
     color: var(--color-text-main);
     border: 2px solid var(--color-border-soft);
     padding: 8px 20px;
     font-weight: bold;
+    text-wrap: nowrap;
     text-align: center;
     cursor: pointer;
     font-size: 1rem;
@@ -848,11 +866,11 @@ input[type="checkbox"] {
 }
 
 /* Включение/Отключение секции (при входе) */
-.onlogin-2fa.active {
-    display: block;
+.container-onlogin-2fa.active {
+    display: flex;
 }
 
-.onlogin-2fa.disable {
+.container-onlogin-2fa.disable {
     display: none;
 }
 

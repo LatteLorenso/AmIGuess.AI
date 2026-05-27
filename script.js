@@ -435,8 +435,8 @@ async function generateQRCode(email) {
             const formattedSecret = formatSecret(data.secret);
 
             container.innerHTML = `
-                <img src="${data.qrcode}" alt="QR" style="display:flex; justify-self:center; margin-bottom:10px; width:200px; height:200px;">
-                <p style="font-size:1rem; text-align:left;">Вручную: <b>${formattedSecret}</b></p>
+                <img src="${data.qrcode}" alt="QR" style="display:flex; justify-self:center; width:200px; height:200px;">
+                <p style="font-size:1rem; text-align:left; margin-top: 15px;">Ключ 2FA: <b>${formattedSecret}</b></p>
             `;
         } else {
             container.innerHTML = `<p class="error">${data.message}</p>`;
@@ -456,8 +456,6 @@ async function confirm2FA(email) {
         inputToken?.focus();
         return;
     }
-
-    // document.getElementById('btn-confirm-enable').disabled = true;
 
     try {
         const res = await fetch('http://localhost:3000/api/2fa/verify-setup', {
@@ -492,19 +490,19 @@ async function start2FASetupDOM(email) {
     const containerFor2FA = document.getElementById('container-2fa');
     if (containerFor2FA) {
         document.getElementById('onlogin-2fa').classList.remove('active');
-        document.getElementById('onlogin-2fa').classList.add('disable');
+        document.getElementById('onlogin-2fa').classList.add('disable'); 
     }
 
     containerFor2FA.innerHTML = `
     <form>
         <h4>Настройка 2FA</h4>
         <p>1. Отсканируйте QR-код:</p>
-        <div id="qr-container" style="text-align:center; margin: 20px 0px 10px;">
+        <div id="qr-container" style="text-align:center; margin: 10px 0px 10px;">
             <button id="btn-generate-qr" style="padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">Показать QR-код</button>
         </div>
         <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-2fa-token" placeholder="123456" maxlength="6" autocomplete='off' style="padding:8px; width:100%; margin:10px 0px; font-size:1rem;" required>
-        <button type="button" id="btn-confirm-enable" style="width:100%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
+        <input type="text" id="input-2fa-token" placeholder="123456" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem;" required>
+        <button type="button" id="btn-confirm-enable" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
             Подтвердить
         </button>
     </form>
@@ -582,8 +580,6 @@ async function disable2FA() {
             inputToken?.focus();
             return;
         }
-    
-        // document.getElementById('btn-disable-confirm').disabled = true;
 
     
         const res = await fetch('http://localhost:3000/api/2fa/disable', {
