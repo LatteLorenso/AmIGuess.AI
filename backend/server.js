@@ -2,6 +2,8 @@ const express = require('express'); // легкое подключение се�
 const cors = require('cors'); // позволяем браузеру связываться с разными адресами
 const mongoose = require('mongoose'); // Связь между бэкендом и MongoDB (позволяет читать/писать данные в БД через JS)
 const bcrypt = require('bcryptjs'); // для хеширования паролей
+const crypto = require('crypto');
+const { Temporal } = require ('@js-temporal/polyfill');
 
 const app = express();
 const PORT = 3000;
@@ -19,12 +21,18 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     fname: { type: String, required: true },
     sname: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    twoFactorSecret: { type: String, select: false }, // select: false гарантирует, что секрет не "утечёт" при обычных findOne() — его нужно будет явно запрашивать через .select('+twoFactorSecret').
+    isTwoFactorEnabled: { type: Boolean, default: false },
+    require2FAOnLogin: { type: Boolean, default: false },
+    tempToken: { type: String, default: false },
+    tempTokenExpires: { type: Date, default: null, select: false },
+    backupCodes: [{ type: String }]
 });
 
 const User = mongoose.model('User', userSchema);
 
-// Вход в аккаунт
+// Вход в аккаунт (1)
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -37,24 +45,35 @@ app.post('/login', async (req, res) => {
         // Проверяем email
         const user = await User.findOne({ email: email.toLowerCase().trim() });
         if (!user) {
-            return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email' });
+            return res.status(401).json({ success: false, field: 'email', message: 'Неверный Email: Возможно пользователь не зарегистрирован', errorField: 'email' });
         }
-
-        // // Проверяем имя
-        // if (user.fname !== fname.trim()) {
-        //     return res.status(401).json({ success: false, field: 'fname', message: 'Неверное имя: Возможно неверный регистр или пропущены символы' });
-        // }
-
-        // // Проверяем фамилию
-        // if (user.sname !== sname.trim()) {
-        //     return res.status(401).json({ success: false, field: 'sname', message: 'Неверная фамилия: Возможно неверный регистр или пропущены символы' });
-        // }
 
         // Проверяем пароль
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ success: false, field: 'password', message: 'Неверный пароль: Возможно неверный регистр или пропущены символы' });
+            return res.status(401).json({ success: false, field: 'password', message: 'Неверный пароль: Возможно неверный регистр или пропущены символы', errorField: 'password' });
+        }
+
+        if (user.isTwoFactorEnabled && user.require2FAOnLogin) {
+            // Генерируем временный пропуск
+            const tempToken = crypto.randomBytes(32).toString('hex');
+            user.tempToken = tempToken;
+            // Время истечение пропуска
+            const temporalTime = Temporal.Now.instant();
+            // Добавляем +5 минут к текущему моменту времени
+            const tempTokenExpiresTemporal = temporalTime.add({ minutes: 5 }); 
+            // Temporal Object to Date Object for MongoDB
+            const tempTokenExpiresDate = new Date(tempTokenExpiresTemporal.epochMilliseconds);
+            user.tempTokenExpires = tempTokenExpiresDate;
+            await user.save();
+
+            return res.json({
+                success: true,
+                requires2FA: true,
+                tempToken: tempToken,
+                message: 'Введите код для подтверждения'
+            });
         }
 
         // Всё совпадает — возвращаем данные пользователя
@@ -67,6 +86,79 @@ app.post('/login', async (req, res) => {
                 email: user.email
             }
         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Вход в аккаунт (2) - подтверждение через 2FA-код
+app.post('/api/auth/verify-login-2fa', async (req, res) => {
+    const { tempToken, token, email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Отсуствует email' });
+    }
+
+    if (!tempToken) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Временный токен потерян'
+        });
+    }
+
+    if (!token || !/^\d{6}$/.test(token)) {
+        return res.status(400).json({ success: false, message: 'Токен должен содержать 6 символов' });
+    }
+
+    try {
+        const user = await User.findOne({
+            email: email.toLowerCase().trim(),
+            tempToken: tempToken
+        }).select('+twoFactorSecret +tempTokenExpires');
+
+        if (user && user.tempTokenExpires) {
+            const dbInstant = Temporal.Instant.fromEpochMilliseconds(user.tempTokenExpires.getTime());
+            const nowInstant = Temporal.Now.instant();
+            
+            if (Temporal.Instant.compare(dbInstant, nowInstant) > 0) {
+                // Пропускаем else-блок - идём дальше
+            } else {
+                return res.status(401).json({ success: false, message: 'Сессия истекла' });
+            }
+        } else {
+            return res.status(401).json({ success: false, message: 'Неверный токен/Токен не найден' });
+        }
+
+        // Ставим верхний регистр, убираем пробелы
+        const cleanToken = token.replace(/\s/g, '');
+
+        const verified = speakeasy.totp.verify({
+            secret: user.twoFactorSecret,
+            encoding: 'base32',
+            token: cleanToken,
+            window: 2
+        });
+
+        if (!verified) {
+            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA', errorField: 'token' });
+        }
+
+        // Код верный - очищаем временный допуск, входим в аккаунт
+        user.tempToken = undefined;
+        user.tempTokenExpires = undefined;
+        await user.save();
+        
+        res.json({
+            success: true,
+            user: {
+                _id: user._id,
+                fname: user.fname,
+                sname: user.sname,
+                email: user.email
+            }
+        });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Ошибка сервера' });
@@ -162,6 +254,211 @@ app.post('/register', async (req, res) => {
         }
         
         res.status(500).json({ success: false, message: 'Ошибка при регистрации' });
+    }
+});
+
+const speakeasy = require('speakeasy');
+const qrcode = require('qrcode');
+
+// Двухфакторная Аутентификация: Эндпоинт получения статуса 2FA
+app.get('/api/2fa/status', async (req, res) => {
+    const { email } = req.query;
+
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email обязателен' });
+    }
+
+    try {
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        res.json({
+            success: true,
+            isEnabled: user.isTwoFactorEnabled,
+            is2FAOnLoginEnabled: user.require2FAOnLogin
+        });
+    } catch (error) {
+        console.log('Ошибка получения статуса 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт настройки 2FA
+app.post('/api/2fa/setup', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ success: false, message: 'Email обязателен' });
+    }
+
+    try {
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        const secret = speakeasy.generateSecret({
+            name: `AmIGuess.AI (${user.email})`,
+            issuer: `AmIGuess.AI`
+        });
+
+        const qrCodeDataURL = await qrcode.toDataURL(secret.otpauth_url);
+
+        res.json({
+            success: true,
+            secret: secret.base32,
+            qrcode: qrCodeDataURL,
+            otpauthUrl: secret.otpauth_url
+        });
+    } catch (error) {
+        console.error('Ошибка настройки 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт подтверждения настройки 2FA (пользователь отсканировал QR - ввел код из приложения - мы проверяем и только после сохраняем в БД)
+app.post('/api/2fa/verify-setup', async (req, res) => {
+    try {
+        const { email, token, secret } = req.body;
+        
+        if (!email || !token || !secret) {
+            return res.status(400).json({ success: false, message: 'Заполните все поля' });
+        }
+
+        // Ставим верхний регистр, убираем пробелы
+        const cleanToken = token.replace(/\s/g, '');
+        const cleanSecret = secret.replace(/\s/g, '').toUpperCase();
+
+        // Строгая валидация формата токена
+        if (!/^\d{6}$/.test(cleanToken)) {
+            return res.status(400).json({ success: false, message: 'Токен должен быть 6-значным' });
+        }
+
+        const verified = speakeasy.totp.verify({
+            secret: cleanSecret,
+            encoding: 'base32',
+            token: cleanToken,
+            window: 2 // +- 60 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
+        });
+
+        if (!verified) {
+            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA' });
+        }
+
+        // Код верный, сохраняем в БД
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        user.twoFactorSecret = cleanSecret;
+        user.isTwoFactorEnabled = true;
+        await user.save();
+
+        res.json({
+            success: true,
+            message: '2FA Успешно включен',
+        });
+    } catch (error) {
+        console.error('Ошибка подтверждения 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт отключения 2FA (требует подтверждения)
+app.post('/api/2fa/disable', async (req, res) => {
+    try {
+        const email = req.headers['x-user-email'];
+        const { password, token } = req.body;
+
+        if (!password || !token) {
+            return res.status(400).json({ success: false, message: 'Заполните все поля' });
+        }
+        const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+twoFactorSecret');
+        if (!user || !user.twoFactorSecret) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ success: false, message: 'Неверный пароль: Возможно неверный регистр или пропущены символы', errorField: 'password' });
+            
+        }
+
+        // Ставим верхний регистр, убираем пробелы
+        const cleanToken = token.replace(/\s/g, '');
+        const cleanSecret = user.twoFactorSecret.replace(/\s/g, '').toUpperCase();
+
+        const verified = speakeasy.totp.verify({
+            secret: cleanSecret,
+            encoding: 'base32',
+            token: cleanToken,
+            window: 2 // +- 60 секунд на рассинхронизацию. Проверь не только текущий код, но и соседние (предыдущий и следующий), из-за разницы времени
+        });
+
+        if (!verified) {
+            return res.status(400).json({ success: false, message: 'Неверный код подтверждения из приложения 2FA', errorField: 'token' });
+        }
+
+        user.isTwoFactorEnabled = false;
+        user.require2FAOnLogin = false;
+        user.twoFactorSecret = undefined;
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: '2FA успешно отключен'
+        });
+    } catch (error) {
+        console.log('Ошибка отключения 2FA:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера: ' + error.message });
+    }
+});
+
+// Двухфакторная Аутентификация: Эндпоинт включения 2FA при входе
+app.post('/api/2fa/require-onlogin', async (req, res) => {
+    try {
+        const email = req.headers['x-user-email'];
+        const { enable } = req.body;
+
+        if (email === undefined || typeof enable !== 'boolean') {
+            return res.status(400).json({ success: false, message: 'Некорректные данные' });
+        }
+
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+        }
+
+        if (enable && !user.isTwoFactorEnabled) {
+            return res.status(400).json({ success: false, message: 'Для продолжения включите основной 2FA' });
+        }
+
+        if (user.require2FAOnLogin === enable) {
+            return res.json({
+                success: true,
+                message: enable ? '2FA при входе уже включен' : '2FA при входе уже выключен',
+                is2FAOnLoginEnabled: enable,
+                changed: false
+            });
+        }
+
+        user.require2FAOnLogin = enable;
+        await user.save();
+
+        res.json({
+            success: true,
+            message: enable ? '2FA при входе успешно включен' : '2FA при входе успешно выключен',
+            is2FAOnLoginEnabled: user.require2FAOnLogin,
+            changed: true
+        });
+
+    } catch (error) {
+        console.error('Ошибка переключения 2FA при входе:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
     }
 });
 

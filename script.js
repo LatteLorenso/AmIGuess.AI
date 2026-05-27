@@ -126,7 +126,7 @@ const overlayModal = document.querySelector('.modal-overlay');
 const loginBtn = document.getElementById('loginBtn');
 
 loginBtn.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     loginModal.classList.add('active');
 });
 
@@ -145,12 +145,14 @@ document.querySelectorAll('.modal').forEach(modal => {
     const closeBtn = modal.querySelector('.modal-close');
     const overlay = modal.querySelector('.modal-overlay');
 
+    // Закрытие по крестику
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             closeModal(modal);
         });
     }
 
+    // Закрытие по клику вне меню
     if (overlay) {
         overlay.addEventListener('click', () => {
             closeModal(modal);
@@ -197,6 +199,7 @@ document.querySelectorAll('.container-title-logout').forEach(container => {
     });
 });
 
+// Скрываем кнопку входа из аккаунта/Показываем кнопку выхода из аккаунта
 const userContainer = document.querySelector('.container-user');
 
 function showUser() {
@@ -204,15 +207,537 @@ function showUser() {
     userContainer.style.display = 'inline';
 }
 
+// Модальное окно Settings (Открытие)
+const btnSettings = document.getElementById('settings');
+const modalSettings = document.getElementById('settings-modal');
+
+btnSettings.addEventListener('click', (event) => {
+    event.preventDefault;
+    modalSettings.classList.add('active');
+});
+
+// Боковое меню (Показ соответствующих настроек по нажатию на пункт из бокового меню)
+const containerMenu = document.getElementById('container-menu');
+const containerOption = document.getElementById('aside-options');
+const mainMenu = document.getElementById('main-side');
+const selectedOption = document.querySelectorAll('.settings-panel');
+
+const menuOptions = document.querySelectorAll('.left-side-option');
+
+async function activatePanel(button) {
+    // 1. Управление активными классами меню
+    menuOptions.forEach(btn => btn.classList.remove('active'));
+
+    button.classList.add('active');
+
+    // 2. Переключение панелей
+    selectedOption.forEach(panel => {
+        panel.classList.remove('active');
+    });
+
+    const targetID = button.getAttribute('data-target');
+    const targetPanel = document.getElementById(targetID);
+
+    if (targetPanel) {
+        targetPanel.classList.add('active');
+        
+        // 3. Очищаем динамический контейнер ПЕРЕД загрузкой (предотвращает дубли)
+        if (targetID === 'safety-settings') {
+            const container = document.getElementById('container-2fa');
+            if (container) {
+                container.innerHTML = '';
+                update2FAUI();
+            }
+        }
+    }
+
+    // 4. Если открыта панель безопасности - запускаем await функцию, проверяющая статус включенного 2FA
+    if (targetID === 'safety-settings') {
+        await loadAndUpdate2FAStatus();
+    }
+}
+
+menuOptions.forEach(button => {
+    button.addEventListener('click', () => {
+        activatePanel(button);
+    });
+});
+
+// Двухфакторная Аутентификация:
+
+// Включение 2FA
+
+// Получение данных текущего пользователя
+const getCurrentUserEmail = () => {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) return null;
+
+    try {
+        return JSON.parse(userJson).email || null;
+    } catch (error) {
+        console.error('Ошибка парсинга user из localStorage:', error);
+        return null;
+    }
+};
+
+// Временное хранение секрета
+let temp2FASecret = '';
+
+// Форматирование секрета для отображения (группы по 4 символа)
+const formatSecret = (secret, groupSize = 4) => {
+    if (!secret) return '';
+    return secret.replace(/\s/g, '').match(new RegExp(`.{1,${groupSize}}`, 'g'))?.join(' ') || secret;
+};
+
+// Проверка статуса 2FA и изменение UI
+async function loadAndUpdate2FAStatus() {
+    const email = getCurrentUserEmail();
+    if (!email || !isLoggedIn) return;
+    
+    try {
+        const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
+        const data = await response.json();
+
+        if (data.success) {
+            // Обновление UI
+            update2FAUI(data.isEnabled, data.is2FAOnLoginEnabled);
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки статуса 2FA:', error);
+        showToast('Не удалось загрузить настройки:', 'error');
+    }
+}
+
+// Обновление интерфейса на основе флага isTwoFactorEnabled
+function update2FAUI(isEnabled, is2FAOnLoginEnabled) {
+
+    const btnEnable = document.getElementById('enable-2fa');
+    const btnDisable = document.getElementById('disable-2fa');
+    const require2FAOnLogin = document.getElementById('onlogin-2fa');
+    const btnEnable2FAOnLogin = document.getElementById('enable-2fa-onlogin');
+    const btnDisable2FAOnLogin = document.getElementById('disable-2fa-onlogin');
+
+    if (isEnabled) {
+        if (btnEnable) {
+            btnEnable.classList.add('disable');
+            btnEnable.classList.remove('active');
+        }
+        if (btnDisable) {
+            btnDisable.classList.add('active');
+            btnDisable.classList.remove('disable');
+        }
+        if (require2FAOnLogin) {
+            require2FAOnLogin.classList.add('active');
+            require2FAOnLogin.classList.remove('disable');
+        }
+    } else {
+        if (btnEnable) {
+            btnEnable.classList.remove('disable');
+            btnEnable.classList.add('active');
+        }
+        if (btnDisable) {
+            btnDisable.classList.remove('active');
+            btnDisable.classList.add('disable');
+        }
+        if (require2FAOnLogin) {
+            require2FAOnLogin.classList.remove('active');
+            require2FAOnLogin.classList.add('disable');
+        }
+    }
+
+    if (is2FAOnLoginEnabled) {
+        if (btnEnable2FAOnLogin) {
+            btnEnable2FAOnLogin.classList.add('disable');
+            btnEnable2FAOnLogin.classList.remove('active');
+        }
+        if (btnDisable2FAOnLogin) {
+            btnDisable2FAOnLogin.classList.add('active');
+            btnDisable2FAOnLogin.classList.remove('disable');
+        }
+    } else {
+        if (btnEnable2FAOnLogin) {
+            btnEnable2FAOnLogin.classList.remove('disable');
+            btnEnable2FAOnLogin.classList.add('active');
+        }
+        if (btnDisable2FAOnLogin) {
+            btnDisable2FAOnLogin.classList.remove('active');
+            btnDisable2FAOnLogin.classList.add('disable');
+        }
+    }
+}
+
+// Кнопка включения 2FA
+const btnEnable2FA = document.getElementById('enable-2fa');
+
+if (btnEnable2FA) {
+    btnEnable2FA.addEventListener('click', async () => {
+        if (!isLoggedIn) {
+            showToast('Чтобы продолжить войдите в аккаунт', 'error');
+            return;
+        }
+
+        const email = getCurrentUserEmail();
+        if (!email) {
+            showToast('Ошибка: не удалось получить email', 'error');
+            return;
+        }
+
+        btnEnable2FA.classList.add('disable');
+        btnEnable2FA.classList.remove('active');
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
+            const data = await response.json();
+
+            if (data.success) {
+                if (data.isEnabled) {
+                    update2FAUI(data.isEnabled);
+                    showToast('2FA уже включен');
+                    
+                } else {
+                    await start2FASetupDOM(email);
+                }
+            } else {
+                showToast(`Ошибка: ${data.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке 2FA:', error);
+            showToast('Ошибка соединения с сервером', 'error');
+        }
+    });
+}
+
+// Асинхронная функция настройки 2FA
+async function generateQRCode(email) {
+    const container = document.getElementById('qr-container');
+    const btnGenerateQr = document.getElementById('btn-generate-qr');
+    const input2FAToken = document.getElementById('input-2fa-token');
+    container.innerHTML = '<p>Генерация...</p>';
+
+    if (btnGenerateQr) {
+        input2FAToken?.focus();
+    }
+
+    try {
+        const res = await fetch('http://localhost:3000/api/2fa/setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            temp2FASecret = data.secret;
+
+            const formattedSecret = formatSecret(data.secret);
+
+            container.innerHTML = `
+                <img src="${data.qrcode}" alt="QR" style="display:flex; justify-self:center; width:200px; height:200px;">
+                <p style="font-size:1rem; text-align:left; margin-top: 15px;">Ключ 2FA: <b>${formattedSecret}</b></p>
+            `;
+        } else {
+            container.innerHTML = `<p class="error">${data.message}</p>`;
+        }
+    } catch (error) {
+        container.innerHTML = '<p class="error">Ошибка сети</p>';
+    }
+}
+
+// Подтверждение 2FA
+async function confirm2FA(email) {
+    const token = document.getElementById('input-2fa-token').value.trim();
+    const inputToken = document.getElementById('input-2fa-token');
+
+    if (!token || token.length !== 6) {
+        showToast('Введите 6-значный код из приложения', 'error');
+        inputToken?.focus();
+        return;
+    }
+
+    try {
+        const res = await fetch('http://localhost:3000/api/2fa/verify-setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, secret: temp2FASecret })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            showToast('2FA успешно включен', 'success');
+            update2FAUI(true, data.is2FAOnLoginEnabled);
+            
+            const container = document.getElementById('container-2fa');
+            if (container) {
+                container.innerHTML = '';
+            }
+            
+        } else {
+            showToast(`${data.message}`, 'error');
+            inputToken?.focus();
+            inputToken?.select();
+        }
+    } catch (error) {
+        showToast('Ошибка соединения', 'error');
+    }
+}
+
+// Настройка 2FA: DOM innerHTML
+async function start2FASetupDOM(email) {
+    const containerFor2FA = document.getElementById('container-2fa');
+    if (containerFor2FA) {
+        document.getElementById('onlogin-2fa').classList.remove('active');
+        document.getElementById('onlogin-2fa').classList.add('disable'); 
+    }
+
+    containerFor2FA.innerHTML = `
+    <form>
+        <h4>Настройка 2FA</h4>
+        <p>1. Отсканируйте QR-код:</p>
+        <div id="qr-container" style="text-align:center; margin: 10px 0px 10px;">
+            <button id="btn-generate-qr">Показать QR-код</button>
+        </div>
+        <p>2. Введите код из приложения:</p>
+        <input type="text" id="input-2fa-token" placeholder="123456" maxlength="6" autocomplete='one-time-code' required>
+        <button type="button" id="btn-confirm-enable">
+            Подтвердить
+        </button>
+    </form>
+    `
+
+    document.getElementById('btn-generate-qr').addEventListener('click', () => generateQRCode(email));
+    document.getElementById('btn-confirm-enable').addEventListener('click', () => confirm2FA(email));
+    document.getElementById('input-2fa-token').addEventListener('keydown', (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById('btn-confirm-enable').focus();
+        }
+    });
+}
+
+// Отключение 2FA
+
+// Кнопка отключения 2FA
+const btnDisable2FA = document.getElementById('disable-2fa');
+
+if (btnDisable2FA) {
+    btnDisable2FA.addEventListener('click', async () => {
+        if (!isLoggedIn) {
+            showToast('Чтобы продолжить войдите в аккаунт', 'error');
+            return;
+        }
+
+        const email = getCurrentUserEmail();
+        if (!email) {
+            showToast('Ошибка: не удалось получить email', 'error');
+            return;
+        }
+        
+        btnDisable2FA.classList.remove('active');
+        btnDisable2FA.classList.add('disable');
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/2fa/status?email=${encodeURIComponent(email)}`);
+            const data = await response.json();
+
+            if (data.success) {
+                if (!data.isEnabled) {
+                    update2FAUI(data.isEnabled);
+                    showToast('2FA уже отключен', 'error');
+                } else {
+                    await disable2FASetupDOM();
+                }
+            } else {
+                showToast(`Ошибка: ${data.message}`, 'error');
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке 2FA', error);
+            showToast('Ошибка соединения с сервером', 'error');
+        }
+    });
+}
+
+// Асинхронная функция отключения 2FA
+async function disable2FA() {
+    try {
+        const passwordInput = document.getElementById('input-disable-password');
+        const inputToken = document.getElementById('input-disable-token');
+    
+        const password = passwordInput?.value || '';
+        const token = inputToken?.value.trim() || '';
+    
+        if (!password) {
+            showToast('Введите пароль', 'error');
+            passwordInput?.focus();
+            return;
+        }
+    
+        if (!token || token.length !== 6) {
+            showToast('Введите 6-значный код из приложения', 'error');
+            inputToken?.focus();
+            return;
+        }
+
+    
+        const res = await fetch('http://localhost:3000/api/2fa/disable', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-User-Email': getCurrentUserEmail()
+            },
+            body: JSON.stringify({ password, token })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('2FA успешно отключен', 'success');
+            update2FAUI(false, false);
+    
+            const container = document.getElementById('container-2fa');
+            if (container) {
+                container.innerHTML = '';
+            }
+        } else {
+            showToast(data.message, 'error');
+
+            if (data.errorField === "password") {
+                passwordInput?.focus();
+                passwordInput?.select();
+            } else if (data.errorField === "token") {
+                inputToken?.focus();
+            } else {
+                passwordInput?.focus();
+            }
+        }
+    } catch (error) {
+        console.error('Ошибка отключения 2FA:', error);
+        showToast('Ошибка соединения', 'error');
+        passwordInput?.focus();
+    }
+}
+
+// Отключение 2FA: DOM innerHTML
+async function disable2FASetupDOM() {
+    const container = document.getElementById('container-2fa');
+    if (container) {
+        document.getElementById('onlogin-2fa').classList.remove('active');
+        document.getElementById('onlogin-2fa').classList.add('disable');
+    }
+    const email = getCurrentUserEmail();
+
+    container.innerHTML = `
+    <form>
+        <h4>Отключение 2FA</h4>
+        <p style="font-size:1rem; margin-bottom:10px;">Для аккаунта - <strong>${email}</strong></p>
+        <p>1. Введите пароль:</p>
+        <input type="password" id="input-disable-password" placeholder="Пароль" required>
+        <p class="disable-hint">2. Введите код из приложения:<br>
+        <span>(после успешного подтверждения, можете удалить код из приложения)</span></p>
+        <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='one-time-code' required>
+        <button type="button" id="btn-disable-confirm">
+            Подтвердить
+        </button>
+    </form>
+    `
+
+    document.getElementById('btn-disable-confirm').addEventListener('click', () => disable2FA());
+    document.getElementById('input-disable-password').addEventListener('keydown', (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById('btn-disable-confirm').focus();
+        }
+    });
+    document.getElementById('input-disable-token').addEventListener('keydown', (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById('btn-disable-confirm').focus();
+        }
+    });
+}
+
+// Включение/Отключение 2FA при входе
+async function toggle2FAOnLogin(enable) {
+    
+    if (!isLoggedIn) {
+        showToast('Чтобы продолжить войдите в аккаунт', 'error');
+        return;
+    }
+
+    const email = getCurrentUserEmail();
+    if (!email) {
+        showToast('Ошибка: не удалось получить email', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/2fa/require-onlogin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-user-email': email },
+            body: JSON.stringify({ enable })
+        });
+
+        return await response.json();
+    } catch (error) {
+        console.error('Ошибка проверки статуса включения/отключения 2FA при входе', error);
+        showToast('Ошибка проверки', 'error');
+    }
+}
+
+// Кнопка включения 2FA при входе
+document.getElementById('enable-2fa-onlogin').addEventListener('click', async () => {
+    const result = await toggle2FAOnLogin(true);
+    if (result.success) {
+        const msg = result.changed ? '2FA при входе включен' : 'Уже включен';
+
+        showToast(msg, result.changed ? 'success' : 'info');
+        loadAndUpdate2FAStatus();
+    } else {
+        showToast(result.message || 'Ошибка соединения', 'error');
+    }
+});
+
+// Кнопка отключения 2FA при входе
+document.getElementById('disable-2fa-onlogin').addEventListener('click', async () => {
+    const result = await toggle2FAOnLogin(false);
+    if (result.success) {
+        const msg = result.changed ? '2FA при входе отключен' : 'Уже отключен';
+
+        showToast(msg, result.changed ? 'success' : 'info');
+        loadAndUpdate2FAStatus();
+    } else {
+        showToast(result.message || 'Ошибка соединения', 'error');
+    }
+});
+
 function logout() {
     loginBtn.style.display = 'inline';
     userContainer.style.display = 'none';
 
     // очищаем форму
     loginForm.reset();
+    regForm.reset();
     isLoggedIn = false;
     // Удаляем пользователя
     localStorage.removeItem('user');
+
+    // исходные UI settings-modal
+    // Сброс вкладок на первую
+    document.querySelectorAll('.settings-panel').forEach((panel, index) => {
+        panel.classList.toggle('active', index === 0);
+    });
+    document.querySelectorAll('.left-side-option').forEach((tab, index) => {
+        tab.classList.toggle('active', index === 0);
+    });
+
+    // Очищаем динамический контейнер перед загрузкой (предотвращает дубли)
+    const container = document.getElementById('container-2fa');
+    if (container) {
+        container.innerHTML = '';
+        btnEnable2FA.classList.add('active');
+        btnDisable2FA.classList.add('disable');
+    }
 }
 
 // Проверка был ли вход до перезагрузки страницы
@@ -239,21 +764,22 @@ const regModal = document.getElementById('reg-modal');
 const regBtn = document.getElementById('btn-reg');
 
 reg.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Регистрации
-    regModal.classList.add('active');
+    setTimeout(() => regModal.classList.add('active'), 150);
 });
 
+// Есть аккаунт ссылка (modal-hint)
 const login = document.getElementById('login');
 
 login.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Входа
-    loginModal.classList.add('active');
+    setTimeout(() => loginModal.classList.add('active'), 150);
 });
 
 
@@ -262,15 +788,14 @@ const logoutModal = document.getElementById('logout-modal');
 const logoutBtn = document.getElementById('logoutBtn');
 
 logoutBtn.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     logoutModal.classList.add('active');
 });
 
 const leaveBtn = document.querySelector('.btn-logout');
 
 leaveBtn.addEventListener('click', (event) => {
-    // event.preventDefault(); // убираем переход по ссылке
-    logoutModal.classList.remove('active');
+    setTimeout(() => closeModal(logoutModal), 150);
     logout();
     showToast(`Ждем вашего возвращения!`, 'success');
 });
@@ -285,48 +810,62 @@ loginForm.addEventListener('submit', async (event) => {
         input.classList.remove('input-error');
     });
 
-    const formData = new FormData(loginForm);
-
-    const email = formData.get('email').trim();
-    const password = formData.get('password');
+    const emailInput = document.querySelector("input[name='email']");
+    const email = emailInput?.value.trim();
+    const passwordInput = document.querySelector("input[name='password']");
+    const password = passwordInput?.value.trim();
 
     // Валидация на клиенте
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         showToast('Неверный формат Email', 'error');
-        loginForm.querySelector('input[name="email"]').classList.add('input-error');
+        loginForm.querySelector("input[name='email']").classList.add('input-error');
         return;
     }
 
-    if (password.length < 6) {
+    if (passwordInput.length < 6) {
         showToast('Пароль должен содержать не менее 6 символов!', 'error');
-        loginForm.querySelector('input[name="password"]').classList.add('input-error');
+        loginForm.querySelector("input[name='password']").classList.add('input-error');
         return;
     }
-
-    const data = {
-        email: email,
-        password: password
-    };
 
     try {
         const response = await fetch('http://localhost:3000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
         });
 
         const result = await response.json();
 
         if (result.success) {
-            isLoggedIn = true;
+            if (result.requires2FA) {
+                // Сохраняем временный пропуск на клиенте
+                localStorage.setItem('temp_2fa_token', result.tempToken);
+                localStorage.setItem('temp_2fa_email', email);
 
-            // Сохраняем пользователя
-            localStorage.setItem('user', JSON.stringify(result.user));
+                // Закрываем прошлую модалку и открываем новую
+                closeModal(loginModal);
+                showToast('Введите код из приложения для подтверждения входа', 'success');
+                setTimeout(() => login2FAModal.classList.add('active'), 150);
+                if (passwordInput) {
+                    passwordInput.value = '';
+                }
+                login2FAForm.querySelector("input[name='token'").focus();
+                
+            } else {
+                isLoggedIn = true;
 
-            closeModal(loginModal);
-            showUser();
-            showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+                // Сохраняем пользователя
+                localStorage.setItem('user', JSON.stringify(result.user));
+    
+                setTimeout(() => closeModal(loginModal), 150);
+                showUser();
+                showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+            }
         } else {
             showToast(result.message, 'error');
 
@@ -336,8 +875,91 @@ loginForm.addEventListener('submit', async (event) => {
             }
         }
     } catch (error) {
-        showToast('Произошла непредвиденная ошибка при регистрации. Попробуйте позже.', 'error');
+        console.error(error);
+        showToast('Произошла ошибка при входе. Попробуйте позже.', 'error');
     }
+});
+
+// Модалка для ввода 2FA-кода
+const login2FAModal = document.getElementById('login-2fa-modal');
+const login2FAForm = document.getElementById('login-2fa-form');
+
+if (login2FAModal) {
+    login2FAForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const tokenInput = document.querySelector("input[name='token']");
+        const token = tokenInput?.value.trim();
+
+        if (!token || token.length !== 6) {
+            showToast('Токен должен содержать 6 символов', 'error');
+            tokenInput?.focus();
+            return;
+        }
+        
+        const tempToken = localStorage.getItem('temp_2fa_token');
+        const email = localStorage.getItem('temp_2fa_email');
+
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/verify-login-2fa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tempToken: tempToken,
+                    token: token,
+                    email: email
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                localStorage.removeItem('temp_2fa_token');
+                localStorage.removeItem('temp_2fa_email');
+
+                isLoggedIn = true;
+
+                // Сохраняем пользователя
+                localStorage.setItem('user', JSON.stringify(result.user));
+    
+                closeModal(login2FAModal);
+                showUser();
+                login2FAForm.reset();
+                showToast(`Добро пожаловать, ${result.user.fname} ${result.user.sname}!`, 'success');
+            } else {
+                const message = result.message?.toLowerCase() || '';
+
+                if (message.includes('сессия') || message.includes('истекла') || message.includes('истек')) {
+                    localStorage.removeItem('temp_2fa_token');
+                    localStorage.removeItem('temp_2fa_email');
+                    
+                    // Закрываем текущую модалку и открываем прошлую
+                    closeModal(login2FAModal);
+                    showToast('Сессия истекла. Пожалуйста, войдите снова', 'success');
+                    setTimeout(() => loginModal.classList.add('active'), 300);
+                    login2FAForm.reset();
+                }
+                showToast(result.message, 'error');
+
+                if (result.errorField === 'token') {
+                    tokenInput?.classList.add('input-error');
+                    setTimeout(() => tokenInput?.classList.remove('input-error'), 2000);
+                }
+            }
+
+        } catch (error) {
+            console.error('Ошибка 2FA:', error);
+            showToast('Ошибка соединения с сервером', 'error');
+        }
+    });
+}
+
+login.addEventListener('click', (event) => {
+    event.preventDefault();
+    // Закрываем каждое открытое модальное окно
+    document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
+    // Открываем модальное окно Входа
+    loginModal.classList.add('active');
 });
 
 // Подключение формы Регистрации к серверу
@@ -361,13 +983,13 @@ regForm.addEventListener('submit', async (event) => {
     // Проверка совпадения пароля и его длины
     if (repeatPassword !== password) {
         showToast('Пароли не совпадают', 'error');
-        regForm.querySelector('input[name="repeat-password"]').classList.add('input-error');
+        regForm.querySelector("input[name='repeat-password']").classList.add('input-error');
         return;
     }
     if (password.length < 6) {
         showToast('Пароль должен содержать минимально 6 символов', 'error');
-        regForm.querySelector('input[name="password"]').classList.add('input-error');
-        regForm.querySelector('input[name="repeat-password"]').classList.add('input-error');
+        regForm.querySelector("input[name='password']").classList.add('input-error');
+        regForm.querySelector("input[name='repeat-password']").classList.add('input-error');
         return;
     }
 
@@ -390,18 +1012,15 @@ regForm.addEventListener('submit', async (event) => {
         const checkResult = await checkResponse.json();
 
         if (!checkResult.success) {
-
             if (checkResult.emailExists) {
                 showToast('Пользователь с таким Email уже существует', 'error');
                 regForm.querySelector('input[name="email"]').classList.add('input-error');
             }
-
             if (checkResult.nameExists) {
                 showToast('Пользователь с таким ФИ уже существует', 'error');
-                regForm.querySelector('input[name="fname"]').classList.add('input-error');
-                regForm.querySelector('input[name="sname"]').classList.add('input-error');
+                regForm.querySelector("input[name='fname']").classList.add('input-error');
+                regForm.querySelector("input[name='sname']").classList.add('input-error');
             }
-
             return;
         }
 
@@ -429,7 +1048,7 @@ regForm.addEventListener('submit', async (event) => {
             // Показ ошибок валидации от сервера
             if (result.errors) {
                 Object.keys(result.errors).forEach(field => {
-                    const input = regForm.querySelector('input[name="${field}"]');
+                    const input = regForm.querySelector(`input[name="${field}"]`);
                     if (input) {
                         input.classList.add('input-error');
                     }
@@ -442,8 +1061,8 @@ regForm.addEventListener('submit', async (event) => {
 });
 
 // Добавление паролей в реальном времени
-const passwordInput = regForm.querySelector('input[name="password"]');
-const repeatPasswordInput = regForm.querySelector('input[name="repeat-password"]');
+const passwordInput = regForm.querySelector("input[name='password']");
+const repeatPasswordInput = regForm.querySelector("input[name='repeat-password']");
 
 if (passwordInput && repeatPasswordInput) {
     repeatPasswordInput.addEventListener('input', () => {
@@ -858,18 +1477,27 @@ legalLinks.forEach(link => {
 const form = document.getElementById('email-form');
 const input = document.getElementById('email-input');
 
-// !Не закончен алёрт!
 function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');
-    const text = toast.querySelector('.toast-message');
+    const container = document.getElementById('toast-container');
 
-    text.textContent = message;
+    // Ограничение на 3+ тоста одновременно
+    if (container.childElementCount >= 3) return;
 
-    toast.className = `toast show ${type}`;
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
 
-    setTimeout(() => {
+    container.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    const removeToast = () => {
         toast.classList.remove('show');
-    }, 2500);
+        toast.classList.add('hide');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    }
+
+    setTimeout(removeToast, 3000);
 }
 
 form.addEventListener('submit', (Event) => {
@@ -882,9 +1510,7 @@ form.addEventListener('submit', (Event) => {
         localStorage.setItem('subscribedEmails', JSON.stringify(emails)); // JSON.stringify - из массива в строку
         console.log('Текущий email:', email);
         console.log('Список записанных emails:', JSON.parse(localStorage.getItem('subscribedEmails')));
-        // showToast();
         input.value = ''; // Очищаем поле после добавления Email
-
     }
 });
 

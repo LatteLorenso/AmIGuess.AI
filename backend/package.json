@@ -2,18 +2,21 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "LatteLorenso",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@js-temporal/polyfill": "^0.5.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "express": "^5.2.1",
-    "mongoose": "^9.1.1"
+    "mongoose": "^9.1.1",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
   }
 }
