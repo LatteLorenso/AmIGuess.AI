@@ -12,7 +12,7 @@ npm install express mongoose cors bcryptjs speakease qrcode @js-temporal/polyfil
 # 3.5. Опционально. Добавьте начальных пользователей (админа и обычного пользователя)
 node seed.js
 
-# 5. Запустите сервер
+# 5. Запустите сервер (убедитесь, что находитесь в папке backend)
 node server.js
 
 # 6. Откройте index.html в браузере
