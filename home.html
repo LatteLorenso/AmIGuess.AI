@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AmIGuess.AI | AI-Assistant Interactive Prediction</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <script src="cursor.js" defer></script>
     <link rel="icon" type="image/x-icon" href="favicon/hornbill-brands-solid.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -143,12 +145,13 @@
                         Введите код двухфакторной авторизации, чтобы получить доступ к аккаунту AmIGuess.AI
                     </p>
             
-                    <form class="login-form" id="login-2fa-form" autocomplete="off">
+                    <form class="login-form" id="login-2fa-form">
                         <input 
                             type="text" 
                             name="token" 
                             placeholder="Код из приложения"
                             maxlength="6"
+                            autocomplete="one-time-code"
                             required
                         >
 
@@ -263,9 +266,6 @@
                     <div class="container-title-settings">
                         <h3 class="modal-title-settings">Настройки аккаунта</h3>
                     </div>
-                    <!-- <p class="modal-subtitle-settings">
-                        Information
-                    </p> -->
 
                     <div id="container-menu" class="menu-settings">
                         <aside id="aside-options" class="left-side">
@@ -287,7 +287,6 @@
                                             <a id="enable-2fa" class="btn-turn-on">Включить 2FA</a>
                                             <a id="disable-2fa" class="btn-turn-off">Отключить 2FA</a>
                                         <section id="onlogin-2fa" class="container-onlogin-2fa">
-                                            <!-- <p class="subtitle-option">Включить двухфакторную аутентификацию при входе в аккаунт</p> -->
                                             <a id="enable-2fa-onlogin" class="btn-turn-on" style="min-width: 250px;">Включить 2FA при входе</a>
                                             <a id="disable-2fa-onlogin" class="btn-turn-off" style="min-width: 250px;">Отключить 2FA при входе</a>
                                         </section>
@@ -479,76 +478,73 @@
         <!-- ====== FOOTER SECTION ====== -->
         <footer class="footer-section section" id="contacts">
             <div class="footer-top-container">
-            <!-- Верхняя часть футера -->
-            <div class="footer-top">
-                <div class="footer-brand">
-                    <a href="#main" class="logo">
-                        <h4 class="brand-title">AmIGuess.AI</h4>
-                    </a>
-                        <p class="brand-subtitle">AI, который предсказывает будущее</p>
-                    <div class="href-container">
-                        <li><a href="https://github.com/LatteLorenso" target="_blank">
-                            <i class="fab fa-github fa-lg"></i>
-                        </a></li>
-                        <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
-                        <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
-                        <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
-                    </div>
-                </div>
-
-                <div class="footer-links">
-                    <h4>О платформе</h4>
-                    <ul>
-                        <li><a href="#" data-key="about">О нас</a></li>
-                        <li><a href="#" data-key="AIassistant">Как работает AI-assistant</a></li>
-                        <li><a href="#" data-key="research">Исследования</a></li>
-                        <li><a href="#" data-key="method">Методология прогнозов</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Продукты и возможности</h4>
-                    <ul>
-                        <li><a href="#" data-key="examples">Примеры прогнозов</a></li>
-                        <li><a href="#" data-key="integrations">Интеграции</a></li>
-                        <li><a href="#" data-key="api">API для разработчиков</a></li>
-                        <li><a href="#" data-key="support">Поддержка клиентов</a></li>
-                    </ul>
-                </div>
-                <div class="footer-modal" id="footer-modal">
-                    <div class="footer-modal-overlay"></div>
-                
-                    <div class="footer-modal-window">
-                        <div class="footer-modal-header">
-                            <button class="footer-modal-close">&times;</button>
-                            <h2 class="footer-modal-title"></h2>
+                <!-- Верхняя часть футера -->
+                <div class="footer-top">
+                    <div class="footer-brand">
+                        <a href="#main" class="logo">
+                            <h4 class="brand-title">AmIGuess.AI</h4>
+                        </a>
+                            <p class="brand-subtitle">AI, который предсказывает будущее</p>
+                        <div class="href-container">
+                            <li><a href="https://github.com/LatteLorenso" target="_blank">
+                                <i class="fab fa-github fa-lg"></i>
+                            </a></li>
+                            <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
+                            <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
+                            <li><a href="#"><i class="fab fa-github fa-lg"></i></a></li>
                         </div>
-                        <div class="footer-modal-content"></div>
                     </div>
-                </div>
-                
-                <div class="form-container">
-                    <h4>Подписка</h4>
-                    <p>Подпишитесь, чтобы получать свежие прогнозы, аналитические отчёты и инсайты от AmIGuess.AI прямо на вашу почту.</p>
-                    <form action="#" class="subscribe-form" id="email-form">
-                        <input type="email" placeholder="Ваш Email" required id="email-input">
-                        <button type="submit"><i class="far fa-paper-plane"></i></button>
-                    </form>
-                </div>
-
-                <!-- ====== BACKGROUND LAYER: Am I Guess ? + Matrix ====== -->
-                <div class="background-title">
-                    <span class="bg-word bg-am">AM</span>
-                    <span class="bg-word bg-i">I</span>
-                    <span class="bg-word bg-guess">GUESS</span>
-                    <span class="bg-word bg-question">?</span>
-                </div>
-
-                <div id="toast-container" class="toast-container">
-                    <!-- <span class="toast-message"></span> -->
+    
+                    <div class="footer-links">
+                        <h4>О платформе</h4>
+                        <ul>
+                            <li><a href="#" data-key="about">О нас</a></li>
+                            <li><a href="#" data-key="AIassistant">Как работает AI-assistant</a></li>
+                            <li><a href="#" data-key="research">Исследования</a></li>
+                            <li><a href="#" data-key="method">Методология прогнозов</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Продукты и возможности</h4>
+                        <ul>
+                            <li><a href="#" data-key="examples">Примеры прогнозов</a></li>
+                            <li><a href="#" data-key="integrations">Интеграции</a></li>
+                            <li><a href="#" data-key="api">API для разработчиков</a></li>
+                            <li><a href="#" data-key="support">Поддержка клиентов</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-modal" id="footer-modal">
+                        <div class="footer-modal-overlay"></div>
+                    
+                        <div class="footer-modal-window">
+                            <div class="footer-modal-header">
+                                <button class="footer-modal-close">&times;</button>
+                                <h2 class="footer-modal-title"></h2>
+                            </div>
+                            <div class="footer-modal-content"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-container">
+                        <h4>Подписка</h4>
+                        <p>Подпишитесь, чтобы получать свежие прогнозы, аналитические отчёты и инсайты от AmIGuess.AI прямо на вашу почту.</p>
+                        <form action="#" class="subscribe-form" id="email-form">
+                            <input type="email" placeholder="Ваш Email" required id="email-input">
+                            <button type="submit"><i class="far fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+    
+                    <!-- ====== BACKGROUND LAYER: Am I Guess ? + Matrix ====== -->
+                    <div class="background-title">
+                        <span class="bg-word bg-am">AM</span>
+                        <span class="bg-word bg-i">I</span>
+                        <span class="bg-word bg-guess">GUESS</span>
+                        <span class="bg-word bg-question">?</span>
+                    </div>
+    
+                    <div id="toast-container" class="toast-container"></div>
                 </div>
             </div>
-            </div>
-            
             <!-- Нижняя часть футера -->
             <div class="footer-bottom">
                 <p>&copy; 2026 AmIGuess.AI. Все права защищены.</p>
@@ -559,8 +555,5 @@
             </div>
         </footer>
     </section>
-
-<script src="script.js"></script>
-<script src="cursor.js"></script>
 </body>
 </html>

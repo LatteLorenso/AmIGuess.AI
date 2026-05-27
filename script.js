@@ -126,7 +126,7 @@ const overlayModal = document.querySelector('.modal-overlay');
 const loginBtn = document.getElementById('loginBtn');
 
 loginBtn.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     loginModal.classList.add('active');
 });
 
@@ -364,8 +364,6 @@ function update2FAUI(isEnabled, is2FAOnLoginEnabled) {
             btnDisable2FAOnLogin.classList.add('disable');
         }
     }
-    
-    // console.log('UI обновлен: isTwoFactorEnabled = ', isEnabled);
 }
 
 // Кнопка включения 2FA
@@ -498,11 +496,11 @@ async function start2FASetupDOM(email) {
         <h4>Настройка 2FA</h4>
         <p>1. Отсканируйте QR-код:</p>
         <div id="qr-container" style="text-align:center; margin: 10px 0px 10px;">
-            <button id="btn-generate-qr" style="padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">Показать QR-код</button>
+            <button id="btn-generate-qr">Показать QR-код</button>
         </div>
         <p>2. Введите код из приложения:</p>
-        <input type="text" id="input-2fa-token" placeholder="123456" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem;" required>
-        <button type="button" id="btn-confirm-enable" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer;">
+        <input type="text" id="input-2fa-token" placeholder="123456" maxlength="6" autocomplete='one-time-code' required>
+        <button type="button" id="btn-confirm-enable">
             Подтвердить
         </button>
     </form>
@@ -634,11 +632,11 @@ async function disable2FASetupDOM() {
         <h4>Отключение 2FA</h4>
         <p style="font-size:1rem; margin-bottom:10px;">Для аккаунта - <strong>${email}</strong></p>
         <p>1. Введите пароль:</p>
-        <input type="password" id="input-disable-password" placeholder="Пароль" style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;" required>
-        <p>2. Введите код из приложения:<br>
-        (после успешного подтверждения, можете удалить код из приложения)</p>
-        <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='off' style="padding:8px; width:60%; margin:10px 0px; font-size:1rem; box-sizing:border-box;" required>
-        <button type="button" id="btn-disable-confirm" style="width:60%; padding:10px; background:#008cff; color:var(--color-text-main); border:none; cursor:pointer; box-sizing:border-box;">
+        <input type="password" id="input-disable-password" placeholder="Пароль" required>
+        <p class="disable-hint">2. Введите код из приложения:<br>
+        <span>(после успешного подтверждения, можете удалить код из приложения)</span></p>
+        <input type="text" id="input-disable-token" placeholder="Код из приложения" maxlength="6" autocomplete='one-time-code' required>
+        <button type="button" id="btn-disable-confirm">
             Подтвердить
         </button>
     </form>
@@ -766,7 +764,7 @@ const regModal = document.getElementById('reg-modal');
 const regBtn = document.getElementById('btn-reg');
 
 reg.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Регистрации
@@ -777,7 +775,7 @@ reg.addEventListener('click', (event) => {
 const login = document.getElementById('login');
 
 login.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Входа
@@ -790,7 +788,7 @@ const logoutModal = document.getElementById('logout-modal');
 const logoutBtn = document.getElementById('logoutBtn');
 
 logoutBtn.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     logoutModal.classList.add('active');
 });
 
@@ -957,7 +955,7 @@ if (login2FAModal) {
 }
 
 login.addEventListener('click', (event) => {
-    event.preventDefault(); // убираем переход по ссылке
+    event.preventDefault();
     // Закрываем каждое открытое модальное окно
     document.querySelectorAll('.modal.active').forEach(modal => closeModal(modal));
     // Открываем модальное окно Входа
